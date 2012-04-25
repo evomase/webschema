@@ -56,8 +56,7 @@ class Schema {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see Admin::menu()
+	 * Used to add the configuration page to the settings menu
 	 */
 	public function menu()
 	{
@@ -65,8 +64,7 @@ class Schema {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see Admin::page()
+	 * Renders the configuration page and handles all request from the it too.
 	 */
 	public function page()
 	{
