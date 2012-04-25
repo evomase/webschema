@@ -10,7 +10,7 @@
 					</th>
 					
 					<td>
-						<input id="schema" type="text" class="regular-text" name="web_schema[schema_json_url]" value="<?php echo ( $schema['schema_json_url'] )? $schema['schema_json_url'] : 'http://schema.rdfs.org/all.json'; ?>" />
+						<input id="schema" type="text" class="regular-text" name="web_schema[schema_json_url]" value="<?php echo $schema['schema_json_url']; ?>" />
 					</td>
 				</tr>
 			</tbody>

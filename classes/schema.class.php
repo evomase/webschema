@@ -73,7 +73,7 @@ class Schema {
 		if ( $_POST['submit' ] )
 			update_option( 'web_schema', $_POST[$this->formName] );
 		
-		$this->settings = get_option( 'web_schema' );
+		$this->settings = get_option( 'web_schema', array( 'schema_json_url' => 'http://schema.rdfs.org/all.json' ) );
 		
 		if ( $_POST['update_records'] )
 			$this->updateRecords();
@@ -81,6 +81,7 @@ class Schema {
 		if ( $_POST['truncate_records'] )
 			$this->truncateRecords();
 			
+		$schema = $this->settings;
 		
 		include_once( WEB_SCHEMA_PLUGIN_DIR . '/templates/info.tpl.php' );
 	}
@@ -142,16 +143,10 @@ class Schema {
 		$url = $this->settings['schema_json_url'];
 		
 		if ( empty( $url ) || !preg_match( '/http:\/\/[\w\.\-\/]+/i', $url ) )
-		{
-			Site::getInstance()->notify( 'Please provide a schema URL' );
 			return false;
-		}
 		
 		if ( !( ( $schema = file_get_contents( $url ) ) && ( $schema = json_decode( $schema ) ) ) )
-		{
-			Site::getInstance()->notify( 'Schema retrieved from URL given isn\'t a valid JSON format' );
 			return false;
-		}
 		
 		SchemaType::getInstance()->setProcessTypes( $schema->types );
 		SchemaProperty::getInstance()->setProcessProperties( $schema->properties );

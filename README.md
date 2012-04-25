@@ -19,7 +19,7 @@ At the moment, the tool is only available for Wordpress but I'll be working on a
 
 All you have to do is pull the source code and add it to the plugin directory. Once that's done the plugin needs to be activated in the plugin admin interface.
 
-Once the plugin has been activated, the settings page can be accessed via the ``Settings`` menu. The schemas needs to be upload and stored in the database, to do that click on the
+Once the plugin has been activated, the plugin configuration page can be accessed via the ``Settings`` menu. The schemas needs to be upload and stored in the database, to do that click on the
 ``Update Records`` button.
 
 ##	How to use
