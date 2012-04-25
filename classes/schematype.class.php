@@ -56,18 +56,17 @@ class SchemaType {
 		
 		$parent = $this->getParentID( $type->id );
 		
-		$type = $wpdb->_escape( get_object_vars( $type ) );
+		$type = get_object_vars( $type );
 		
-		extract( $type );
-		
-		$sql = "INSERT INTO $this->tableName ( comment, name, label, url, parent ) VALUES ( '$comment', '$id', '$label', '$url', $parent )";
+		$sql = $wpdb->prepare( "INSERT INTO $this->tableName ( comment, name, label, url, parent ) VALUES ( %s, %s, %s, %s, %d )", 
+				$type['comment'], $type['id'], $type['label'], $type['url'], $parent );
 		
 		if ( !$wpdb->query( $sql ) ) return false;
 		
 		$id = $wpdb->insert_id;
 		
-		if ( !empty( $properties ) )
-			$this->processProperties( $id, $properties );
+		if ( !empty( $type['properties'] ) )
+			$this->processProperties( $id, $type['properties'] );
 		
 		return true;
 	}
@@ -109,15 +108,15 @@ class SchemaType {
 		
 		$parent = $this->getParentID( $type->id );
 		
-		$type = $wpdb->_escape( get_object_vars( $type ) );
-		extract( $type );  
+		$type = get_object_vars( $type );
 		
-		$sql = "UPDATE $this->tableName SET comment = '$comment', name = '$id', label = '$label', url = '$url', parent = '$parent' WHERE id = $typeID ";
+		$sql = $wpdb->prepare( "UPDATE $this->tableName SET comment = %s, name = %s, label = %s, url = %s, parent = %d WHERE id = $typeID ",
+				$type['comment'], $type['id'], $type['label'], $type['url'], $parent, $typeID );
 		
 		$wpdb->query( $sql ); 
 		
-		if ( !empty( $properties ) )
-			$this->processProperties( $id, $properties );
+		if ( !empty( $type['properties'] ) )
+			$this->processProperties( $id, $type['properties'] );
 		
 		return true;
 	}

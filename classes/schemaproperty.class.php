@@ -57,9 +57,7 @@ class SchemaProperty {
 		
 		global $wpdb;
 		
-		$property = $wpdb->_escape( $property );
-		
-		$sql = "SELECT * FROM $this->tableName WHERE name = '$property'";
+		$sql = $wpdb->prepare( "SELECT * FROM $this->tableName WHERE name = %s", $property );
 		
 		if ( $result = $wpdb->get_results( $sql, ARRAY_A ) )
 			$this->properties[$property] = $result;
@@ -104,15 +102,14 @@ class SchemaProperty {
 		
 		$property->ranges = ( is_array( $property->ranges ) )? serialize( $property->ranges ) : $property->ranges;
 		
-		$property = $wpdb->_escape( get_object_vars( $property ) );
+		$property = get_object_vars( $property );
 		
-		extract( $property );
-		
-		$sql = "INSERT INTO $this->tableName ( comment, name, label, ranges ) VALUES ( '$comment', '$id', '$label', '$ranges' )";
+		$sql = $wpdb->prepare( "INSERT INTO $this->tableName ( comment, name, label, ranges ) VALUES ( %s, %s, %s, %s )",
+				$property['comment'], $property['id'], $property['label'], $property['ranges'] );
 		
 		if ( $wpdb->query( $sql ) )
 		{
-			$this->properties[$id]['id'] = $wpdb->insert_id;
+			$this->properties[$property['id']]['id'] = $wpdb->insert_id;
 			
 			return $wpdb->insert_id;
 		}

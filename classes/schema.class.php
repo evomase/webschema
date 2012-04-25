@@ -104,10 +104,7 @@ class Schema {
 	{
 		global $wpdb;
 		
-		$typeID = $wpdb->_escape( $typeID );
-		$propertyID = $wpdb->_escape( $propertyID );
-		
-		$sql = "INSERT INTO $this->tableName ( type_id, property_id ) VALUES ( $typeID, $propertyID )";
+		$sql = $wpdb->prepare( "INSERT INTO $this->tableName ( type_id, property_id ) VALUES ( %d, %d )", $typeID, $propertyID );
 		
 		return $wpdb->query( $sql );
 	}
@@ -123,10 +120,7 @@ class Schema {
 	{
 		global $wpdb;
 		
-		$typeID = $wpdb->_escape( $typeID );
-		$propertyID = $wpdb->_escape( $propertyID );
-		
-		$sql = "SELECT id FROM $this->tableName WHERE type_id = $typeID AND property_id = $propertyID";
+		$sql = $wpdb->prepare( "SELECT id FROM $this->tableName WHERE type_id = %d AND property_id = %d", $typeID, $propertyID );
 		
 		return $wpdb->get_var( $sql );
 	}
