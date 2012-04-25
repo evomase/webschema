@@ -36,3 +36,9 @@ to highlight each markup.
 *	Type - <font color="#FF0033">Red</font>
 *	Property - <font color="#335CFF">Blue</font>
 *	Nested Type Property - <font color="#C94AC9">Purple</font>
+
+##	TODO
+*	Add a field to select parent schema
+*	Drupal version
+*	Standalone version
+
