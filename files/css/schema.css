@@ -1,0 +1,67 @@
+.form-table {
+	width: auto;
+}
+
+.form-table th {
+	padding-left: 0px;
+	width: 100px;
+}
+
+.form-table input[type="text"] {
+	width: 25em;
+}
+
+.postbox .form-table td {
+	padding-left: 0px;
+}
+
+#schema_html {
+	padding: 10px;
+}
+
+#schema_html label {
+	margin-bottom: 5px;
+	display: inline-block;
+}
+
+#schema_html form div {
+	margin-bottom: 10px;
+}
+
+#schema_html #buttons {
+	display: block;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#schema_html #prop_type {
+	display: none;
+}
+
+#schema_html select {
+	display: block;
+	margin-bottom: 10px;
+}
+
+.mceButton span.mce_schema_type, 
+.mceButton span.mce_schema_prop {
+	background: url('../js/tinymce/img/icons.png') no-repeat !important;
+}
+
+.mceButton:hover span.mce_schema_type {
+	background-position: -8px -11px !important;
+}
+
+.mceButton span.mce_schema_type {
+	background-position: -8px -34px !important;
+}
+
+.mceButton span.mce_schema_prop {
+	background-position: -29px -34px !important;
+}
+
+.mceButton:hover span.mce_schema_prop {
+	background-position: -28px -11px !important;
+}
+
+
