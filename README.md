@@ -38,7 +38,7 @@ to highlight each markup.
 *	Nested Type Property - <font color="#C94AC9">Purple</font>
 
 ##	TODO
-*	Add a field to select parent schema
 *	Drupal version
 *	Standalone version
+*	Develop functionality to add custom schemas
 

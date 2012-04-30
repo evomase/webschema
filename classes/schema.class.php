@@ -7,6 +7,7 @@ class Schema {
 	private $tableName;
 	private $formName = 'web_schema';
 	private $schema = array();
+	private $postMetaKey = '_web_schema';
 	
 	public function __construct()
 	{
@@ -15,7 +16,11 @@ class Schema {
 		global $wpdb;
 		
 		$this->tableName = $wpdb->prefix . 'web_schema';
-			
+
+		add_action( 'save_post', array( $this, 'adminPostPageSave' ), 10, 2 );
+		add_action( 'delete_post', array( $this, 'deletePost' ) );
+		add_action( 'add_meta_boxes', array( $this, 'adminPostPageInit' ) );
+		
 		add_action( 'admin_menu', array( $this, 'menu' ) );
 		add_action( 'admin_print_styles-settings_page_web_schema', array( $this, 'enqueueStyle' ) );
 		add_action( 'admin_print_styles-post.php', array( $this, 'enqueueStyle' ) );
@@ -61,6 +66,65 @@ class Schema {
 	public function menu()
 	{
 		add_options_page( 'Web Schema', 'Web Schema', 'manage_options', 'web_schema', array( $this, 'page' ) );
+	}
+	
+	/**
+	 * Adds meta boxes to all content types
+	 */
+	public function adminPostPageInit()
+	{
+		$contentTypes = get_post_types( array( 'public' => true ) );
+		unset( $contentTypes['attachment'] );
+		
+		foreach( $contentTypes as $id => $contentType )
+		{
+			add_meta_box( 'schema', 'Schema', array( $this, 'adminPostPage' ), $id, 'side', 0 );
+		}
+	}
+	
+	/**
+	 * This function is called when a post has been saved. It saves the post schema details
+	 * @param int $postID
+	 * @param StdClass $post
+	 * @return int|boolean
+	 */
+	public function adminPostPageSave( $postID, $post )
+	{
+		if ( empty( $_POST[$this->formName] ) ) return;
+		
+		$content = $_POST[$this->formName];
+		
+		$postSchema = get_post_meta( $post->ID, $this->postMetaKey, true );
+		
+		if ( empty( $postSchema ) )
+			return add_post_meta( $post->ID, $this->postMetaKey, $content, true );
+		else
+			return update_post_meta( $post->ID, $this->postMetaKey, $content );
+	}
+	
+	/**
+	 * Renders the meta box on the admin post interface.
+	 * @param StdClass $post
+	 */
+	public function adminPostPage( $post )
+	{
+		$schema = $this->getSchema();
+		$postSchema = $this->getPostSchema( $post->ID );
+		
+		require_once( WEB_SCHEMA_PLUGIN_DIR . '/templates/post_schema.tpl.php' );
+	}
+	
+	/**
+	 * Returns the post schema
+	 * @param int $postID
+	 * @return array
+	 */
+	public function getPostSchema( $postID )
+	{
+		$postSchema = get_post_meta( $postID, $this->postMetaKey, true );
+		$postSchema = ( !empty( $postSchema ) )? $postSchema : array();
+		
+		return $postSchema;
 	}
 	
 	/**
