@@ -314,6 +314,9 @@
 				list.append( option );
 			}
 			
+			if ( nodeType )
+				$( '#add', iframe ).html( 'Update' );
+			
 			$( 'button', iframe ).bind( 'click', function( e ){
 				e.preventDefault();
 				
@@ -357,6 +360,18 @@
 			
 			this.bindTip( node );
 		};
+		
+		/**
+		 * Adds a schema nested type - range
+		 */
+		this.addRangeType = function( id, node ){
+			var type = this.types[id];
+			
+			node.setAttribute( 'itemscope', 'itemscope' );
+			node.setAttribute( 'itemtype', type.url );
+			
+			this.bindTip( node );
+		}
 		
 		/**
 		 * Removes a schema type
@@ -483,6 +498,7 @@
 			var type = {};
 			var nodeProp = node.getAttribute( 'itemprop' );
 			var content = this.selection.getContent();
+			var edit = ( nodeProp && ( content == $( node ).text() || content == $( node ).html() ) )? true : false;
 			
 			if ( ( ( content == $( node ).text() ) || content == $( node ).html() ) )
 				type = schemaType.getTypeByURL( this.getTypeNode( $( node ).parent() ).attr( 'itemtype' ) );
@@ -506,6 +522,9 @@
 				list.append( option );
 			}
 			
+			if ( edit )
+				$( '#add', iframe ).html( 'Update' );
+			
 			list.bind( 'change', function(){
 				schemaProp.renderRanges( $( this ) );
 			});
@@ -516,7 +535,7 @@
 				switch( $( this ).attr( 'id' ) )
 				{
 					case 'add':
-						if ( ( ( content == $( node ).text() ) || content == $( node ).html() ) && node.getAttribute( 'itemprop' ) )
+						if ( edit )
 							node = self.edit();
 						else
 							node = self.add();
@@ -526,10 +545,7 @@
 							rangeID = propType.data( 'id' );
 							
 							if ( rangeID )
-							{
-								self.editor.selection.select( node );
-								schemaType.add( rangeID );
-							}
+								schemaType.addRangeType( rangeID, node );
 						}
 						break;
 						
@@ -621,7 +637,7 @@
 			var content = this.selection.getContent();
 			var node = this.getNode();
 			
-			if ( ( !node.getAttribute( 'itemtype' ) ) && ( node.tagName.toLowerCase() == 'span' ) )
+			if ( !$( node ).attr( 'itemtype' ) && ( $( node ).html() == content || $( node ).text() == content ) )
 				node.setAttribute( 'itemprop', prop.name );
 			else
 			{

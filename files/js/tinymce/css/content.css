@@ -1,11 +1,11 @@
-*[itemprop] {
+[itemprop] {
 	border-bottom: 1px solid #335CFF;
 	padding-bottom: 2px;
 	display: inline-block;
 	margin-bottom: 2px;
 }
 
-*[itemtype] {
+[itemtype] {
 	border-left: 1px solid #FF0033;
 	border-right: 1px solid #FF0033;
     padding: 0px 10px;
@@ -15,14 +15,19 @@ span[itemtype] {
 	margin: 0 5px;
 }
 
-*[itemtype][itemprop] {
+[itemtype][itemprop] {
 	border-bottom: 1px solid #C94AC9;
 	border-left: none;
 	border-right: none;
 	padding: 0px 0px 2px 0px;
+	margin-bottom: 2px;
 }
 
-*[itemtype][itemprop] [itemprop] {
+* [itemtype][itemprop]:first-child {
+	margin-left: 0px;
+}
+
+[itemtype][itemprop] [itemprop] {
 	padding-bottom: 0px;
 }
 

@@ -18,7 +18,6 @@ class Schema {
 		$this->tableName = $wpdb->prefix . 'web_schema';
 
 		add_action( 'save_post', array( $this, 'adminPostPageSave' ), 10, 2 );
-		add_action( 'delete_post', array( $this, 'deletePost' ) );
 		add_action( 'add_meta_boxes', array( $this, 'adminPostPageInit' ) );
 		
 		add_action( 'admin_menu', array( $this, 'menu' ) );
@@ -78,7 +77,7 @@ class Schema {
 		
 		foreach( $contentTypes as $id => $contentType )
 		{
-			add_meta_box( 'schema', 'Schema', array( $this, 'adminPostPage' ), $id, 'side', 0 );
+			add_meta_box( 'web_schema', 'Web Schema', array( $this, 'adminPostPage' ), $id, 'side', 0 );
 		}
 	}
 	
@@ -269,7 +268,8 @@ class Schema {
 	{
 			
 		$elements = ',@[itemtype|itemscope|itemprop|id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove';
-		$elements .= '|onmouseout|onkeypress|onkeydown|onkeyup],#p,-h1,-h2,-h3,-h4,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-ul[type|compact],ol,-li,';
+		$elements .= '|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,';
+		$elements .= '#p,-h1,-h2,-h3,-h4,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-ul[type|compact],ol,-li,';
 		$elements .= 'object[classid|width|height|codebase|*],-strong,em,param[name|value|_value],-span,-div';
 		
 		$options['extended_valid_elements'] .= $elements;
