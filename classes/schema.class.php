@@ -121,7 +121,11 @@ class Schema {
 	public function getPostSchema( $postID )
 	{
 		$postSchema = get_post_meta( $postID, $this->postMetaKey, true );
-		$postSchema = ( !empty( $postSchema ) )? $postSchema : array();
+		
+		if ( empty( $postSchema ) || empty( $postSchema['type'] ) )
+			return array();
+		
+		$postSchema['url'] = SchemaType::getInstance()->getURL( $postSchema['type'] );
 		
 		return $postSchema;
 	}
@@ -326,8 +330,8 @@ class Schema {
 		$propertyTable = SchemaProperty::getInstance()->getTableName();
 		
 		$sql = "SELECT st.id AS st_id, st.comment AS st_comment, st.name AS st_name, st.label AS st_label, st.url, st.parent, ";
-		$sql .= "sp.id AS sp_id, sp.name AS sp_name, sp.label AS sp_label, sp.comment AS sp_comment, sp.ranges FROM $typeTable AS st ";
-		$sql .= "LEFT JOIN $this->tableName AS s ON st.id = s.type_id ";
+		$sql .= "sp.id AS sp_id, sp.name AS sp_name, sp.label AS sp_label, sp.comment AS sp_comment, sp.ranges FROM $this->tableName AS s ";
+		$sql .= "LEFT JOIN $typeTable AS st ON st.id = s.type_id ";
 		$sql .= "LEFT JOIN $propertyTable AS sp ON sp.id = s.property_id ";
 		$sql .= "ORDER BY st_name, sp.name ASC";
 		

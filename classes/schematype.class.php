@@ -5,7 +5,7 @@ class SchemaType {
 	
 	private $tableName;
 	private $processTypes;
-	private $types = array();
+	private $types;
 	
 	public function __construct()
 	{
@@ -14,6 +14,8 @@ class SchemaType {
 		$this->tableName = $wpdb->prefix . 'web_schema_type';
 		
 		register_activation_hook( 'webschema/schema.php', array( $this, 'install' ) );
+		
+		$this->types = array( 'names' => array(), 'data' => array() );
 	}
 	
 	/**
@@ -185,6 +187,41 @@ class SchemaType {
 	}
 	
 	/**
+	 * Returns a type by ID
+	 * @param int $id
+	 * @return array
+	 */
+	public function getType( $id )
+	{
+		if ( empty( $id ) ) return array();
+		
+		if ( array_key_exists( $id, $this->types['data'] ) )
+			return $this->types['data'][$id];
+		
+		global $wpdb;
+		
+		$sql = $wpdb->prepare( "SELECT * FROM $this->tableName WHERE id = %d", $id );
+		
+		if ( !( $result = $wpdb->get_row( $sql, ARRAY_A ) ) )
+			return array();
+		
+		return $this->types['data'][$id] = $result;
+	}
+	
+	/**
+	 * Returns a type URL by ID
+	 * @param int $id
+	 * @return null|string
+	 */
+	public function getURL( $id )
+	{
+		if ( !( $type = $this->getType( $id ) ) )
+			return null;
+		
+		return $type['url'];
+	}
+	
+	/**
 	 * 
 	 * Removes all records in the database;
 	 */
@@ -202,18 +239,16 @@ class SchemaType {
 	 */
 	private function exists( $type )
 	{
-		if ( $id = array_search( $type, $this->types ) )
+		if ( $id = array_search( $type, $this->types['names'] ) )
 			return $id;
 		
 		global $wpdb;
 		
-		$type = $wpdb->_escape( $type );
-		
-		$sql = "SELECT id FROM $this->tableName WHERE name = '$type'";
+		$sql = $wpdb->prepare( "SELECT id FROM $this->tableName WHERE name = %s", $type );
 		
 		if ( $id = $wpdb->get_var( $sql ) )
 		{
-			$this->types[$id] = $type;
+			$this->types['names'][$id] = $type;
 			return $id;
 		}
 		
