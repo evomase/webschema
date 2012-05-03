@@ -30,7 +30,7 @@ goes for adding a property. A property can only be added within a selection wher
 
 
 ### Highlighting.
-To make it easier to identifiy each markup, all markup content are highlighted and a tooltip is shown when the mouse moves over the highlighted content. Below is a list of colors used
+To make it easier to identifiy each schema, all marked-up content are highlighted and a tooltip is shown when the mouse moves over the highlighted content. Below is a list of colors used
 to highlight each markup.
 
 *	Type - <font color="#FF0033">Red</font>

@@ -718,7 +718,7 @@
 			
 			//Add css file 
 			if ( ed.settings.content_css !== false )
-				ed.contentCSS.push( url + '/css/content.css?v=1.02' );
+				ed.contentCSS.push( url + '/css/content.css?v=0.9b' );
 			
 			ed.onLoadContent.add( function( ed, cm ){
 				schema.init( ed );
