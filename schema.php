@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 Plugin Name: Web Schema
 Plugin URI: http://www.davidogilo.co.uk
@@ -8,13 +8,28 @@ Author: David Ogilo
 Author URI: http://www.davidogilo.co.uk
 License: GPL2
 */
-define( 'WEB_SCHEMA_PLUGIN_DIR', dirname( __FILE__ ) );
 
-require_once( WEB_SCHEMA_PLUGIN_DIR . '/classes/schema.class.php' );
-require_once( WEB_SCHEMA_PLUGIN_DIR . '/classes/schematype.class.php' );
-require_once( WEB_SCHEMA_PLUGIN_DIR . '/classes/schemaproperty.class.php' );
+define('WEB_SCHEMA_VERSION', '1.0.0');
 
-Schema::getInstance();
-SchemaProperty::getInstance();
-SchemaType::getInstance();
-?>
+require 'config.php';
+
+spl_autoload_register(function ($class) {
+    $class = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
+
+    if (!file_exists($class)) {
+        return;
+    }
+
+    include "$class";
+});
+
+\WebSchema\Providers\Property::boot();
+\WebSchema\Utils\Installer::boot();
+
+//require_once(WEB_SCHEMA_DIR . '/classes/schema.class.php');
+//require_once(WEB_SCHEMA_DIR . '/classes/schematype.class.php');
+//require_once(WEB_SCHEMA_DIR . '/classes/schemaproperty.class.php');
+
+//Schema::getInstance();
+//SchemaProperty::getInstance();
+//SchemaType::getInstance();
