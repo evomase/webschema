@@ -15,15 +15,16 @@ abstract class Model
      * @var \ArrayObject
      */
     protected static $collection;
-    protected $table;
-    protected $key = 'id';
+    protected static $key = 'id';
+    protected static $table;
 
     /**
-     * @var wpdb
+     * @var \wpdb
      */
-    protected $db;
+    protected static $db;
 
     protected $data = [];
+    protected $new = true;
 
     /**
      * Model constructor.
@@ -31,17 +32,17 @@ abstract class Model
      */
     public function __construct(array $data = array())
     {
-        global $wpdb;
-        $this->db = $wpdb;
-
         $this->fill($data);
     }
 
     /**
      * @param array $data
-     * @return void
      */
-    abstract public function fill(array $data);
+    public function fill(array $data)
+    {
+        $data = array_intersect_key($data, $this->data);
+        $this->data = array_merge($this->data, $data);
+    }
 
     /**
      * @param $id
@@ -53,24 +54,37 @@ abstract class Model
             static::$collection->offsetGet($id);
         }
 
-        return (new static())->load($id);
+        return static::search($id, static::$key);
     }
 
     /**
-     * @param $id
+     * @param        $value
+     * @param string $column
      * @return $this|null
      */
-    protected function load($id)
+    public static function search($value, $column = 'name')
     {
-        $query = $this->db->prepare('SELECT * FROM ' . $this->table . ' WHERE ' . $this->key . ' = %d', $id);
+        $query = static::$db->prepare('SELECT * FROM ' . static::$table . ' WHERE ' . $column . ' = %s', $value);
 
-        if ($data = $this->db->get_row($query, ARRAY_A)) {
-            $this->fill($data);
-            $this->put($data[$this->key], $this);
-            return $this;
+        if ($data = static::$db->get_row($query, ARRAY_A)) {
+            $model = new static($data);
+            $model->new = false;
+
+            $model->fill($data);
+            $model->put($data[static::$key], $model);
+
+            return $model;
         }
 
         return null;
+    }
+
+    /**
+     *
+     */
+    public static function clearCollection()
+    {
+        static::$collection = new \ArrayObject();
     }
 
     /**
@@ -95,48 +109,52 @@ abstract class Model
         return (new static())->search($value);
     }
 
-    /**
-     * @param        $value
-     * @param string $column
-     * @return $this|null
-     */
-    protected function search($value, $column = 'name')
-    {
-        $query = $this->db->prepare('SELECT * FROM ' . $this->table . ' WHERE ' . $column . ' = %s', $value);
-
-        if ($data = $this->db->get_row($query, ARRAY_A)) {
-            $this->fill($data);
-            $this->put($data[$this->key], $this);
-            return $this;
-        }
-
-        return null;
-    }
-
     public static function boot()
     {
+        global $wpdb;
+
         self::$collection = new \ArrayObject();
+        self::$db = $wpdb;
     }
 
     public function save()
     {
-        if (!array_key_exists($this->key, $this->data)) {
+        if ($this->new) {
             $this->add();
+            $this->new = false;
         } else {
             $this->update();
         }
 
-        if (array_key_exists($this->key, $this->data)) {
-            $this->put($this->data[$this->key], $this);
+        if (array_key_exists(static::$key, $this->data)) {
+            $this->put($this->data[static::$key], $this);
         }
     }
 
+    /**
+     * @return mixed
+     */
     abstract protected function add();
 
+    /**
+     * @return mixed
+     */
     abstract protected function update();
 
+    /**
+     * @return mixed
+     */
     public function getID()
     {
-        return $this->data[$this->key];
+        return $this->data[static::$key];
+    }
+
+    /**
+     * @param $id
+     * @return $this|null
+     */
+    protected function load($id)
+    {
+        return $this->search($id, static::$key);
     }
 }

@@ -12,24 +12,7 @@ License: GPL2
 define('WEB_SCHEMA_VERSION', '1.0.0');
 
 require 'config.php';
-
-spl_autoload_register(function ($class) {
-    $class = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-
-    if (!file_exists($class)) {
-        return;
-    }
-
-    include "$class";
-});
+require 'autoload.php';
 
 \WebSchema\Providers\Property::boot();
 \WebSchema\Utils\Installer::boot();
-
-//require_once(WEB_SCHEMA_DIR . '/classes/schema.class.php');
-//require_once(WEB_SCHEMA_DIR . '/classes/schematype.class.php');
-//require_once(WEB_SCHEMA_DIR . '/classes/schemaproperty.class.php');
-
-//Schema::getInstance();
-//SchemaProperty::getInstance();
-//SchemaType::getInstance();

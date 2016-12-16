@@ -11,7 +11,7 @@ namespace WebSchema\Utils;
 
 class Installer
 {
-    private $directory = WEB_SCHEMA_DIR . '/migration';
+    private $directory = WEB_SCHEMA_DIR . '/resources/migration';
     private $db;
 
     /**
@@ -33,6 +33,7 @@ class Installer
 
     /**
      * @throws \RuntimeException
+     * @return bool
      */
     public function runOnce()
     {
@@ -46,11 +47,11 @@ class Installer
             }
         }
 
-        $this->insertData();
+        return true;
     }
 
     private function insertData()
     {
-        $data = json_decode(file_get_contents($this->directory . '/schema.json'), true);
+        //$data = json_decode(file_get_contents($this->directory . '/schema.json'), true);
     }
 }

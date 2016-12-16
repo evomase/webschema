@@ -13,4 +13,4 @@ define('WEB_SCHEMA_DIR', dirname(__FILE__));
 //db settings
 define('WEB_SCHEMA_TABLE_TYPES', $wpdb->prefix . 'web_schema_types');
 define('WEB_SCHEMA_TABLE_PROPERTIES', $wpdb->prefix . 'web_schema_properties');
-define('WEB_SCHEMA_TABLE_SCHEMA', $wpdb->prefix . 'web_schema');
+define('WEB_SCHEMA_TABLE_TYPE_PROPERTIES', $wpdb->prefix . 'web_schema_type_properties');

@@ -18,19 +18,25 @@ class Type
         $count = count($types);
 
         while ($count != 0) {
-            $current = each($types)['value'];
+            if (!$current = each($types)) {
+                reset($types);
+                $current = each($types);
+            }
+
             $data = $current['value'];
-            $data['parent_id'] = 0;
+            $id = $current['key'];
 
             if ($parent = $data['parent']) {
-                if ($parent != TypeModel::find($parent) && !empty($types[$parent])) {
+                if ((!$parent = TypeModel::get($parent)) && !empty($types[$data['parent']])) {
                     continue;
                 }
 
-                $data['parent_id'] = $parent->getID();
+                if ($parent) {
+                    $data['parent'] = $parent->getID();
+                }
             }
 
-            if (!$type = TypeModel::find($data['name'])) {
+            if (!$type = TypeModel::get($id)) {
                 $type = new TypeModel($data);
             } else {
                 $type->fill($data);
@@ -38,9 +44,11 @@ class Type
 
             $type->save();
 
-            unset($types[$current['key']]);
+            unset($types[$id]);
             $count = count($types);
         }
+
+        return $count;
     }
 
     public static function boot()
