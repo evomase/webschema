@@ -46,7 +46,7 @@ abstract class Model
 
     /**
      * @param $id
-     * @return mixed
+     * @return static
      */
     public static function get($id)
     {
@@ -54,37 +54,35 @@ abstract class Model
             static::$collection->offsetGet($id);
         }
 
-        return static::search($id, static::$key);
-    }
-
-    /**
-     * @param        $value
-     * @param string $column
-     * @return $this|null
-     */
-    public static function search($value, $column = 'name')
-    {
-        $query = static::$db->prepare('SELECT * FROM ' . static::$table . ' WHERE ' . $column . ' = %s', $value);
-
-        if ($data = static::$db->get_row($query, ARRAY_A)) {
-            $model = new static($data);
-            $model->new = false;
-
-            $model->fill($data);
-            $model->put($data[static::$key], $model);
-
-            return $model;
+        if ($data = static::search($id, static::$key)) {
+            return current($data);
         }
 
         return null;
     }
 
     /**
-     *
+     * @param        $value
+     * @param string $column
+     * @return array
      */
-    public static function clearCollection()
+    public static function search($value, $column = 'name')
     {
-        static::$collection = new \ArrayObject();
+        $data = [];
+        $query = static::$db->prepare('SELECT * FROM ' . static::$table . ' WHERE ' . $column . ' = %s', $value);
+        $results = static::$db->get_results($query, ARRAY_A);
+
+        foreach ($results as $row) {
+            $model = new static($row);
+            $model->new = false;
+
+            $model->fill($data);
+            $model->put($data[static::$key], $model);
+
+            $data[] = $model;
+        }
+
+        return $data;
     }
 
     /**
@@ -98,6 +96,14 @@ abstract class Model
         }
 
         static::$collection[$id] = $model;
+    }
+
+    /**
+     *
+     */
+    public static function clearCollection()
+    {
+        static::$collection = new \ArrayObject();
     }
 
     /**
@@ -120,7 +126,7 @@ abstract class Model
     public function save()
     {
         if ($this->new) {
-            $this->add();
+            $this->insert();
             $this->new = false;
         } else {
             $this->update();
@@ -134,7 +140,7 @@ abstract class Model
     /**
      * @return mixed
      */
-    abstract protected function add();
+    abstract protected function insert();
 
     /**
      * @return mixed

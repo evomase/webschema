@@ -15,4 +15,6 @@ require 'config.php';
 require 'autoload.php';
 
 \WebSchema\Providers\Property::boot();
+\WebSchema\Providers\Type::boot();
+\WebSchema\Providers\TypeProperty::boot();
 \WebSchema\Utils\Installer::boot();

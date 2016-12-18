@@ -8,44 +8,45 @@
 
 namespace WebSchema\Providers;
 
-use WebSchema\Model\Type as TypeModel;
+use WebSchema\Model\Type as Model;
 
 
 class Type
 {
-    public static function createOrUpdate(array $types)
+    public static function createOrUpdate(array $data)
     {
-        $count = count($types);
+        //TODO: refactor this code >_<
+        $count = count($data);
 
         while ($count != 0) {
-            if (!$current = each($types)) {
-                reset($types);
-                $current = each($types);
+            if (!$current = each($data)) {
+                reset($data);
+                $current = each($data);
             }
 
-            $data = $current['value'];
+            $row = $current['value'];
             $id = $current['key'];
 
-            if ($parent = $data['parent']) {
-                if ((!$parent = TypeModel::get($parent)) && !empty($types[$data['parent']])) {
+            if ($parent = $row[Model::FIELD_PARENT]) {
+                if ((!$parent = Model::get($parent)) && !empty($types[$row[Model::FIELD_PARENT]])) {
                     continue;
                 }
 
                 if ($parent) {
-                    $data['parent'] = $parent->getID();
+                    $row[Model::FIELD_PARENT] = $parent->getID();
                 }
             }
 
-            if (!$type = TypeModel::get($id)) {
-                $type = new TypeModel($data);
+            if (!$type = Model::get($id)) {
+                $type = new Model($row);
             } else {
-                $type->fill($data);
+                $type->fill($row);
             }
 
             $type->save();
 
-            unset($types[$id]);
-            $count = count($types);
+            unset($data[$id]);
+            $count = count($data);
         }
 
         return $count;
@@ -53,6 +54,6 @@ class Type
 
     public static function boot()
     {
-        TypeModel::boot();
+        Model::boot();
     }
 }

@@ -8,17 +8,17 @@
 
 namespace WebSchema\Providers;
 
-use WebSchema\Model\Property as PropertyModel;
+use WebSchema\Model\Property as Model;
 
 class Property
 {
-    public static function createOrUpdate(array $properties)
+    public static function createOrUpdate(array $data)
     {
-        foreach ($properties as $data) {
-            if (!$property = PropertyModel::find($data['name'])) {
-                $property = new PropertyModel($data);
+        foreach ($data as $row) {
+            if (!$property = Model::get($row[Model::FIELD_ID])) {
+                $property = new Model($row);
             } else {
-                $property->fill($data);
+                $property->fill($row);
             }
 
             $property->save();
@@ -27,6 +27,6 @@ class Property
 
     public static function boot()
     {
-        PropertyModel::boot();
+        Model::boot();
     }
 }

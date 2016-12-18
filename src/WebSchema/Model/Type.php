@@ -27,10 +27,24 @@ class Type extends Model
         self::FIELD_ID      => null
     ];
 
+    private $properties;
+
+    /**
+     * @return array
+     */
+    public function getProperties()
+    {
+        if (empty($this->properties)) {
+            $this->properties = TypeProperty::search($this->data[self::FIELD_ID], TypeProperty::FIELD_TYPE_ID);
+        }
+
+        return $this->properties;
+    }
+
     /**
      * @return false|int
      */
-    protected function add()
+    protected function insert()
     {
         $query = 'INSERT INTO ' . self::$table . ' ( id, comment, label, url, parent ) VALUES ( %s, %s, %s, %s, %s )';
         $query = self::$db->prepare($query, $this->data[self::FIELD_ID], $this->data[self::FIELD_COMMENT],

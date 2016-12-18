@@ -50,7 +50,7 @@ class Installer
         return true;
     }
 
-    private function insertData()
+    private function import()
     {
         //$data = json_decode(file_get_contents($this->directory . '/schema.json'), true);
     }

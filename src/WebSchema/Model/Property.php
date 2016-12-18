@@ -28,7 +28,7 @@ class Property extends Model
     /**
      * @return false|int
      */
-    protected function add()
+    protected function insert()
     {
         $query = 'INSERT INTO ' . self::$table . ' ( id, comment, label, ranges ) VALUES ( %s, %s, %s, %s )';
         $query = self::$db->prepare($query, $this->data[self::FIELD_ID], $this->data[self::FIELD_COMMENT],
