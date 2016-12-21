@@ -7,26 +7,26 @@
  * Time: 16:51
  */
 
-namespace tests\WebSchema\Providers;
+namespace tests\WebSchema\Factory;
 
 use tests\WebSchema\AbstractTestCase;
 use WebSchema\Model\Property;
 use WebSchema\Model\Type;
 use WebSchema\Model\TypeProperty as Model;
-use WebSchema\Providers\Property as PropertyProvider;
-use WebSchema\Providers\Type as TypeProvider;
-use WebSchema\Providers\TypeProperty;
+use WebSchema\Factory\PropertyFactory;
+use WebSchema\Factory\TypeFactory;
+use WebSchema\Factory\TypePropertyFactory;
 use WebSchema\Utils\Installer;
 
-class TypePropertyTest extends AbstractTestCase
+class TypePropertyFactoryTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
         (new Installer())->runOnce();
 
-        Type::boot();
-        Property::boot();
-        TypeProperty::boot();
+        TypeFactory::boot();
+        PropertyFactory::boot();
+        TypePropertyFactory::boot();
     }
 
     public function testCreateOrDelete()
@@ -61,10 +61,10 @@ class TypePropertyTest extends AbstractTestCase
                 ]
         ];
 
-        PropertyProvider::createOrUpdate($properties);
-        TypeProvider::createOrUpdate($types);
+        PropertyFactory::createOrUpdate($properties);
+        TypeFactory::createOrUpdate($types);
 
-        TypeProperty::createOrUpdate($types);
+        TypePropertyFactory::createOrUpdate($types);
 
         Model::clearCollection();
 

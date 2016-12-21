@@ -6,17 +6,17 @@
  * Time: 17:01
  */
 
-namespace WebSchema\Providers;
+namespace WebSchema\Factory;
 
-use WebSchema\Model\Property as Model;
+use WebSchema\Model\Property;
 
-class Property
+class PropertyFactory
 {
     public static function createOrUpdate(array $data)
     {
         foreach ($data as $row) {
-            if (!$property = Model::get($row[Model::FIELD_ID])) {
-                $property = new Model($row);
+            if (!$property = Property::get($row[Property::FIELD_ID])) {
+                $property = new Property($row);
             } else {
                 $property->fill($row);
             }
@@ -27,6 +27,6 @@ class Property
 
     public static function boot()
     {
-        Model::boot();
+        Property::boot();
     }
 }

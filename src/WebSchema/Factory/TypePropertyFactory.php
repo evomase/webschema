@@ -6,14 +6,14 @@
  * Time: 17:01
  */
 
-namespace WebSchema\Providers;
+namespace WebSchema\Factory;
 
 use WebSchema\Model\Property;
-use WebSchema\Model\TypeProperty as Model;
 use WebSchema\Model\Type;
+use WebSchema\Model\TypeProperty;
 
 
-class TypeProperty
+class TypePropertyFactory
 {
     public static function createOrUpdate(array $data)
     {
@@ -21,13 +21,12 @@ class TypeProperty
             $properties = $type['properties'];
             $id = $type[Type::FIELD_ID];
 
-            foreach($properties as $property)
-            {
+            foreach ($properties as $property) {
                 $property = Property::get($property);
 
-                $model = new Model([
-                    Model::FIELD_TYPE_ID => $id,
-                    Model::FIELD_PROPERTY_ID => $property->getID()
+                $model = new TypeProperty([
+                    TypeProperty::FIELD_TYPE_ID     => $id,
+                    TypeProperty::FIELD_PROPERTY_ID => $property->getID()
                 ]);
 
                 $model->save();
@@ -37,6 +36,6 @@ class TypeProperty
 
     public static function boot()
     {
-        Model::boot();
+        TypeProperty::boot();
     }
 }

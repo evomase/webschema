@@ -6,12 +6,12 @@
  * Time: 17:01
  */
 
-namespace WebSchema\Providers;
+namespace WebSchema\Factory;
 
-use WebSchema\Model\Type as Model;
+use WebSchema\Model\Type;
 
 
-class Type
+class TypeFactory
 {
     public static function createOrUpdate(array $data)
     {
@@ -27,18 +27,18 @@ class Type
             $row = $current['value'];
             $id = $current['key'];
 
-            if ($parent = $row[Model::FIELD_PARENT]) {
-                if ((!$parent = Model::get($parent)) && !empty($types[$row[Model::FIELD_PARENT]])) {
+            if ($parent = $row[Type::FIELD_PARENT]) {
+                if ((!$parent = Type::get($parent)) && !empty($types[$row[Type::FIELD_PARENT]])) {
                     continue;
                 }
 
                 if ($parent) {
-                    $row[Model::FIELD_PARENT] = $parent->getID();
+                    $row[Type::FIELD_PARENT] = $parent->getID();
                 }
             }
 
-            if (!$type = Model::get($id)) {
-                $type = new Model($row);
+            if (!$type = Type::get($id)) {
+                $type = new Type($row);
             } else {
                 $type->fill($row);
             }
@@ -54,6 +54,6 @@ class Type
 
     public static function boot()
     {
-        Model::boot();
+        Type::boot();
     }
 }

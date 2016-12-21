@@ -6,10 +6,10 @@
  * Time: 16:46
  */
 
-namespace WebSchema\Providers;
+namespace WebSchema\Factory;
 
 
-class Schema
+class SchemaFactory
 {
     private static $instance;
 

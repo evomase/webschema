@@ -76,8 +76,8 @@ abstract class Model
             $model = new static($row);
             $model->new = false;
 
-            $model->fill($data);
-            $model->put($data[static::$key], $model);
+            $model->fill($row);
+            $model->put($row[static::$key], $model);
 
             $data[] = $model;
         }
@@ -119,8 +119,8 @@ abstract class Model
     {
         global $wpdb;
 
-        self::$collection = new \ArrayObject();
-        self::$db = $wpdb;
+        static::$collection = new \ArrayObject();
+        static::$db = $wpdb;
     }
 
     public function save()
