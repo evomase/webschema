@@ -20,7 +20,7 @@ class SchemaController
     public static function boot()
     {
         if (empty(self::$instance)) {
-            new self();
+            self::$instance = new self();
         }
     }
 
