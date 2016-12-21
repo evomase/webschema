@@ -157,10 +157,10 @@ abstract class Model
 
     /**
      * @param $id
-     * @return $this|null
+     * @return Model|null
      */
     protected function load($id)
     {
-        return $this->search($id, static::$key);
+        return current($this->search($id, static::$key));
     }
 }
