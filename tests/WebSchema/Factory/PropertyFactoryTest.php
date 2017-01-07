@@ -18,7 +18,7 @@ class PropertyFactoryTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->runOnce();
+        (new Installer())->runOnce(false);
         PropertyFactory::boot();
     }
 

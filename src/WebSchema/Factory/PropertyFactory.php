@@ -12,6 +12,9 @@ use WebSchema\Model\Property;
 
 class PropertyFactory
 {
+    /**
+     * @param array $data
+     */
     public static function createOrUpdate(array $data)
     {
         foreach ($data as $row) {
@@ -23,6 +26,21 @@ class PropertyFactory
 
             $property->save();
         }
+    }
+
+    /**
+     * @return Property[]
+     */
+    public static function getAll()
+    {
+        $models = Property::getAll();
+        $data = [];
+
+        foreach ($models as $id => $model) {
+            $data[$id] = $model->toArray();
+        }
+
+        return $data;
     }
 
     public static function boot()

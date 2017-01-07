@@ -13,9 +13,14 @@ use WebSchema\Model\Type;
 
 class TypeFactory
 {
+    /**
+     * @param array $data
+     * @return int
+     */
     public static function createOrUpdate(array $data)
     {
         //TODO: refactor this code >_<
+        $data = self::setParents($data);
         $count = count($data);
 
         while ($count != 0) {
@@ -50,6 +55,38 @@ class TypeFactory
         }
 
         return $count;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    private static function setParents(array $data)
+    {
+        foreach ($data as $id => $type) {
+            if (empty($type['ancestors'])) {
+                $data[$id]['parent'] = null;
+            } else {
+                $data[$id]['parent'] = end($type['ancestors']);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @return Type[]
+     */
+    public static function getAll()
+    {
+        $models = Type::getAll();
+        $data = [];
+
+        foreach ($models as $id => $model) {
+            $data[$id] = $model->toArray();
+        }
+
+        return $data;
     }
 
     public static function boot()

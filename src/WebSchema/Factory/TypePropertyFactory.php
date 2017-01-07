@@ -15,6 +15,9 @@ use WebSchema\Model\TypeProperty;
 
 class TypePropertyFactory
 {
+    /**
+     * @param array $data
+     */
     public static function createOrUpdate(array $data)
     {
         foreach ($data as $type) {

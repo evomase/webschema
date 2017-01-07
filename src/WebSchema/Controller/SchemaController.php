@@ -8,6 +8,9 @@
 
 namespace WebSchema\Controller;
 
+use WebSchema\Factory\PropertyFactory;
+use WebSchema\Factory\TypeFactory;
+
 class SchemaController
 {
     private static $instance;
@@ -26,6 +29,8 @@ class SchemaController
 
     public function getAll()
     {
-
+        header('Content-Type: application/json');
+        echo json_encode(['types' => TypeFactory::getAll(), 'properties' => PropertyFactory::getAll()]);
+        exit;
     }
 }

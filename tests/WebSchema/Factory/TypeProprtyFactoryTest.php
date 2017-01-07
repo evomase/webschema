@@ -22,7 +22,7 @@ class TypePropertyFactoryTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->runOnce();
+        (new Installer())->runOnce(false);
 
         TypeFactory::boot();
         PropertyFactory::boot();

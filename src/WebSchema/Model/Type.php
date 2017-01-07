@@ -27,15 +27,40 @@ class Type extends Model
         self::FIELD_ID      => null
     ];
 
+    /**
+     * @var Property[]
+     */
     private $properties;
 
     /**
      * @return array
      */
+    public function toArray()
+    {
+        $data = parent::toArray();
+
+        foreach ($this->getProperties() as $id => $property) {
+            $data['properties'][] = $property->getID();
+        }
+
+        return $data;
+    }
+
+    /**
+     * @return Property[]
+     */
     public function getProperties()
     {
         if (empty($this->properties)) {
-            $this->properties = TypeProperty::search($this->data[self::FIELD_ID], TypeProperty::FIELD_TYPE_ID);
+            /**
+             * @var TypeProperty[] $properties
+             */
+            $properties = TypeProperty::search($this->data[self::FIELD_ID], TypeProperty::FIELD_TYPE_ID);
+
+            foreach($properties as $id => $property) {
+                $property = $property->getProperty();
+                $this->properties[$id] = Property::get($property);
+            }
         }
 
         return $this->properties;

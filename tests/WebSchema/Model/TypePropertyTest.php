@@ -19,7 +19,7 @@ class TypePropertyTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->runOnce();
+        (new Installer())->runOnce(false);
 
         TypeProperty::boot();
     }

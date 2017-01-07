@@ -44,4 +44,12 @@ class TypeProperty extends Model
 
         return self::$db->query($query);
     }
+
+    /**
+     * @return string
+     */
+    public function getProperty()
+    {
+        return $this->data[self::FIELD_PROPERTY_ID];
+    }
 }

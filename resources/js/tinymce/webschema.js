@@ -1,9 +1,7 @@
-/**
- * Created by David on 21/12/2016.
- */
 (function () {
     var Schema = function () {
         var data = [];
+        var dataURL = window.ajaxurl + '?action=schema_get_all';
 
         this.init = function () {
             var self = this;
@@ -21,11 +19,15 @@
         };
 
         this.open = function (ed) {
-            var selection = getSelection(ed);
+            var node = ed.selection.getNode();
+        };
+
+        var getElementSchema = function () {
+
         };
 
         var getData = function () {
-            if (!data) {
+            if (!data.length) {
                 load();
             }
 
@@ -34,24 +36,13 @@
 
         var load = function () {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', '');
+            xhr.open('GET', dataURL, false);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                    
+                    data = xhr.responseText;
                 }
             };
             xhr.send();
-        };
-
-        var getSelection = function (ed) {
-            var node = ed.selection.getNode();
-            var content = ed.selection.getContent();
-
-            if (node.innerText != content) {
-                return '<span>' + content + '</span>';
-            }
-
-            return node;
         };
     };
 

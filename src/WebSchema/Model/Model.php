@@ -64,7 +64,7 @@ abstract class Model
     /**
      * @param        $value
      * @param string $column
-     * @return array
+     * @return Model[]
      */
     public static function search($value, $column = 'name')
     {
@@ -79,7 +79,7 @@ abstract class Model
             $model->fill($row);
             $model->put($row[static::$key], $model);
 
-            $data[] = $model;
+            $data[$row[static::$key]] = $model;
         }
 
         return $data;
@@ -96,6 +96,27 @@ abstract class Model
         }
 
         static::$collection[$id] = $model;
+    }
+
+    /**
+     * @return Model[]
+     */
+    public static function getAll()
+    {
+        $data = [];
+        $results = static::$db->get_results('SELECT * FROM ' . static::$table, ARRAY_A);
+
+        foreach ($results as $row) {
+            $model = new static($row);
+            $model->new = false;
+
+            $model->fill($row);
+            $model->put($row[static::$key], $model);
+
+            $data[$row[static::$key]] = $model;
+        }
+
+        return $data;
     }
 
     /**
@@ -153,6 +174,20 @@ abstract class Model
     public function getID()
     {
         return $this->data[static::$key];
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $data = [];
+
+        foreach ($this->data as $id => $value) {
+            $data[$id] = $value;
+        }
+
+        return $data;
     }
 
     /**

@@ -9,9 +9,17 @@
 namespace WebSchema\Utils;
 
 
+use WebSchema\Factory\PropertyFactory;
+use WebSchema\Factory\TypeFactory;
+use WebSchema\Factory\TypePropertyFactory;
+
 class Installer
 {
     private $directory = WEB_SCHEMA_DIR . '/resources/migration';
+
+    /**
+     * @var \wpdb
+     */
     private $db;
 
     /**
@@ -32,26 +40,34 @@ class Installer
     }
 
     /**
+     * @param  bool $import
      * @throws \RuntimeException
      * @return bool
      */
-    public function runOnce()
+    public function runOnce($import = true)
     {
         $dbSchemas = include $this->directory . '/install.php';
 
         foreach ($dbSchemas as $name => $schema) {
             if (!$this->db->query($schema)) {
-                continue;
-
                 throw new \RuntimeException('Web Schema: Database table ' . $name . ' could not be created.');
             }
         }
 
-        return true;
+        return ($import || $import === '') ? $this->import() : true;
     }
 
+    /**
+     * Import the data
+     */
     private function import()
     {
-        //$data = json_decode(file_get_contents($this->directory . '/schema.json'), true);
+        $data = json_decode(file_get_contents($this->directory . '/schema.json'), true);
+
+        PropertyFactory::createOrUpdate($data['properties']);
+        TypeFactory::createOrUpdate($data['types']);
+        TypePropertyFactory::createOrUpdate($data['types']);
+
+        return true;
     }
 }

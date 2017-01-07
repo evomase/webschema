@@ -17,19 +17,17 @@ class TypeTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->runOnce();
+        (new Installer())->runOnce(false);
 
         Type::boot();
     }
 
     public function testSave()
     {
-        $rand = rand(0, 10);
-
         $model = new Type([
-            Type::FIELD_ID      => 'id_' . $rand,
+            Type::FIELD_ID      => 'id_1',
             Type::FIELD_COMMENT => 'random',
-            Type::FIELD_LABEL   => 'ID - ' . $rand,
+            Type::FIELD_LABEL   => 'ID - 1',
             Type::FIELD_PARENT  => '',
             Type::FIELD_URL     => 'http://www.hotmail.com'
         ]);
@@ -52,5 +50,22 @@ class TypeTest extends AbstractTestCase
         Type::clearCollection();
 
         $this->assertInstanceOf('WebSchema\Model\Type', Type::get($model->getID()));
+    }
+
+    public function testGetAll()
+    {
+        $model = new Type([
+            Type::FIELD_ID      => 'id_2',
+            Type::FIELD_COMMENT => 'random',
+            Type::FIELD_LABEL   => 'ID - 2',
+            Type::FIELD_PARENT  => '',
+            Type::FIELD_URL     => 'http://www.hotmail.com'
+        ]);
+
+        $model->save();
+        $model = $model->toArray();
+
+        $this->assertInternalType('array', $model);
+        $this->assertArrayHasKey(Type::FIELD_URL, $model);
     }
 }

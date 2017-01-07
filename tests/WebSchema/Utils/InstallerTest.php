@@ -10,12 +10,26 @@
 namespace tests\WebSchema\Utils;
 
 use tests\WebSchema\AbstractTestCase;
+use WebSchema\Model\Property;
+use WebSchema\Model\Type;
+use WebSchema\Model\TypeProperty;
 use WebSchema\Utils\Installer;
 
 class InstallerTest extends AbstractTestCase
 {
     public function testRunOnce()
     {
+        $installer = new Installer();
+
+        $this->assertTrue($installer->runOnce(false));
+    }
+
+    public function testImport()
+    {
+        Property::boot();
+        Type::boot();
+        TypeProperty::boot();
+
         $installer = new Installer();
 
         $this->assertTrue($installer->runOnce());
