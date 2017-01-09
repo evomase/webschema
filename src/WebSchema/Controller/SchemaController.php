@@ -18,6 +18,8 @@ class SchemaController
     private function __construct()
     {
         add_action('wp_ajax_schema_get_all', array($this, 'getAll'));
+        add_action('wp_ajax_schema_get_template', array($this, 'getTemplate'));
+
     }
 
     public static function boot()
@@ -31,6 +33,13 @@ class SchemaController
     {
         header('Content-Type: application/json');
         echo json_encode(['types' => TypeFactory::getAll(), 'properties' => PropertyFactory::getAll()]);
+        exit;
+    }
+
+    public function getTemplate()
+    {
+        header('Content-Type: text/html');
+        include WEB_SCHEMA_DIR . '/resources/templates/dialog.tpl.php';
         exit;
     }
 }

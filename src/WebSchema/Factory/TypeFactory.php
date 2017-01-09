@@ -82,6 +82,8 @@ class TypeFactory
         $models = Type::getAll();
         $data = [];
 
+        ksort($models);
+
         foreach ($models as $id => $model) {
             $data[$id] = $model->toArray();
         }
