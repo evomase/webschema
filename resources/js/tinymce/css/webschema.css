@@ -40,6 +40,11 @@
     clear: both;
 }
 
-.web-schema .hide {
-    display: none;
+/*.web-schema .hide {*/
+    /*display: none;*/
+/*}*/
+
+.web-schema select {
+    width: 250px;
+    height: auto;
 }

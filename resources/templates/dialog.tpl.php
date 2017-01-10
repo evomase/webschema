@@ -16,7 +16,7 @@
         <h3><span>Metas</span> <span>[add]</span><span class="clear"></span></h3>
         <div class="clear"></div>
 
-        <fieldset class="hide">
+        <fieldset class="hide dummy-property">
             <label>Property</label>
 
             <select class="property" title="Property">
