@@ -18,7 +18,7 @@ class PropertyFactoryTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->runOnce(false);
+        (new Installer())->disableImport()->runOnce();
         PropertyFactory::boot();
     }
 
@@ -30,13 +30,13 @@ class PropertyFactoryTest extends AbstractTestCase
                     Property::FIELD_ID      => 'id_3',
                     Property::FIELD_COMMENT => '',
                     Property::FIELD_LABEL   => 'id 3',
-                    Property::FIELD_RANGES  => ''
+                    Property::FIELD_RANGES  => ['Thing']
                 ],
 
             'id_0' =>
                 [
                     Property::FIELD_ID      => 'id_0',
-                    Property::FIELD_RANGES  => '',
+                    Property::FIELD_RANGES  => ['Thing'],
                     Property::FIELD_COMMENT => '',
                     Property::FIELD_LABEL   => 'id 0'
                 ]

@@ -15,63 +15,18 @@ class TypeFactory
 {
     /**
      * @param array $data
-     * @return int
      */
     public static function createOrUpdate(array $data)
     {
-        //TODO: refactor this code >_<
-        $data = self::setParents($data);
-        $count = count($data);
-
-        while ($count != 0) {
-            if (!$current = each($data)) {
-                reset($data);
-                $current = each($data);
-            }
-
-            $row = $current['value'];
-            $id = $current['key'];
-
-            if ($parent = $row[Type::FIELD_PARENT]) {
-                if ((!$parent = Type::get($parent)) && !empty($types[$row[Type::FIELD_PARENT]])) {
-                    continue;
-                }
-
-                if ($parent) {
-                    $row[Type::FIELD_PARENT] = $parent->getID();
-                }
-            }
-
-            if (!$type = Type::get($id)) {
-                $type = new Type($row);
+        foreach ($data as $row) {
+            if (!$model = Type::get($row[Type::FIELD_ID])) {
+                $model = new Type($row);
             } else {
-                $type->fill($row);
+                $model->fill($row);
             }
 
-            $type->save();
-
-            unset($data[$id]);
-            $count = count($data);
+            $model->save();
         }
-
-        return $count;
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    private static function setParents(array $data)
-    {
-        foreach ($data as $id => $type) {
-            if (empty($type['ancestors'])) {
-                $data[$id]['parent'] = null;
-            } else {
-                $data[$id]['parent'] = end($type['ancestors']);
-            }
-        }
-
-        return $data;
     }
 
     /**
@@ -89,6 +44,49 @@ class TypeFactory
         }
 
         return $data;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public static function createTree(array $data)
+    {
+        $tree = [];
+
+        foreach ($data as $id => $type) {
+            $ancestors = array_merge($type[Type::FIELD_ANCESTORS], [$type[Type::FIELD_ID]]);
+            print_r(implode(',', $ancestors) . PHP_EOL);
+
+            $tree = self::buildTree($data, $ancestors, $tree);
+        }
+
+        return $tree;
+    }
+
+    /**
+     * @param array $data
+     * @param array $ancestors
+     * @param array $tree
+     * @return array
+     */
+    public static function buildTree(array $data, array $ancestors, array $tree = [])
+    {
+        foreach ($ancestors as $index => $ancestor) {
+            if (empty($tree[$ancestor])) {
+                $tree[$ancestor] = $data[$ancestor];
+                $tree[$ancestor]['children'] = [];
+            }
+
+            unset($ancestors[$index]);
+            $children = self::buildTree($data, $ancestors);
+
+            $tree[$ancestor]['children'] = array_replace_recursive($tree[$ancestor]['children'], $children);
+
+            break;
+        }
+
+        return $tree;
     }
 
     public static function boot()

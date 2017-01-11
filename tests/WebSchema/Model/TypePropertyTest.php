@@ -19,30 +19,28 @@ class TypePropertyTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->runOnce(false);
+        (new Installer())->disableImport()->runOnce();
 
         TypeProperty::boot();
     }
 
     public function testSave()
     {
-        $rand = rand(0, 10);
-
         $type = new Type([
-            Type::FIELD_ID      => 'id_' . $rand,
-            Type::FIELD_COMMENT => 'random',
-            Type::FIELD_LABEL   => 'ID - ' . $rand,
-            Type::FIELD_PARENT  => '',
-            Type::FIELD_URL     => 'http://www.hotmail.com'
+            Type::FIELD_ID        => 'id_0',
+            Type::FIELD_COMMENT   => 'random',
+            Type::FIELD_LABEL     => 'ID - 0',
+            Type::FIELD_ANCESTORS => ['Thing'],
+            Type::FIELD_URL       => 'http://www.hotmail.com'
         ]);
 
         $type->save();
 
         $property = new Property([
-            Property::FIELD_ID      => 'id_' . $rand,
+            Property::FIELD_ID      => 'id_0',
             Property::FIELD_COMMENT => 'random',
-            Property::FIELD_LABEL   => 'ID - ' . $rand,
-            Property::FIELD_RANGES  => ''
+            Property::FIELD_LABEL   => 'ID - 0',
+            Property::FIELD_RANGES  => ['Thing']
         ]);
 
         $property->save();

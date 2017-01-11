@@ -18,7 +18,7 @@ class TypeFactoryTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->runOnce(false);
+        (new Installer())->disableImport()->runOnce();
         TypeFactory::boot();
     }
 
@@ -27,11 +27,11 @@ class TypeFactoryTest extends AbstractTestCase
         $data = [
             'id_3' =>
                 [
-                    Type::FIELD_ID      => 'id_3',
-                    Type::FIELD_URL     => 'http://www.hotmail.com',
-                    'ancestors'         => ['id_2'],
-                    Type::FIELD_COMMENT => '',
-                    Type::FIELD_LABEL   => 'id 3'
+                    Type::FIELD_ID        => 'id_3',
+                    Type::FIELD_URL       => 'http://www.hotmail.com',
+                    Type::FIELD_ANCESTORS => ['id_2'],
+                    Type::FIELD_COMMENT   => '',
+                    Type::FIELD_LABEL     => 'id 3'
                 ],
 
             'id_0' =>
@@ -44,20 +44,20 @@ class TypeFactoryTest extends AbstractTestCase
 
             'id_1' =>
                 [
-                    Type::FIELD_ID      => 'id_1',
-                    Type::FIELD_URL     => 'http://www.hotmail.com',
-                    'ancestors'         => ['id_0'],
-                    Type::FIELD_COMMENT => '',
-                    Type::FIELD_LABEL   => 'id 1'
+                    Type::FIELD_ID        => 'id_1',
+                    Type::FIELD_URL       => 'http://www.hotmail.com',
+                    Type::FIELD_ANCESTORS => ['id_0'],
+                    Type::FIELD_COMMENT   => '',
+                    Type::FIELD_LABEL     => 'id 1'
                 ],
 
             'id_2' =>
                 [
-                    Type::FIELD_ID      => 'id_2',
-                    Type::FIELD_URL     => 'http://www.hotmail.com',
-                    'ancestors'         => ['id_1'],
-                    Type::FIELD_COMMENT => '',
-                    Type::FIELD_LABEL   => 'id 2'
+                    Type::FIELD_ID        => 'id_2',
+                    Type::FIELD_URL       => 'http://www.hotmail.com',
+                    Type::FIELD_ANCESTORS => ['id_1'],
+                    Type::FIELD_COMMENT   => '',
+                    Type::FIELD_LABEL     => 'id 2'
                 ]
         ];
 
@@ -78,5 +78,33 @@ class TypeFactoryTest extends AbstractTestCase
         $this->assertCount(4, $data);
         $this->assertInternalType('array', current($data));
         $this->assertArrayHasKey(Type::FIELD_URL, current($data));
+    }
+
+    public function testCreateTree()
+    {
+//        $ancestors = [
+//            ['Thing', 'Factory', 'Place'],
+//            ['Thing', 'Hospital', 'Country'],
+//            ['Thing', 'Factory', 'Schatzi']
+//        ];
+//
+//        $tree = [];
+//
+//        foreach($ancestors as $map){
+//            $tree = TypeFactory::buildTree([], $map, $tree);
+//        }
+//
+//        print_r($tree);
+
+        $tree = TypeFactory::createTree([
+            'Thing'    => ['id' => 'Thing', Type::FIELD_ANCESTORS => []],
+            'Country'  => ['id' => 'Country', Type::FIELD_ANCESTORS => ['Thing', 'Hospital']],
+            'Factory'  => ['id' => 'Factory', Type::FIELD_ANCESTORS => ['Thing']],
+            'Place'    => ['id' => 'Place', Type::FIELD_ANCESTORS => ['Thing', 'Factory']],
+            'Hospital' => ['id' => 'Hospital', Type::FIELD_ANCESTORS => ['Thing']],
+            'Schatzi'  => ['id' => 'Schatzi', Type::FIELD_ANCESTORS => ['Thing', 'Factory']]
+        ]);
+
+        print_r($tree);
     }
 }

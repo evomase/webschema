@@ -10,19 +10,19 @@
 namespace tests\WebSchema\Factory;
 
 use tests\WebSchema\AbstractTestCase;
-use WebSchema\Model\Property;
-use WebSchema\Model\Type;
-use WebSchema\Model\TypeProperty as Model;
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;
 use WebSchema\Factory\TypePropertyFactory;
+use WebSchema\Model\Property;
+use WebSchema\Model\Type;
+use WebSchema\Model\TypeProperty as Model;
 use WebSchema\Utils\Installer;
 
 class TypePropertyFactoryTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->runOnce(false);
+        (new Installer())->disableImport()->runOnce();
 
         TypeFactory::boot();
         PropertyFactory::boot();
@@ -37,13 +37,13 @@ class TypePropertyFactoryTest extends AbstractTestCase
                     Property::FIELD_ID      => 'pid_3',
                     Property::FIELD_COMMENT => '',
                     Property::FIELD_LABEL   => 'id 3',
-                    Property::FIELD_RANGES  => ''
+                    Property::FIELD_RANGES  => []
                 ],
 
             'pid_0' =>
                 [
                     Property::FIELD_ID      => 'pid_0',
-                    Property::FIELD_RANGES  => '',
+                    Property::FIELD_RANGES  => [],
                     Property::FIELD_COMMENT => '',
                     Property::FIELD_LABEL   => 'id 0'
                 ]
@@ -52,12 +52,12 @@ class TypePropertyFactoryTest extends AbstractTestCase
         $types = [
             'id_3' =>
                 [
-                    Type::FIELD_ID      => 'id_3',
-                    Type::FIELD_URL     => 'http://www.hotmail.com',
-                    Type::FIELD_PARENT  => '',
-                    Type::FIELD_COMMENT => '',
-                    Type::FIELD_LABEL   => 'id 3',
-                    'properties'        => ['pid_3', 'pid_0']
+                    Type::FIELD_ID        => 'id_3',
+                    Type::FIELD_URL       => 'http://www.hotmail.com',
+                    Type::FIELD_ANCESTORS => [],
+                    Type::FIELD_COMMENT   => '',
+                    Type::FIELD_LABEL     => 'id 3',
+                    'properties'          => ['pid_3', 'pid_0']
                 ]
         ];
 

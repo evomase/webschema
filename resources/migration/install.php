@@ -5,15 +5,14 @@ return [
         `comment` VARCHAR( 255 ) NULL,
         `label` VARCHAR( 50 ) NOT NULL,
         `url` VARCHAR( 255 ) NOT NULL,
-        `parent` VARCHAR( 50 ),
-        UNIQUE (  `id`, `parent` ) 
+        `ancestors` VARCHAR( 255 )
     ) ENGINE=INNODB;',
 
     WEB_SCHEMA_TABLE_PROPERTIES => 'CREATE TABLE IF NOT EXISTS ' . WEB_SCHEMA_TABLE_PROPERTIES . ' (
         `id` VARCHAR( 50 ) NOT NULL PRIMARY KEY ,
         `comment` VARCHAR( 255 ) NULL,
         `label` VARCHAR( 50 ) NOT NULL,
-        `ranges` LONGTEXT NULL
+        `ranges` VARCHAR( 255 ) NULL
     ) ENGINE=INNODB;',
 
     WEB_SCHEMA_TABLE_TYPE_PROPERTIES => 'CREATE TABLE IF NOT EXISTS ' . WEB_SCHEMA_TABLE_TYPE_PROPERTIES . ' (

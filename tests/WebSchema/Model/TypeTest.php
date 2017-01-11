@@ -17,7 +17,7 @@ class TypeTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->runOnce(false);
+        (new Installer())->disableImport()->runOnce();
 
         Type::boot();
     }
@@ -25,11 +25,11 @@ class TypeTest extends AbstractTestCase
     public function testSave()
     {
         $model = new Type([
-            Type::FIELD_ID      => 'id_1',
-            Type::FIELD_COMMENT => 'random',
-            Type::FIELD_LABEL   => 'ID - 1',
-            Type::FIELD_PARENT  => '',
-            Type::FIELD_URL     => 'http://www.hotmail.com'
+            Type::FIELD_ID        => 'id_1',
+            Type::FIELD_COMMENT   => 'random',
+            Type::FIELD_LABEL     => 'ID - 1',
+            Type::FIELD_ANCESTORS => ['Thing'],
+            Type::FIELD_URL       => 'http://www.hotmail.com'
         ]);
 
         $model->save();
@@ -49,17 +49,40 @@ class TypeTest extends AbstractTestCase
 
         Type::clearCollection();
 
-        $this->assertInstanceOf('WebSchema\Model\Type', Type::get($model->getID()));
+        $model = Type::get($model->getID());
+
+        $this->assertInstanceOf('WebSchema\Model\Type', $model);
+        $this->assertInternalType('array', $model->getAncestors());
     }
 
-    public function testGetAll()
+    public function testFill()
+    {
+        $model = new Type();
+        $model->fill([
+            Type::FIELD_ID        => 'id_1',
+            Type::FIELD_COMMENT   => 'random',
+            Type::FIELD_LABEL     => 'ID - 1',
+            Type::FIELD_ANCESTORS => json_encode(['Thing']),
+            Type::FIELD_URL       => 'http://www.hotmail.com'
+        ]);
+
+        $this->assertInternalType('array', $model->getAncestors());
+
+        $model->fill([
+            Type::FIELD_ANCESTORS => 'ahahahha agagg a'
+        ]);
+
+        $this->assertEquals(['Thing'], $model->getAncestors());
+    }
+
+    public function testToArray()
     {
         $model = new Type([
-            Type::FIELD_ID      => 'id_2',
-            Type::FIELD_COMMENT => 'random',
-            Type::FIELD_LABEL   => 'ID - 2',
-            Type::FIELD_PARENT  => '',
-            Type::FIELD_URL     => 'http://www.hotmail.com'
+            Type::FIELD_ID        => 'id_2',
+            Type::FIELD_COMMENT   => 'random',
+            Type::FIELD_LABEL     => 'ID - 2',
+            Type::FIELD_ANCESTORS => ['Thing'],
+            Type::FIELD_URL       => 'http://www.hotmail.com'
         ]);
 
         $model->save();

@@ -21,6 +21,7 @@ class Installer
      * @var \wpdb
      */
     private $db;
+    private $import = true;
 
     /**
      * Installer constructor.
@@ -34,17 +35,29 @@ class Installer
         register_activation_hook('webschema/schema.php', array($this, 'runOnce'));
     }
 
+    /**
+     * @return Installer
+     */
     public static function boot()
     {
         return (new self());
     }
 
     /**
-     * @param  bool $import
+     * @return $this
+     */
+    public function disableImport()
+    {
+        $this->import = false;
+
+        return $this;
+    }
+
+    /**
      * @throws \RuntimeException
      * @return bool
      */
-    public function runOnce($import = true)
+    public function runOnce()
     {
         $dbSchemas = include $this->directory . '/install.php';
 
@@ -54,7 +67,7 @@ class Installer
             }
         }
 
-        return ($import || $import === '') ? $this->import() : true;
+        return ($this->import) ? $this->import() : true;
     }
 
     /**

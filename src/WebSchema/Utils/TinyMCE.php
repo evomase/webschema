@@ -28,7 +28,7 @@ class TinyMCE
 
     public static function addValidAttributes(array $data)
     {
-        $data['extended_valid_elements'] = '@[itemscope|itemtype],span';
+        $data['extended_valid_elements'] = '@[itemscope|itemtype],p,span';
         $data['wpautop'] = false;
 
         return $data;

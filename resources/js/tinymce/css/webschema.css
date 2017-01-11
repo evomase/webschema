@@ -1,3 +1,7 @@
+.web-schema * {
+    white-space: normal;
+}
+
 .web-schema h3 {
     font-size: 1.3em;
 }
@@ -6,6 +10,7 @@
     float: left;
     font-size: inherit;
 }
+
 
 .web-schema span {
     float: right;
@@ -40,11 +45,21 @@
     clear: both;
 }
 
-/*.web-schema .hide {*/
-    /*display: none;*/
-/*}*/
+.web-schema .hide {
+    display: none;
+}
 
 .web-schema select {
     width: 250px;
     height: auto;
+}
+
+.web-schema #message {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 10px;
+}
+
+.web-schema p {
+    width: 607px;
 }

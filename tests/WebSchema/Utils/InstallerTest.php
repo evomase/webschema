@@ -21,7 +21,7 @@ class InstallerTest extends AbstractTestCase
     {
         $installer = new Installer();
 
-        $this->assertTrue($installer->runOnce(false));
+        $this->assertTrue($installer->disableImport()->runOnce());
     }
 
     public function testImport()

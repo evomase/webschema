@@ -8,6 +8,10 @@
 
 namespace tests\WebSchema;
 
+use WebSchema\Model\Property;
+use WebSchema\Model\Type;
+use WebSchema\Model\TypeProperty;
+
 class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
     public static function tearDownAfterClass()
@@ -20,5 +24,9 @@ class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_TYPE_PROPERTIES);
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_TYPES);
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_PROPERTIES);
+
+        Type::clearCollection();
+        Property::clearCollection();
+        TypeProperty::clearCollection();
     }
 }
