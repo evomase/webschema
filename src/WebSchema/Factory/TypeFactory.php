@@ -81,7 +81,9 @@ class TypeFactory
             unset($ancestors[$index]);
             $children = self::buildTree($data, $ancestors);
 
-            $tree[$ancestor]['children'] = array_replace_recursive($tree[$ancestor]['children'], $children);
+            if ($children) {
+                $tree[$ancestor]['children'] = array_replace_recursive($tree[$ancestor]['children'], $children);
+            }
 
             break;
         }
