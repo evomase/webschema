@@ -11,7 +11,6 @@
     font-size: inherit;
 }
 
-
 .web-schema span {
     float: right;
 }
@@ -62,4 +61,18 @@
 
 .web-schema p {
     width: 607px;
+}
+
+[itemtype], [itemprop] {
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+[itemtype] {
+    background: rgba(255, 204, 128, 0.3);
+}
+
+[itemprop] {
+    background: rgba(204, 255, 255, 0.6);
 }

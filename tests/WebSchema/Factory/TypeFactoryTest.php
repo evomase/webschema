@@ -82,20 +82,6 @@ class TypeFactoryTest extends AbstractTestCase
 
     public function testCreateTree()
     {
-//        $ancestors = [
-//            ['Thing', 'Factory', 'Place'],
-//            ['Thing', 'Hospital', 'Country'],
-//            ['Thing', 'Factory', 'Schatzi']
-//        ];
-//
-//        $tree = [];
-//
-//        foreach($ancestors as $map){
-//            $tree = TypeFactory::buildTree([], $map, $tree);
-//        }
-//
-//        print_r($tree);
-
         $tree = TypeFactory::createTree([
             'Thing'    => ['id' => 'Thing', Type::FIELD_ANCESTORS => []],
             'Country'  => ['id' => 'Country', Type::FIELD_ANCESTORS => ['Thing', 'Hospital']],
@@ -105,6 +91,8 @@ class TypeFactoryTest extends AbstractTestCase
             'Schatzi'  => ['id' => 'Schatzi', Type::FIELD_ANCESTORS => ['Thing', 'Factory']]
         ]);
 
-        print_r($tree);
+        $this->assertNotEmpty($tree['Thing']['children']['Hospital']['children']['Country']);
+        $this->assertNotEmpty($tree['Thing']['children']['Factory']['children']['Place']);
+        $this->assertNotEmpty($tree['Thing']['children']['Factory']['children']['Schatzi']);
     }
 }

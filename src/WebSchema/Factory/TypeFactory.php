@@ -56,8 +56,6 @@ class TypeFactory
 
         foreach ($data as $id => $type) {
             $ancestors = array_merge($type[Type::FIELD_ANCESTORS], [$type[Type::FIELD_ID]]);
-            print_r(implode(',', $ancestors) . PHP_EOL);
-
             $tree = self::buildTree($data, $ancestors, $tree);
         }
 
@@ -66,23 +64,22 @@ class TypeFactory
 
     /**
      * @param array $data
-     * @param array $ancestors
+     * @param array $items
      * @param array $tree
      * @return array
      */
-    public static function buildTree(array $data, array $ancestors, array $tree = [])
+    private static function buildTree(array $data, array $items, array $tree = [])
     {
-        foreach ($ancestors as $index => $ancestor) {
-            if (empty($tree[$ancestor])) {
-                $tree[$ancestor] = $data[$ancestor];
-                $tree[$ancestor]['children'] = [];
+        foreach ($items as $index => $item) {
+            if (empty($tree[$item])) {
+                $tree[$item] = $data[$item];
+                $tree[$item]['children'] = [];
             }
 
-            unset($ancestors[$index]);
-            $children = self::buildTree($data, $ancestors);
+            unset($items[$index]);
 
-            if ($children) {
-                $tree[$ancestor]['children'] = array_replace_recursive($tree[$ancestor]['children'], $children);
+            if ($children = self::buildTree($data, $items)) {
+                $tree[$item]['children'] = array_replace_recursive($tree[$item]['children'], $children);
             }
 
             break;

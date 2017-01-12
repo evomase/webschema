@@ -32,7 +32,11 @@ class SchemaController
     public function getAll()
     {
         header('Content-Type: application/json');
-        echo json_encode(['types' => TypeFactory::getAll(), 'properties' => PropertyFactory::getAll()]);
+        echo json_encode([
+            'types'      => ($types = TypeFactory::getAll()),
+            'properties' => PropertyFactory::getAll(),
+            'tree'       => TypeFactory::createTree($types)
+        ]);
         exit;
     }
 
