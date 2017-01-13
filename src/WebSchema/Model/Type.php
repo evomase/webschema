@@ -39,6 +39,8 @@ class Type extends Model
     {
         $data = parent::toArray();
 
+        $data['properties'] = [];
+
         foreach ($this->getProperties() as $id => $property) {
             $data['properties'][] = $property->getID();
         }

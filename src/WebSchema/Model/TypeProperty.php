@@ -23,6 +23,35 @@ class TypeProperty extends Model
     ];
 
     /**
+     * @param $type
+     * @param $property
+     * @return TypeProperty|null
+     */
+    public static function lookup($type, $property)
+    {
+        $model = null;
+        $query = static::$db->prepare('SELECT * FROM ' . static::$table . ' WHERE type_id = %s AND property_id = %s',
+            $type, $property);
+
+        if ($data = static::$db->get_col($query, ARRAY_A)) {
+            $model = new self($data);
+            $model->new = false;
+
+            $model->put($data[static::$key], $model);
+        }
+
+        return $model;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProperty()
+    {
+        return $this->data[self::FIELD_PROPERTY_ID];
+    }
+
+    /**
      * @return false|int
      */
     protected function insert()
@@ -43,13 +72,5 @@ class TypeProperty extends Model
             $this->data[self::FIELD_ID]);
 
         return self::$db->query($query);
-    }
-
-    /**
-     * @return string
-     */
-    public function getProperty()
-    {
-        return $this->data[self::FIELD_PROPERTY_ID];
     }
 }

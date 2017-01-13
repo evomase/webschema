@@ -76,7 +76,6 @@ abstract class Model
             $model = new static($row);
             $model->new = false;
 
-            $model->fill($row);
             $model->put($row[static::$key], $model);
 
             $data[$row[static::$key]] = $model;
@@ -110,7 +109,6 @@ abstract class Model
             $model = new static($row);
             $model->new = false;
 
-            $model->fill($row);
             $model->put($row[static::$key], $model);
 
             $data[$row[static::$key]] = $model;

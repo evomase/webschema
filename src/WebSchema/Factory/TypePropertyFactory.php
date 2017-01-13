@@ -8,7 +8,6 @@
 
 namespace WebSchema\Factory;
 
-use WebSchema\Model\Property;
 use WebSchema\Model\Type;
 use WebSchema\Model\TypeProperty;
 
@@ -22,15 +21,17 @@ class TypePropertyFactory
     {
         foreach ($data as $type) {
             $properties = $type['properties'];
-            $id = $type[Type::FIELD_ID];
+            $type = $type[Type::FIELD_ID];
 
             foreach ($properties as $property) {
-                $property = Property::get($property);
+                $row = [
+                    TypeProperty::FIELD_PROPERTY_ID => $property,
+                    TypeProperty::FIELD_TYPE_ID     => $type
+                ];
 
-                $model = new TypeProperty([
-                    TypeProperty::FIELD_TYPE_ID     => $id,
-                    TypeProperty::FIELD_PROPERTY_ID => $property->getID()
-                ]);
+                if (!$model = TypeProperty::lookup($type, $property)) {
+                    $model = new TypeProperty($row);
+                }
 
                 $model->save();
             }

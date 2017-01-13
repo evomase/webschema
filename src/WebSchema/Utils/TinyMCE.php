@@ -16,7 +16,8 @@ class TinyMCE
         add_filter('mce_external_plugins', array(__CLASS__, 'register'));
         add_filter('mce_buttons', array(__CLASS__, 'addButtons'));
 
-        add_action('tiny_mce_before_init', array(__CLASS__, 'addValidAttributes'));
+        add_action('tiny_mce_before_init', array(__CLASS__, 'extendConfig'));
+        add_action('init', array(__CLASS__, 'addValidAttributes'));
     }
 
     public static function register(array $plugins)
@@ -26,12 +27,20 @@ class TinyMCE
         return $plugins;
     }
 
-    public static function addValidAttributes(array $data)
+    public static function extendConfig(array $data)
     {
-        $data['extended_valid_elements'] = '@[itemscope|itemtype|itemprop],p,span';
+        $data['extended_valid_elements'] = '@[itemscope|itemtype|itemprop],p,span,meta[name|value]';
+        $data['valid_children'] = '+p[meta]';
         $data['wpautop'] = false;
 
         return $data;
+    }
+
+    public static function addValidAttributes()
+    {
+        global $allowedposttags;
+
+        $allowedposttags['meta'] = [];
     }
 
     public static function addButtons(array $buttons)

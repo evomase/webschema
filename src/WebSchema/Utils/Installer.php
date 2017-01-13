@@ -78,7 +78,7 @@ class Installer
         $data = json_decode(file_get_contents($this->directory . '/schema.json'), true);
 
         PropertyFactory::createOrUpdate($data['properties']);
-        TypeFactory::createOrUpdate($data['types']);
+        TypeFactory::createOrUpdate($data['types'] + $data['datatypes']);
         TypePropertyFactory::createOrUpdate($data['types']);
 
         return true;

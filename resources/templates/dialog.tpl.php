@@ -26,10 +26,10 @@
 
 
     <div class="metas">
-        <h3><span>Metas</span> <span>[add]</span><span class="clear"></span></h3>
+        <h3><span>Metas</span> <span><a href="#">[add]</a></span></h3>
         <div class="clear"></div>
 
-        <fieldset class="hide dummy-property">
+        <fieldset class="hide">
             <label>Property</label>
 
             <select class="property" title="Property">
@@ -37,9 +37,9 @@
             </select>
 
             <label>Value</label>
-            <input type="text" title="Value"/>
+            <input type="text" title="Value" class="value" autocomplete="false"/>
 
-            <a href="#" title="remove">[x]</a>
+            <a href="#" title="remove" class="remove">[x]</a>
         </fieldset>
     </div>
 </form>

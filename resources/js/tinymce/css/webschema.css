@@ -63,16 +63,24 @@
     width: 607px;
 }
 
-[itemtype], [itemprop] {
+.web-schema a {
+    cursor: pointer;
+}
+
+.web-schema .meta .remove {
+    color: red;
+}
+
+.mce-content-body [itemtype], .mce-content-body [itemprop] {
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
 }
 
-[itemtype] {
+.mce-content-body [itemtype] {
     background: rgba(255, 204, 128, 0.3);
 }
 
-[itemprop] {
+.mce-content-body [itemprop] {
     background: rgba(204, 255, 255, 0.6);
 }

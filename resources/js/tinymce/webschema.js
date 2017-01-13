@@ -10,16 +10,24 @@
                     select_property: 'Due to this selection being directly within ":parent", please select a property below and add its schema'
                 };
 
+            /**
+             *
+             * @param template
+             * @param node node is a clone of original element
+             * @returns {Element}
+             */
             function render(template, node) {
                 load();
 
                 let parentSchema = null;
 
-                if (node.textContent == editor.selection.getContent({format: 'text'})) {
+                if (!isNew(node)) {
                     parentSchema = getNodeSchema(node.parentNode);
                 }
                 else {
+                    //new selected content/text with no schema
                     parentSchema = getNodeSchema(node);
+                    node = null;
                 }
 
                 let container = document.createElement('div');
@@ -27,16 +35,10 @@
 
                 renderParentInfo(container, parentSchema, node);
 
-                if (!parentSchema) {
-                    renderInfo(container, node);
-                }
-
                 return container;
             }
 
-            function renderInfo(container, node) {
-                let schema = getNodeSchema(node);
-
+            function renderInfo(container, schema) {
                 let schemas = Object.keys(data.types).map(function (schema) {
                     return data.types[schema];
                 });
@@ -49,16 +51,17 @@
 
             function renderParentInfo(container, parentSchema, node) {
                 let schema = getNodeSchema(node);
-                let property = getNodeProperty(node);
 
                 if (parentSchema) {
+                    let property = getNodeProperty(node);
+
+                    //if schema is a DataType then get it from property's ranges as its not added to the element attribute
+                    if (!schema && property) {
+                        schema = data.properties[property]['ranges'][0];
+                    }
+
                     let properties = getSchemaProperties(parentSchema);
                     let parentProperty = container.querySelector('.parent-property');
-
-                    //Don't add URL or Text schemas to list
-                    properties = properties.filter((property) => {
-                        return !(['Text', 'URL'].includes(property['ranges'][0]));
-                    });
 
                     addOptions(parentProperty, properties, property);
 
@@ -69,18 +72,27 @@
 
                     let message = container.querySelector('#message p');
                     message.textContent = messages.select_property.replace(':parent', parentSchema);
+
+                    changeSchema(property, schema, container);
+                }
+                else {
+                    renderInfo(container, schema);
                 }
 
-                eventChangeParentProperty(property, schema, container);
+                changeMetaProperty(schema, container);
+                addMetas(node, container);
             }
 
             function getNodeSchema(node) {
                 let schema = null;
-                let type = node.getAttribute('itemtype');
 
-                if (type) {
-                    let regexp = new RegExp('/(\\w+)$');
-                    schema = regexp.exec(type)[1];
+                if (node) {
+                    let type = node.getAttribute('itemtype');
+
+                    if (type) {
+                        let regexp = new RegExp('/(\\w+)$');
+                        schema = regexp.exec(type)[1];
+                    }
                 }
 
                 return schema;
@@ -92,29 +104,66 @@
 
             function registerEvents() {
                 dialog.querySelector('.schema').addEventListener('change', function (e) {
-                    eventChangeSchema(e.target.value);
+                    changeMetaProperty(e.target.value);
                 });
 
                 dialog.querySelector('.parent-property').addEventListener('change', function (e) {
-                    eventChangeParentProperty(e.target.value);
+                    changeSchema(e.target.value);
+                });
+
+                dialog.querySelector('.metas a').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    addMeta();
                 });
             }
 
-            function eventChangeSchema(schema) {
+            function changeMetaProperty(schema, window = dialog) {
                 let properties = getSchemaProperties(schema);
-                let element = dialog.querySelector('.dummy-property .property');
-
-                removeOptions(element);
+                let elements = window.querySelectorAll('.metas .property');
 
                 //only add URL or Text meta properties
-                properties = properties.filter((property) => {
-                    return (['Text', 'URL'].includes(property['ranges'][0]));
-                });
+                properties = properties.filter(isDataType);
 
-                addOptions(element, properties);
+                elements.forEach((element) => {
+                    removeOptions(element);
+                    addOptions(element, properties);
+                });
             }
 
-            function eventChangeParentProperty(property, schema = null, window = dialog) {
+            function addMetas(node, window = dialog) {
+                let metas = node.querySelectorAll('meta');
+
+                metas.forEach((meta) => {
+                    addMeta(meta.getAttribute('name'), meta.getAttribute('value'), window);
+                });
+            }
+
+            function addMeta(property = null, value = '', window = dialog) {
+                let metas = window.querySelector('.metas');
+                let meta = metas.querySelector('.hide').cloneNode(true);
+
+                meta.classList.remove('hide');
+                meta.classList.add('meta');
+
+                if (property && value) {
+                    meta.querySelector('select option[value=' + property + ']').setAttribute('selected', 'selected');
+                    meta.querySelector('.value').setAttribute('value', value);
+                }
+
+                meta.querySelector('.remove').addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    removeMeta(e.target.parentNode);
+                });
+
+                metas.appendChild(meta);
+            }
+
+            function removeMeta(element) {
+                element.remove();
+            }
+
+            function changeSchema(property, schema = null, window = dialog) {
                 let element = window.querySelector('.schema');
                 let data = getPropertySchemas(property);
                 let schemas = [];
@@ -216,16 +265,20 @@
                 return properties;
             }
 
+            function isNew(node) {
+                return (node.textContent != editor.selection.getContent({format: 'text'}));
+            }
+
             function save() {
                 let node = editor.selection.getNode();
                 let schema = dialog.querySelector('.schema').value;
                 let property = dialog.querySelector('.parent-property').value;
+                let metas = dialog.querySelectorAll('.metas .meta');
 
                 //new schema added
-                let fresh = false;
+                let fresh = isNew(node);
 
-                if (node.innerHTML != editor.selection.getContent()) {
-                    fresh = true;
+                if (fresh) {
                     node = document.createElement('span');
                     node.innerHTML = editor.selection.getContent();
                 }
@@ -237,13 +290,47 @@
                     node.setAttribute('itemtype', url);
 
                     if (property) {
+
+                        if (isDataType(data.properties[property])) {
+                            node.removeAttribute('itemscope');
+                            node.removeAttribute('itemtype');
+                        }
+
                         node.setAttribute('itemprop', property);
                     }
 
                     if (fresh) {
                         editor.selection.setContent(node.outerHTML);
                     }
+                    else {
+                        node.querySelectorAll('meta').forEach((element) => {
+                            element.remove();
+                        });
+                    }
+
+                    metas.forEach((meta) => {
+                        let element = document.createElement('meta');
+                        let name = meta.querySelector('select').value;
+                        let value = meta.querySelector('.value').value;
+
+                        if (name && value) {
+                            element.setAttribute('name', meta.querySelector('select').value);
+                            element.setAttribute('value', meta.querySelector('.value').value);
+
+                            node.appendChild(element);
+                        }
+                    });
                 }
+            }
+
+            function isDataType(property) {
+                for (let type of property['ranges']) {
+                    if (data.types[type]['ancestors'][0] == 'DataType') {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             function getTemplate() {
