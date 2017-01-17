@@ -29,8 +29,8 @@ class TinyMCE
 
     public static function extendConfig(array $data)
     {
-        $data['extended_valid_elements'] = '@[itemscope|itemtype|itemprop],p,span,meta[name|value]';
-        $data['valid_children'] = '+p[meta]';
+        $data['extended_valid_elements'] = '@[itemscope|itemtype|itemprop],p,span,meta[content]';
+        $data['valid_children'] = '+p[meta],+span[meta]';
         $data['wpautop'] = false;
 
         return $data;

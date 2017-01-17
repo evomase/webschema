@@ -99,7 +99,7 @@
             }
 
             function getNodeProperty(node) {
-                return (node.hasAttribute('itemprop')) ? node.getAttribute('itemprop') : null;
+                return (node && node.hasAttribute('itemprop')) ? node.getAttribute('itemprop') : null;
             }
 
             function registerEvents() {
@@ -131,11 +131,13 @@
             }
 
             function addMetas(node, window = dialog) {
-                let metas = node.querySelectorAll('meta');
+                if (node) {
+                    let metas = node.querySelectorAll('meta');
 
-                metas.forEach((meta) => {
-                    addMeta(meta.getAttribute('name'), meta.getAttribute('value'), window);
-                });
+                    metas.forEach((meta) => {
+                        addMeta(meta.getAttribute('itemprop'), meta.getAttribute('content'), window);
+                    });
+                }
             }
 
             function addMeta(property = null, value = '', window = dialog) {
@@ -315,7 +317,7 @@
 
                         if (name && value) {
                             element.setAttribute('name', meta.querySelector('select').value);
-                            element.setAttribute('value', meta.querySelector('.value').value);
+                            element.setAttribute('content', meta.querySelector('.value').value);
 
                             node.appendChild(element);
                         }
