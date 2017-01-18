@@ -316,10 +316,11 @@
                         let value = meta.querySelector('.value').value;
 
                         if (name && value) {
-                            element.setAttribute('name', meta.querySelector('select').value);
+                            element.setAttribute('itemprop', meta.querySelector('select').value);
                             element.setAttribute('content', meta.querySelector('.value').value);
 
-                            node.appendChild(element);
+                            //node.appendChild(element);
+                            node.insertBefore(element, node.firstChild);
                         }
                     });
                 }
@@ -429,14 +430,14 @@
                             editor.contentCSS.push(link);
                         });
 
-                        editor.on('NodeChange', function (e) {
-                            if (e.selectionChange && e.element.tagName == 'BR' && e.element.hasAttribute('data-mce-bogus')
-                                && e.element.parentNode.hasAttribute('itemscope')) {
-                                e.element.parentNode.removeAttribute('itemtype');
-                                e.element.parentNode.removeAttribute('itemscope');
-                                e.element.parentNode.removeAttribute('itemprop');
+                        editor.on('NewBlock', function (e) {
+                            if (e.newBlock && e.newBlock.querySelector('[data-mce-bogus]')
+                                && e.newBlock.hasAttribute('itemscope')) {
+                                e.newBlock.removeAttribute('itemtype');
+                                e.newBlock.removeAttribute('itemscope');
+                                e.newBlock.removeAttribute('itemprop');
                             }
-                        })
+                        });
                     }
                 });
 
