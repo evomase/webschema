@@ -77,10 +77,22 @@
     cursor: pointer;
 }
 
+.mce-content-body .web-schema-tooltip {
+    content: 'Loading info..';
+    position: absolute;
+    font-size: 0.7em;
+    right: 1px;
+    top: -20px;
+}
+
 .mce-content-body [itemtype] {
     background: rgba(255, 204, 128, 0.3);
 }
 
 .mce-content-body [itemprop] {
     background: rgba(204, 255, 255, 0.6);
+}
+
+.webschema-tooltip {
+    position: absolute;
 }

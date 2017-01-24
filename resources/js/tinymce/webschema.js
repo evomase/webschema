@@ -5,6 +5,7 @@
                 template = '',
                 dialog = null,
                 editor = null,
+                tooltip = null,
                 messages = {
                     select_schema: 'Please select a schema from the list below',
                     select_property: 'Due to this selection being directly within ":parent", please select a property below and add its schema'
@@ -111,10 +112,19 @@
                     changeSchema(e.target.value);
                 });
 
-                dialog.querySelector('.metas a').addEventListener('click', function (e) {
+                dialog.querySelector('.metas h3 a').addEventListener('click', function (e) {
                     e.preventDefault();
                     addMeta();
                 });
+
+                let metas = dialog.querySelectorAll('.metas .meta a');
+
+                metas.forEach((element) => {
+                    element.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        removeMeta(e.target.parentNode);
+                    });
+                })
             }
 
             function changeMetaProperty(schema, window = dialog) {
@@ -336,6 +346,14 @@
                 return false;
             }
 
+            function removeSchemaAttributes(element) {
+                if (element && element.hasAttribute('itemscope')) {
+                    element.removeAttribute('itemtype');
+                    element.removeAttribute('itemscope');
+                    element.removeAttribute('itemprop');
+                }
+            }
+
             function getTemplate() {
                 if (!template.length) {
                     template = ajax('schema_get_template', false);
@@ -358,6 +376,37 @@
                 xhr.send();
 
                 return data;
+            }
+
+            function renderTooltip(e) {
+                let element = e.target;
+
+                if (element.hasAttribute('itemscope') || element.hasAttribute('itemprop')) {
+                    e.stopPropagation();
+
+                    if (!tooltip) {
+                        generateTooltip();
+                    }
+
+                    tooltip.setContent(element);
+                    tooltip.renderTo();
+
+                    tooltip.moveRel(element, ['bc-tr']);
+
+                    let rect = editor.container.querySelector('iframe').getBoundingClientRect();
+                    tooltip.moveBy(rect.x, (rect.y - element.clientHeight) - 40);
+                    tooltip.show();
+                }
+                else {
+                    if (tooltip) {
+                        tooltip.hide();
+                    }
+                }
+            }
+
+            function generateTooltip() {
+                tooltip = new tinymce.ui.WebSchemaToolTip();
+                tooltip.renderTo();
             }
 
             function load() {
@@ -430,18 +479,27 @@
                             editor.contentCSS.push(link);
                         });
 
-                        editor.on('NewBlock', function (e) {
-                            if (e.newBlock && e.newBlock.querySelector('[data-mce-bogus]')
-                                && e.newBlock.hasAttribute('itemscope')) {
-                                e.newBlock.removeAttribute('itemtype');
-                                e.newBlock.removeAttribute('itemscope');
-                                e.newBlock.removeAttribute('itemprop');
-                            }
+                        editor.on('newblock', function (e) {
+                            removeSchemaAttributes(e.newBlock);
+                        });
+
+                        editor.on('mouseover', function (e) {
+                            renderTooltip(e);
                         });
                     }
                 });
 
                 tinymce.PluginManager.add('webschema', tinymce.plugins.WebSchema);
+
+                tinymce.ui.WebSchemaToolTip = tinymce.ui.Tooltip.extend({
+                    renderHtml: function () {
+                        return '<div id="' + this._id + '" class="webschema-tooltip"></div></div>';
+                    },
+
+                    setContent: function (element) {
+                        this.getEl().textContent = getNodeSchema(element);
+                    }
+                });
             };
         };
     }
