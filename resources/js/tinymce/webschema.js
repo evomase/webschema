@@ -329,7 +329,6 @@
                             element.setAttribute('itemprop', meta.querySelector('select').value);
                             element.setAttribute('content', meta.querySelector('.value').value);
 
-                            //node.appendChild(element);
                             node.insertBefore(element, node.firstChild);
                         }
                     });
@@ -389,12 +388,15 @@
                     }
 
                     tooltip.setContent(element);
-                    tooltip.renderTo();
-
-                    tooltip.moveRel(element, ['bc-tr']);
+                    tooltip.moveRel(element, ['br-tr', 'tr-br']);
 
                     let rect = editor.container.querySelector('iframe').getBoundingClientRect();
-                    tooltip.moveBy(rect.x, (rect.y - element.clientHeight) - 40);
+
+                    console.log(e);
+
+                    tooltip.moveBy(rect.x, rect.y);
+                    //tooltip.moveTo(e.screenX, e.screenY);
+                    //tooltip.repaint();
                     tooltip.show();
                 }
                 else {
@@ -493,12 +495,40 @@
 
                 tinymce.ui.WebSchemaToolTip = tinymce.ui.Tooltip.extend({
                     renderHtml: function () {
-                        return '<div id="' + this._id + '" class="webschema-tooltip"></div></div>';
+                        return '<div id="' + this._id + '" class="mce-panel mce-inline-toolbar-grp mce-container webschema-tooltip">' +
+                            '<div class="mce-container-body"><p></p></div></div>';
                     },
 
                     setContent: function (element) {
-                        this.getEl().textContent = getNodeSchema(element);
+                        let content = [];
+                        let schema = getNodeSchema(element);
+
+                        if (schema) {
+                            Array.prototype.push.apply(content, this.setSchemaContent(element, schema));
+                        }
+
+                        Array.prototype.push.apply(content, this.setPropertyContent(element));
+                        content = content.join(' ');
+
+                        content += ' <a href="#">[edit]</a>';
+
+                        this.getEl().querySelector('p').innerHTML = content;
+                    },
+
+                    setSchemaContent: function (element, schema) {
+                        let parent = getNodeSchema(element.parentNode);
+                        let content = ['The schema for this content is "' + schema + '".'];
+
+                        if (parent) {
+                            content.push('It also belongs within "' + parent + '".');
+                        }
+                        return content;
+                    },
+
+                    setPropertyContent: function (element) {
+                        return [];
                     }
+
                 });
             };
         };

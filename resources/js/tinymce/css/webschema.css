@@ -95,4 +95,10 @@
 
 .webschema-tooltip {
     position: absolute;
+    padding: 10px;
+    max-width: 300px;
+}
+
+.webschema-tooltip * {
+    font-size: 0.8rem;
 }
