@@ -102,3 +102,8 @@
 .webschema-tooltip * {
     font-size: 0.8rem;
 }
+
+.webschema-tooltip a {
+    display: inline-block;
+    margin-top: 10px;
+}

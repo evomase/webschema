@@ -18,8 +18,6 @@
              * @returns {Element}
              */
             function render(template, node) {
-                load();
-
                 let parentSchema = null;
 
                 if (!isNew(node)) {
@@ -40,7 +38,7 @@
             }
 
             function renderInfo(container, schema) {
-                let schemas = Object.keys(data.types).map(function (schema) {
+                let schemas = Object.keys(data.types).map((schema) => {
                     return data.types[schema];
                 });
 
@@ -104,15 +102,15 @@
             }
 
             function registerEvents() {
-                dialog.querySelector('.schema').addEventListener('change', function (e) {
+                dialog.querySelector('.schema').addEventListener('change', (e) => {
                     changeMetaProperty(e.target.value);
                 });
 
-                dialog.querySelector('.parent-property').addEventListener('change', function (e) {
+                dialog.querySelector('.parent-property').addEventListener('change', (e) => {
                     changeSchema(e.target.value);
                 });
 
-                dialog.querySelector('.metas h3 a').addEventListener('click', function (e) {
+                dialog.querySelector('.metas h3 a').addEventListener('click', (e) => {
                     e.preventDefault();
                     addMeta();
                 });
@@ -120,7 +118,7 @@
                 let metas = dialog.querySelectorAll('.metas .meta a');
 
                 metas.forEach((element) => {
-                    element.addEventListener('click', function (e) {
+                    element.addEventListener('click', (e) => {
                         e.preventDefault();
                         removeMeta(e.target.parentNode);
                     });
@@ -162,7 +160,7 @@
                     meta.querySelector('.value').setAttribute('value', value);
                 }
 
-                meta.querySelector('.remove').addEventListener('click', function (e) {
+                meta.querySelector('.remove').addEventListener('click', (e) => {
                     e.preventDefault();
 
                     removeMeta(e.target.parentNode);
@@ -387,16 +385,12 @@
                         generateTooltip();
                     }
 
-                    tooltip.setContent(element);
-                    tooltip.moveRel(element, ['br-tr', 'tr-br']);
+                    tooltip.setContent(element, data);
+                    tooltip.moveRel(element, ['bc-tc']);
 
                     let rect = editor.container.querySelector('iframe').getBoundingClientRect();
 
-                    console.log(e);
-
                     tooltip.moveBy(rect.x, rect.y);
-                    //tooltip.moveTo(e.screenX, e.screenY);
-                    //tooltip.repaint();
                     tooltip.show();
                 }
                 else {
@@ -409,6 +403,8 @@
             function generateTooltip() {
                 tooltip = new tinymce.ui.WebSchemaToolTip();
                 tooltip.renderTo();
+
+                tooltip.run();
             }
 
             function load() {
@@ -429,7 +425,7 @@
                         {
                             text: 'OK',
                             subtype: 'primary',
-                            onclick: function () {
+                            onclick: () => {
                                 save();
                                 close();
 
@@ -438,7 +434,7 @@
                         },
                         {
                             text: 'Cancel',
-                            onclick: function () {
+                            onclick: () => {
                                 close();
 
                                 window.close();
@@ -470,7 +466,7 @@
                             cmd: 'webschema.open'
                         });
 
-                        editor.on('init', function () {
+                        editor.on('init', () => {
                             let link = url + '/css/webschema.css?';
                             let css = document.createElement('link');
                             css.setAttribute('rel', 'stylesheet');
@@ -479,14 +475,25 @@
                             document.querySelector('head').appendChild(css);
 
                             editor.contentCSS.push(link);
+
+                            load();
                         });
 
-                        editor.on('newblock', function (e) {
+                        editor.on('newblock', (e) => {
                             removeSchemaAttributes(e.newBlock);
                         });
 
-                        editor.on('mouseover', function (e) {
+                        editor.on('mouseover', (e) => {
                             renderTooltip(e);
+                        });
+
+                        editor.on('preinit', () => {
+                            //add valid elements
+                            editor.schema.addValidElements('p[itemscope|itemtype|itemprop],span[itemscope|itemtype|itemprop],' +
+                                'meta[itemprop|content],ul[itemscope|itemtype|itemprop],li[itemscope|itemtype|itemprop]');
+
+                            //add valid children
+                            editor.schema.addValidChildren('+p[meta],+span[meta],+ul[meta],+li[meta]');
                         });
                     }
                 });
@@ -494,12 +501,20 @@
                 tinymce.PluginManager.add('webschema', tinymce.plugins.WebSchema);
 
                 tinymce.ui.WebSchemaToolTip = tinymce.ui.Tooltip.extend({
+                    element: null,
+
                     renderHtml: function () {
                         return '<div id="' + this._id + '" class="mce-panel mce-inline-toolbar-grp mce-container webschema-tooltip">' +
                             '<div class="mce-container-body"><p></p></div></div>';
                     },
 
+                    run: function () {
+                        this.registerEvents();
+                    },
+
                     setContent: function (element) {
+                        this.element = element;
+
                         let content = [];
                         let schema = getNodeSchema(element);
 
@@ -507,28 +522,56 @@
                             Array.prototype.push.apply(content, this.setSchemaContent(element, schema));
                         }
 
-                        Array.prototype.push.apply(content, this.setPropertyContent(element));
-                        content = content.join(' ');
+                        Array.prototype.push.apply(content, this.setPropertyContent(element, (schema)));
 
-                        content += ' <a href="#">[edit]</a>';
+                        content = content.filter((e) => {
+                            return e;
+                        });
 
-                        this.getEl().querySelector('p').innerHTML = content;
+                        content.push('<a href="#">[edit]</a>');
+
+                        this.getEl().querySelector('p').innerHTML = content.join('<br />');
                     },
 
                     setSchemaContent: function (element, schema) {
                         let parent = getNodeSchema(element.parentNode);
-                        let content = ['The schema for this content is "' + schema + '".'];
+                        let text = 'The schema type for this content is "' + data.types[schema]['label'] + '".';
 
                         if (parent) {
-                            content.push('It also belongs within "' + parent + '".');
+                            text += ' It also belongs within "' + data.types[parent]['label'] + '".';
                         }
-                        return content;
+
+                        return [text];
                     },
 
-                    setPropertyContent: function (element) {
-                        return [];
-                    }
+                    setPropertyContent: function (element, hideSchema) {
+                        let property = getNodeProperty(element);
+                        let text = null;
 
+                        if (property) {
+                            text = 'The schema property for this content is "' + data.properties[property]['label'] + '".';
+
+                            if (!hideSchema) {
+                                let schema = getNodeSchema(element.parentNode);
+                                text += ' It also belongs within "' + schema + '".';
+                            }
+                        }
+
+                        return [text];
+                    },
+
+                    registerEvents: function () {
+                        this.getEl().querySelector('p').addEventListener('click', (e) => {
+                            if (e.target.nodeName === 'A') {
+                                e.preventDefault();
+
+                                editor.selection.select(this.element);
+                                editor.execCommand('webschema.open');
+
+                                this.hide();
+                            }
+                        });
+                    }
                 });
             };
         };
