@@ -6,6 +6,7 @@
                 dialog = null,
                 editor = null,
                 tooltip = null,
+                valid_elements = ['p', 'span', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'pre'],
                 messages = {
                     select_schema: 'Please select a schema from the list below',
                     select_property: 'Due to this selection being directly within ":parent", please select a property below and add its schema'
@@ -101,19 +102,28 @@
                 return (node && node.hasAttribute('itemprop')) ? node.getAttribute('itemprop') : null;
             }
 
+            function eventChangeMetaProperty(e) {
+                changeMetaProperty(e.target.value);
+            }
+
+            function eventChangeSchema(e) {
+                changeSchema(e.target.value);
+            }
+
+            function eventAddMeta(e) {
+                e.preventDefault();
+                addMeta();
+
+                //recalculate the window dimensions etc
+                //editor.windowManager.getWindows()[0].resizeToContent();
+            }
+
             function registerEvents() {
-                dialog.querySelector('.schema').addEventListener('change', (e) => {
-                    changeMetaProperty(e.target.value);
-                });
+                dialog.querySelector('.schema').addEventListener('change', eventChangeMetaProperty);
 
-                dialog.querySelector('.parent-property').addEventListener('change', (e) => {
-                    changeSchema(e.target.value);
-                });
+                dialog.querySelector('.parent-property').addEventListener('change', eventChangeSchema);
 
-                dialog.querySelector('.metas h3 a').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    addMeta();
-                });
+                dialog.querySelector('.metas h3 a').addEventListener('click', eventAddMeta);
 
                 let metas = dialog.querySelectorAll('.metas .meta a');
 
@@ -157,7 +167,7 @@
 
                 if (property && value) {
                     meta.querySelector('select option[value=' + property + ']').setAttribute('selected', 'selected');
-                    meta.querySelector('.value').setAttribute('value', value);
+                    meta.querySelector('.value').textContent = value;
                 }
 
                 meta.querySelector('.remove').addEventListener('click', (e) => {
@@ -413,6 +423,28 @@
                 }
             }
 
+            function addValidElements() {
+                let elements, children;
+
+                elements = valid_elements.map((element) => {
+                    return element + '[itemscope|itemtype|itemprop]';
+                });
+
+                elements = elements.join(',') + ',meta[itemprop|content]';
+
+                //add valid elements
+                editor.schema.addValidElements(elements);
+
+                children = valid_elements.map((element) => {
+                    return '+' + element + '[meta]';
+                });
+
+                children = children.join(',');
+
+                //add valid children
+                editor.schema.addValidChildren(children);
+            }
+
             function open() {
                 let node = editor.selection.getNode();
                 let container = render(getTemplate(), node);
@@ -420,7 +452,7 @@
                 let window = editor.windowManager.open({
                     title: 'Web Schema',
                     html: container.innerHTML,
-                    width: 680,
+                    width: 730,
                     buttons: [
                         {
                             text: 'OK',
@@ -488,22 +520,21 @@
                         });
 
                         editor.on('preinit', () => {
-                            //add valid elements
-                            editor.schema.addValidElements('p[itemscope|itemtype|itemprop],span[itemscope|itemtype|itemprop],' +
-                                'meta[itemprop|content],ul[itemscope|itemtype|itemprop],li[itemscope|itemtype|itemprop]');
-
-                            //add valid children
-                            editor.schema.addValidChildren('+p[meta],+span[meta],+ul[meta],+li[meta]');
+                            addValidElements();
                         });
                     }
                 });
 
+                //add plugin
                 tinymce.PluginManager.add('webschema', tinymce.plugins.WebSchema);
 
+                //add tooltip
                 tinymce.ui.WebSchemaToolTip = tinymce.ui.Tooltip.extend({
                     element: null,
 
                     renderHtml: function () {
+                        //self._super()? O_O?
+
                         return '<div id="' + this._id + '" class="mce-panel mce-inline-toolbar-grp mce-container webschema-tooltip">' +
                             '<div class="mce-container-body"><p></p></div></div>';
                     },

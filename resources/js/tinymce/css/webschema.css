@@ -1,5 +1,6 @@
 .web-schema * {
     white-space: normal;
+    outline: none;
 }
 
 .web-schema h3 {
@@ -49,8 +50,18 @@
 }
 
 .web-schema select {
-    width: 250px;
     height: auto;
+}
+
+.web-schema .property {
+    width: 200px;
+}
+
+.web-schema .value {
+    width: 200px;
+    height: 100px;
+    resize: none;
+    padding: 5px;
 }
 
 .web-schema #message {
@@ -63,26 +74,20 @@
     width: 607px;
 }
 
-.web-schema a {
+.web-schema a,
+.webschema-tooltip a {
     cursor: pointer;
+    color: #0085ba;
 }
 
 .web-schema .meta .remove {
-    color: red;
+    margin-left: 13px;
 }
 
 .mce-content-body [itemtype], .mce-content-body [itemprop] {
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
-}
-
-.mce-content-body .web-schema-tooltip {
-    content: 'Loading info..';
-    position: absolute;
-    font-size: 0.7em;
-    right: 1px;
-    top: -20px;
 }
 
 .mce-content-body [itemtype] {

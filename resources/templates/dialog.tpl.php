@@ -37,9 +37,9 @@
             </select>
 
             <label>Value</label>
-            <input type="text" title="Value" class="value" autocomplete="false"/>
+            <textarea class="value" title="Value"></textarea>
 
-            <a href="#" title="remove" class="remove">[x]</a>
+            <a href="#" title="remove" class="remove">[remove]</a>
         </fieldset>
     </div>
 </form>
