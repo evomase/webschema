@@ -84,6 +84,11 @@
     margin-left: 13px;
 }
 
+.mce-web-schema-container {
+    max-height: 700px;
+    overflow-y: scroll;
+}
+
 .mce-content-body [itemtype], .mce-content-body [itemprop] {
     padding-left: 10px;
     padding-right: 10px;

@@ -113,25 +113,36 @@
             function eventAddMeta(e) {
                 e.preventDefault();
                 addMeta();
+                resizeDialog();
+            }
 
+            function eventRemoveMeta(e) {
+                e.preventDefault();
+                removeMeta(e.target.parentNode);
+                resizeDialog();
+            }
+
+            function resizeDialog() {
                 //recalculate the window dimensions etc
-                //editor.windowManager.getWindows()[0].resizeToContent();
+                let window = editor.windowManager.getWindows()[0];
+
+                let rect = dialog.querySelector('.web-schema').getBoundingClientRect();
+                dialog.querySelector('.mce-window-body').style.height = rect.height + 'px';
+                dialog.style.height = 'auto';
+
+                window.initLayoutRect();
+                window.reflow();
             }
 
             function registerEvents() {
                 dialog.querySelector('.schema').addEventListener('change', eventChangeMetaProperty);
-
                 dialog.querySelector('.parent-property').addEventListener('change', eventChangeSchema);
-
                 dialog.querySelector('.metas h3 a').addEventListener('click', eventAddMeta);
 
                 let metas = dialog.querySelectorAll('.metas .meta a');
 
                 metas.forEach((element) => {
-                    element.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        removeMeta(e.target.parentNode);
-                    });
+                    element.addEventListener('click', eventRemoveMeta);
                 })
             }
 
@@ -170,11 +181,7 @@
                     meta.querySelector('.value').textContent = value;
                 }
 
-                meta.querySelector('.remove').addEventListener('click', (e) => {
-                    e.preventDefault();
-
-                    removeMeta(e.target.parentNode);
-                });
+                meta.querySelector('.remove').addEventListener('click', eventRemoveMeta);
 
                 metas.appendChild(meta);
             }
@@ -395,13 +402,7 @@
                         generateTooltip();
                     }
 
-                    tooltip.setContent(element, data);
-                    tooltip.moveRel(element, ['bc-tc']);
-
-                    let rect = editor.container.querySelector('iframe').getBoundingClientRect();
-
-                    tooltip.moveBy(rect.x, rect.y);
-                    tooltip.show();
+                    tooltip.show(element);
                 }
                 else {
                     if (tooltip) {
@@ -413,8 +414,6 @@
             function generateTooltip() {
                 tooltip = new tinymce.ui.WebSchemaToolTip();
                 tooltip.renderTo();
-
-                tooltip.run();
             }
 
             function load() {
@@ -453,6 +452,7 @@
                     title: 'Web Schema',
                     html: container.innerHTML,
                     width: 730,
+                    classes: 'web-schema-container',
                     buttons: [
                         {
                             text: 'OK',
@@ -481,7 +481,9 @@
             }
 
             function close() {
-                //deregisterEvents();
+                dialog.querySelector('.schema').removeEventListener('change', eventChangeMetaProperty);
+                dialog.querySelector('.parent-property').removeEventListener('change', eventChangeSchema);
+                dialog.querySelector('.metas h3 a').removeEventListener('click', eventAddMeta);
             }
 
             this.init = function () {
@@ -533,13 +535,23 @@
                     element: null,
 
                     renderHtml: function () {
-                        //self._super()? O_O?
-
                         return '<div id="' + this._id + '" class="mce-panel mce-inline-toolbar-grp mce-container webschema-tooltip">' +
                             '<div class="mce-container-body"><p></p></div></div>';
                     },
 
-                    run: function () {
+                    show: function (element) {
+                        this.setContent(element);
+                        this.moveRel(element, ['bc-tc']);
+
+                        let rect = editor.container.querySelector('iframe').getBoundingClientRect();
+                        this.moveBy(rect.x, rect.y);
+
+                        this._super();
+                    },
+
+                    postRender: function () {
+                        this._super();
+
                         this.registerEvents();
                     },
 
