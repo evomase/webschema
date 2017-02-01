@@ -1,12 +1,17 @@
-# Web Schema v1.0
+=== Plugin Name ===
+Contributors: evomase
+Tags: seo, tinymce, schema
+Requires at least: 4.6
+Tested up to: 4.7
+Stable tag: 1.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Web Schema is an open source tool created to make it easier for content creators to markup their content with a collection of [schemas](http://schema.org/).
+Web Schema is an open source tool created to make it easier for content creators to markup their content with a collection of schemas.
 
-## Requirements
-*	TinyMCE
-*	PHP
-*	MYSQL
-*	WordPress
+== Description ==
+
+Web Schema is an open source tool created to make it easier for content creators to markup their content with a collection of schemas.
 
 ## Installation
 
@@ -33,8 +38,7 @@ to highlight each markup.
 *	Type - <font color="#FFCC80">Baby Yellow</font>
 *	Property - <font color="#CCFFFF">Baby Green</font>
 
-##	TODO
-*	Drupal version
-*	Standalone version
-*	Develop functionality to add custom schemas
+### Changelog
 
+= 1.0 =
+* Initial release
