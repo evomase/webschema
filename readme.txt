@@ -1,4 +1,4 @@
-=== Plugin Name ===
+# Web Schema
 Contributors: evomase
 Tags: seo, tinymce, schema
 Requires at least: 4.6
