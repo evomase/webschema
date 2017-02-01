@@ -1,7 +1,7 @@
 (() => {
     "use strict";
 
-    class Schema {
+    class WebSchema {
         constructor() {
             let data = null,
                 template = '',
@@ -627,5 +627,5 @@
         };
     }
 
-    (new Schema()).init();
+    (new WebSchema()).init();
 })();
