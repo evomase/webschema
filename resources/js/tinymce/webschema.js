@@ -1,4 +1,6 @@
-(function () {
+(() => {
+    "use strict";
+
     class Schema {
         constructor() {
             let data = null,
@@ -237,7 +239,7 @@
                     tree = tree[schema];
                 }
 
-                ancestors.forEach(function (ancestor) {
+                ancestors.forEach((ancestor) => {
                     tree = tree['children'][ancestor];
                 });
 
@@ -486,18 +488,21 @@
                 dialog.querySelector('.metas h3 a').removeEventListener('click', eventAddMeta);
             }
 
-            this.init = function () {
+            this.init = () => {
                 tinymce.create('tinymce.plugins.WebSchema', {
                     WebSchema: function (ed, url) {
                         editor = ed;
 
-                        editor.addCommand('webschema.open', function () {
+                        editor.addCommand('webschema.open', () => {
                             open();
                         });
 
                         editor.addButton('webschema', {
                             title: 'Add/Edit Schema',
-                            cmd: 'webschema.open'
+                            cmd: 'webschema.open',
+                            onPostRender: function () {
+                                this.getEl().querySelector('i').classList.add('mce-i-dashicon');
+                            }
                         });
 
                         editor.on('init', () => {
@@ -506,8 +511,10 @@
                             css.setAttribute('rel', 'stylesheet');
                             css.setAttribute('href', link + tinymce.Env.cacheSuffix);
 
+                            //load css to head of top document
                             document.querySelector('head').appendChild(css);
 
+                            //load css to content
                             editor.contentCSS.push(link);
 
                             load();

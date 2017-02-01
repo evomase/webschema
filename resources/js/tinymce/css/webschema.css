@@ -1,3 +1,7 @@
+.mce-i-webschema:before {
+    content: "\f325";
+}
+
 .web-schema * {
     white-space: normal;
     outline: none;
