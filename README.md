@@ -15,7 +15,7 @@ At the moment, the tool is only available for WordPress.
 * Upload the plugin files to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
 * Activate the plugin through the 'Plugins' screen in WordPress
 
-##	How to use
+## How to use
 The tool can be used on any page that contains a TinyMCE editor.
 
 To add a schema to a piece of content, just select the content and click on the 'Add/Edit Schema' button on the editor.
