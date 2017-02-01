@@ -15,10 +15,6 @@ At the moment, the tool is only available for WordPress.
 * Upload the plugin files to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
 * Activate the plugin through the 'Plugins' screen in WordPress
 
-### Wordpress
-
-All you have to do is pull the source code and add it to the plugin directory. Once that's done the plugin needs to be activated in the plugin admin interface.
-
 ##	How to use
 The tool can be used on any page that contains a TinyMCE editor.
 

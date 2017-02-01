@@ -9,7 +9,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Web Schema is an open source tool created to make it easier for content creators to markup their content with a collection of schemas.
 
-== Description ==
+## Description
 
 Web Schema is an open source tool created to make it easier for content creators to markup their content with a collection of schemas.
 
@@ -19,10 +19,6 @@ At the moment, the tool is only available for WordPress.
 
 * Upload the plugin files to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
 * Activate the plugin through the 'Plugins' screen in WordPress
-
-### Wordpress
-
-All you have to do is pull the source code and add it to the plugin directory. Once that's done the plugin needs to be activated in the plugin admin interface.
 
 ##	How to use
 The tool can be used on any page that contains a TinyMCE editor.
@@ -35,10 +31,10 @@ This will provide you with an interface where you can create a schema for that c
 To make it easier to identify each schema, all marked-up content are highlighted and a tooltip is shown when the mouse moves over the highlighted content. Below is a list of colors used
 to highlight each markup.
 
-*	Type - <font color="#FFCC80">Baby Yellow</font>
-*	Property - <font color="#CCFFFF">Baby Green</font>
+*	Type - Baby Yellow
+*	Property - Baby Green
 
-### Changelog
+## Changelog
 
-= 1.0 =
+### 1.0
 * Initial release
