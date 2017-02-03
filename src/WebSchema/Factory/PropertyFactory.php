@@ -10,7 +10,7 @@ namespace WebSchema\Factory;
 
 use WebSchema\Models\Property;
 
-class PropertyFactory
+class PropertyFactory extends Factory
 {
     /**
      * @param array $data

@@ -9,7 +9,9 @@
 namespace WebSchema\Utils;
 
 
-class TinyMCE
+use WebSchema\Utils\Interfaces\Bootable;
+
+class TinyMCE implements Bootable
 {
     public static function boot()
     {

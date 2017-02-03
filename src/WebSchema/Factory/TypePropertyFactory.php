@@ -11,8 +11,7 @@ namespace WebSchema\Factory;
 use WebSchema\Models\Type;
 use WebSchema\Models\TypeProperty;
 
-
-class TypePropertyFactory
+class TypePropertyFactory extends Factory
 {
     /**
      * @param array $data

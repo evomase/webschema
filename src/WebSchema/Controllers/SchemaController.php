@@ -10,8 +10,9 @@ namespace WebSchema\Controllers;
 
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;
+use WebSchema\Utils\Interfaces\Bootable;
 
-class SchemaController
+class SchemaController implements Bootable
 {
     private static $instance;
 
@@ -19,7 +20,6 @@ class SchemaController
     {
         add_action('wp_ajax_schema_get_all', array($this, 'getAll'));
         add_action('wp_ajax_schema_get_template', array($this, 'getTemplate'));
-
     }
 
     public static function boot()

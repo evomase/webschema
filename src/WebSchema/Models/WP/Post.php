@@ -14,10 +14,13 @@ class Post
 {
     use HasCollection;
 
+    const FIELD_ROOT_SCHEMA = 'root_schema';
     const META_KEY = 'web-schema';
 
     private $id;
-    private $data;
+    private $data = [
+        self::FIELD_ROOT_SCHEMA => null
+    ];
 
     private function __construct($id)
     {
@@ -38,9 +41,14 @@ class Post
 
     public function load()
     {
-        $this->data = get_post_meta($this->id, static::META_KEY);
-
+        $this->fill(get_post_meta($this->id, static::META_KEY));
         $this->put($this->id, $this);
+    }
+
+    public function fill($data)
+    {
+        $data = array_intersect_key($data, $this->data);
+        $this->data = array_merge($this->data, $data);
     }
 
     public function save()

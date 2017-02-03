@@ -14,13 +14,4 @@ define('WEB_SCHEMA_VERSION', '1.0');
 require 'config.php';
 require 'autoload.php';
 
-\WebSchema\Factory\PropertyFactory::boot();
-\WebSchema\Factory\TypeFactory::boot();
-\WebSchema\Factory\TypePropertyFactory::boot();
-\WebSchema\Utils\Installer::boot();
-
-\WebSchema\Controllers\SchemaController::boot();
-
-if (is_admin()) {
-    \WebSchema\Utils\TinyMCE::boot();
-}
+\WebSchema\Utils\BootLoader::run();

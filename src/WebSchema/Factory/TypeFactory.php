@@ -10,8 +10,7 @@ namespace WebSchema\Factory;
 
 use WebSchema\Models\Type;
 
-
-class TypeFactory
+class TypeFactory extends Factory
 {
     /**
      * @param array $data

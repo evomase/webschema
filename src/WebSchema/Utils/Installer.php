@@ -11,8 +11,9 @@ namespace WebSchema\Utils;
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;
 use WebSchema\Factory\TypePropertyFactory;
+use WebSchema\Utils\Interfaces\Bootable;
 
-class Installer
+class Installer implements Bootable
 {
     private $directory = WEB_SCHEMA_DIR . '/resources/migration';
 
