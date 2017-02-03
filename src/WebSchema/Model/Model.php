@@ -51,7 +51,7 @@ abstract class Model
     public static function get($id)
     {
         if (static::$collection->offsetExists($id)) {
-            static::$collection->offsetGet($id);
+            return static::$collection->offsetGet($id);
         }
 
         if ($data = static::search($id, static::$key)) {
