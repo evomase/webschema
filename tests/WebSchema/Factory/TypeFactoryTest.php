@@ -61,7 +61,7 @@ class TypeFactoryTest extends AbstractTestCase
                 ]
         ];
 
-        $this->assertEquals(TypeFactory::createOrUpdate($data), 0);
+        TypeFactory::createOrUpdate($data);
 
         Type::clearCollection();
 
