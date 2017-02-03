@@ -6,15 +6,14 @@
  * Time: 20:19
  */
 
-namespace WebSchema\Model;
+namespace WebSchema\Models;
 
+use WebSchema\Models\Traits\HasCollection;
 
 abstract class Model
 {
-    /**
-     * @var \ArrayObject
-     */
-    protected static $collection;
+    use HasCollection;
+
     protected static $key = 'id';
     protected static $table;
 
@@ -51,7 +50,7 @@ abstract class Model
     public static function get($id)
     {
         if (static::$collection->offsetExists($id)) {
-            static::$collection->offsetGet($id);
+            return static::$collection->offsetGet($id);
         }
 
         if ($data = static::search($id, static::$key)) {
@@ -85,19 +84,6 @@ abstract class Model
     }
 
     /**
-     * @param       $id
-     * @param Model $model
-     */
-    protected function put($id, Model $model)
-    {
-        if (static::$collection->offsetExists($id)) {
-            return;
-        }
-
-        static::$collection[$id] = $model;
-    }
-
-    /**
      * @return Model[]
      */
     public static function getAll()
@@ -118,14 +104,6 @@ abstract class Model
     }
 
     /**
-     *
-     */
-    public static function clearCollection()
-    {
-        static::$collection = new \ArrayObject();
-    }
-
-    /**
      * @param $value
      * @return Model
      */
@@ -138,8 +116,8 @@ abstract class Model
     {
         global $wpdb;
 
-        static::$collection = new \ArrayObject();
         static::$db = $wpdb;
+        static::bootCollection();
     }
 
     public function save()

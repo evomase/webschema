@@ -6,7 +6,7 @@
  * Time: 20:18
  */
 
-namespace WebSchema\Model;
+namespace WebSchema\Models;
 
 
 class Type extends Model

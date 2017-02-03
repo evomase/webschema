@@ -10,7 +10,6 @@ spl_autoload_register(function ($class) {
     include "$class";
 });
 
-
 //Unit test classes
 spl_autoload_register(function ($class) {
     $class = __DIR__ . '/' . str_replace('\\', '/', $class) . '.php';

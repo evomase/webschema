@@ -6,7 +6,7 @@
  * Time: 20:20
  */
 
-namespace WebSchema\Model;
+namespace WebSchema\Models;
 
 
 class Property extends Model

@@ -7,10 +7,10 @@
  * Time: 18:29
  */
 
-namespace tests\WebSchema\Model;
+namespace tests\WebSchema\Models;
 
 use tests\WebSchema\AbstractTestCase;
-use WebSchema\Model\Property;
+use WebSchema\Models\Property;
 use WebSchema\Utils\Installer;
 
 class PropertyTest extends AbstractTestCase
@@ -64,10 +64,10 @@ class PropertyTest extends AbstractTestCase
      */
     public function testGet(Property $model)
     {
-        $this->assertInstanceOf('WebSchema\Model\Property', Property::get($model->getID()));
+        $this->assertInstanceOf(Property::class, Property::get($model->getID()));
 
         Property::clearCollection();
 
-        $this->assertInstanceOf('WebSchema\Model\Property', Property::get($model->getID()));
+        $this->assertInstanceOf(Property::class, Property::get($model->getID()));
     }
 }

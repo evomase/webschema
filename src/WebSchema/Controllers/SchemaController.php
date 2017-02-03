@@ -6,7 +6,7 @@
  * Time: 16:22
  */
 
-namespace WebSchema\Controller;
+namespace WebSchema\Controllers;
 
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;

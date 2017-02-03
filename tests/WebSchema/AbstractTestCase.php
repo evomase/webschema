@@ -8,9 +8,9 @@
 
 namespace tests\WebSchema;
 
-use WebSchema\Model\Property;
-use WebSchema\Model\Type;
-use WebSchema\Model\TypeProperty;
+use WebSchema\Models\Property;
+use WebSchema\Models\Type;
+use WebSchema\Models\TypeProperty;
 
 class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {

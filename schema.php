@@ -9,7 +9,7 @@ Author URI: http://www.davidogilo.co.uk
 License: GPL2
 */
 
-define('WEB_SCHEMA_VERSION', '1.0.0');
+define('WEB_SCHEMA_VERSION', '1.0');
 
 require 'config.php';
 require 'autoload.php';
@@ -19,7 +19,7 @@ require 'autoload.php';
 \WebSchema\Factory\TypePropertyFactory::boot();
 \WebSchema\Utils\Installer::boot();
 
-\WebSchema\Controller\SchemaController::boot();
+\WebSchema\Controllers\SchemaController::boot();
 
 if (is_admin()) {
     \WebSchema\Utils\TinyMCE::boot();

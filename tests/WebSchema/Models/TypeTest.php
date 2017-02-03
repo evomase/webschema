@@ -7,10 +7,10 @@
  * Time: 18:29
  */
 
-namespace tests\WebSchema\Model;
+namespace tests\WebSchema\Models;
 
 use tests\WebSchema\AbstractTestCase;
-use WebSchema\Model\Type;
+use WebSchema\Models\Type;
 use WebSchema\Utils\Installer;
 
 class TypeTest extends AbstractTestCase
@@ -45,13 +45,13 @@ class TypeTest extends AbstractTestCase
      */
     public function testGet(Type $model)
     {
-        $this->assertInstanceOf('WebSchema\Model\Type', Type::get($model->getID()));
+        $this->assertInstanceOf(Type::class, Type::get($model->getID()));
 
         Type::clearCollection();
 
         $model = Type::get($model->getID());
 
-        $this->assertInstanceOf('WebSchema\Model\Type', $model);
+        $this->assertInstanceOf(Type::class, $model);
         $this->assertInternalType('array', $model->getAncestors());
     }
 

@@ -8,8 +8,8 @@
 
 namespace WebSchema\Factory;
 
-use WebSchema\Model\Type;
-use WebSchema\Model\TypeProperty;
+use WebSchema\Models\Type;
+use WebSchema\Models\TypeProperty;
 
 
 class TypePropertyFactory

@@ -10,9 +10,9 @@
 namespace tests\WebSchema\Utils;
 
 use tests\WebSchema\AbstractTestCase;
-use WebSchema\Model\Property;
-use WebSchema\Model\Type;
-use WebSchema\Model\TypeProperty;
+use WebSchema\Models\Property;
+use WebSchema\Models\Type;
+use WebSchema\Models\TypeProperty;
 use WebSchema\Utils\Installer;
 
 class InstallerTest extends AbstractTestCase

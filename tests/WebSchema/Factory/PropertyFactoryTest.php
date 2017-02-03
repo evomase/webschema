@@ -10,7 +10,7 @@
 namespace tests\WebSchema\Factory;
 
 use tests\WebSchema\AbstractTestCase;
-use WebSchema\Model\Property;
+use WebSchema\Models\Property;
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Utils\Installer;
 

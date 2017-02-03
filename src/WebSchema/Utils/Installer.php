@@ -8,7 +8,6 @@
 
 namespace WebSchema\Utils;
 
-
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;
 use WebSchema\Factory\TypePropertyFactory;

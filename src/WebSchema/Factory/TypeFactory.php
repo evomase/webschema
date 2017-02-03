@@ -8,7 +8,7 @@
 
 namespace WebSchema\Factory;
 
-use WebSchema\Model\Type;
+use WebSchema\Models\Type;
 
 
 class TypeFactory

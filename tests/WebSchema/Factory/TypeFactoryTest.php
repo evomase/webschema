@@ -11,7 +11,7 @@ namespace tests\WebSchema\Factory;
 
 use tests\WebSchema\AbstractTestCase;
 use WebSchema\Factory\TypeFactory;
-use WebSchema\Model\Type;
+use WebSchema\Models\Type;
 use WebSchema\Utils\Installer;
 
 class TypeFactoryTest extends AbstractTestCase
@@ -61,7 +61,7 @@ class TypeFactoryTest extends AbstractTestCase
                 ]
         ];
 
-        $this->assertEquals(TypeFactory::createOrUpdate($data), 0);
+        TypeFactory::createOrUpdate($data);
 
         Type::clearCollection();
 

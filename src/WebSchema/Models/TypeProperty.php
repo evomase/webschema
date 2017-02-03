@@ -6,7 +6,7 @@
  * Time: 20:21
  */
 
-namespace WebSchema\Model;
+namespace WebSchema\Models;
 
 class TypeProperty extends Model
 {

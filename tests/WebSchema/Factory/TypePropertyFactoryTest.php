@@ -13,9 +13,9 @@ use tests\WebSchema\AbstractTestCase;
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;
 use WebSchema\Factory\TypePropertyFactory;
-use WebSchema\Model\Property;
-use WebSchema\Model\Type;
-use WebSchema\Model\TypeProperty as Model;
+use WebSchema\Models\Property;
+use WebSchema\Models\Type;
+use WebSchema\Models\TypeProperty as Model;
 use WebSchema\Utils\Installer;
 
 class TypePropertyFactoryTest extends AbstractTestCase

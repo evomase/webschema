@@ -8,7 +8,7 @@
 
 namespace WebSchema\Factory;
 
-use WebSchema\Model\Property;
+use WebSchema\Models\Property;
 
 class PropertyFactory
 {

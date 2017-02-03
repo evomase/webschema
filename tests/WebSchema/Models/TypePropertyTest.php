@@ -7,12 +7,12 @@
  * Time: 18:29
  */
 
-namespace tests\WebSchema\Model;
+namespace tests\WebSchema\Models;
 
 use tests\WebSchema\AbstractTestCase;
-use WebSchema\Model\Property;
-use WebSchema\Model\Type;
-use WebSchema\Model\TypeProperty;
+use WebSchema\Models\Property;
+use WebSchema\Models\Type;
+use WebSchema\Models\TypeProperty;
 use WebSchema\Utils\Installer;
 
 class TypePropertyTest extends AbstractTestCase
@@ -63,10 +63,10 @@ class TypePropertyTest extends AbstractTestCase
      */
     public function testGet(TypeProperty $model)
     {
-        $this->assertInstanceOf('WebSchema\Model\TypeProperty', TypeProperty::get($model->getID()));
+        $this->assertInstanceOf(TypeProperty::class, TypeProperty::get($model->getID()));
 
         TypeProperty::clearCollection();
 
-        $this->assertInstanceOf('WebSchema\Model\TypeProperty', TypeProperty::get($model->getID()));
+        $this->assertInstanceOf(TypeProperty::class, TypeProperty::get($model->getID()));
     }
 }
