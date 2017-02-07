@@ -16,6 +16,7 @@ class BootLoader
         '\WebSchema\Factory\PropertyFactory'     => null,
         '\WebSchema\Factory\TypeFactory'         => null,
         '\WebSchema\Factory\TypePropertyFactory' => null,
+        '\WebSchema\Factory\WP\PostFactory'      => null,
 
         '\WebSchema\Utils\Installer' => null,
         '\WebSchema\Utils\TinyMCE'   => 'is_admin',

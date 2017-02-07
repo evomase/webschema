@@ -20,7 +20,7 @@ trait HasCollection
      */
     public static function clearCollection()
     {
-        static::$collection = new \ArrayObject();
+        static::bootCollection();
     }
 
     /**

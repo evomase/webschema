@@ -12,4 +12,7 @@ use WebSchema\Utils\Interfaces\Bootable;
 
 abstract class Factory implements Bootable
 {
+    protected function __construct()
+    {
+    }
 }

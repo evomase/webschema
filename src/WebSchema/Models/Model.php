@@ -9,19 +9,19 @@
 namespace WebSchema\Models;
 
 use WebSchema\Models\Traits\HasCollection;
+use WebSchema\Models\Traits\HasData;
 
 abstract class Model
 {
     use HasCollection;
+    use HasData;
 
     protected static $key = 'id';
     protected static $table;
-
     /**
      * @var \wpdb
      */
     protected static $db;
-
     protected $data = [];
     protected $new = true;
 
@@ -150,20 +150,6 @@ abstract class Model
     public function getID()
     {
         return $this->data[static::$key];
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        $data = [];
-
-        foreach ($this->data as $id => $value) {
-            $data[$id] = $value;
-        }
-
-        return $data;
     }
 
     /**
