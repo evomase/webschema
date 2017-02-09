@@ -99,6 +99,7 @@ class Type extends Model
      */
     protected function insert()
     {
+        /** @noinspection SqlResolve */
         $query = 'INSERT INTO ' . self::$table . ' ( id, comment, label, url, ancestors ) VALUES ( %s, %s, %s, %s, %s )';
         $query = self::$db->prepare($query, $this->data[self::FIELD_ID], $this->data[self::FIELD_COMMENT],
             $this->data[self::FIELD_LABEL], $this->data[self::FIELD_URL],

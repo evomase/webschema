@@ -8,21 +8,25 @@
 
 namespace WebSchema\Models\WP;
 
-use WebSchema\Factory\TypeFactory;
+use WebSchema\Models\StructuredData;
 use WebSchema\Models\Traits\HasCollection;
 use WebSchema\Models\Traits\HasData;
+use WebSchema\Models\Types\Model;
 
 class Post
 {
     use HasCollection;
     use HasData;
 
-    const FIELD_ROOT_SCHEMA = 'root-schema';
+    const FIELD_DATA_TYPE = 'data-type';
+    const FIELD_MICRO_DATA = '';
+
     const META_KEY = 'web-schema';
     const POST_TYPE = 'post';
 
     protected $data = [
-        self::FIELD_ROOT_SCHEMA => null
+        self::FIELD_DATA_TYPE  => null,
+        self::FIELD_MICRO_DATA => ''
     ];
 
     private $id;
@@ -35,9 +39,19 @@ class Post
 
     public static function renderMetaBox(\WP_Post $post)
     {
-        $schemas = TypeFactory::getAll();
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $types = StructuredData::getTypes();
+
+        foreach ($types as $id => $type) {
+            /**
+             * @var Model $type
+             */
+            $types[$id] = $type->getSchema()->toArray();
+        }
 
         $model = static::get($post->ID);
+
+        /** @noinspection PhpUnusedLocalVariableInspection */
         $data = $model->data;
 
         include WEB_SCHEMA_DIR . '/resources/templates/meta-box.tpl.php';
@@ -72,7 +86,10 @@ class Post
         $this->put($this->id, $this);
     }
 
-    public function fill($data)
+    /**
+     * @param array $data
+     */
+    public function fill(array $data)
     {
         $data = array_intersect_key($data, $this->data);
         $this->data = array_merge($this->data, $data);
@@ -80,7 +97,8 @@ class Post
 
     public static function addMetaBox()
     {
-        add_meta_box(static::META_KEY, 'Web Schema', array(static::class, 'renderMetaBox'), static::POST_TYPE,
+        add_meta_box(static::META_KEY, 'Web Schema - Structured Data', array(static::class, 'renderMetaBox'),
+            static::POST_TYPE,
             'advanced', 'high');
     }
 
@@ -130,5 +148,15 @@ class Post
         } else {
             update_post_meta($this->id, static::META_KEY, $this->data);
         }
+    }
+
+    public function getMicroData()
+    {
+
+    }
+
+    public function generateMicroData()
+    {
+
     }
 }

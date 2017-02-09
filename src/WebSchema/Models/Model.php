@@ -68,6 +68,7 @@ abstract class Model
     public static function search($value, $column = 'name')
     {
         $data = [];
+        /** @noinspection SqlResolve */
         $query = static::$db->prepare('SELECT * FROM ' . static::$table . ' WHERE ' . $column . ' = %s', $value);
         $results = static::$db->get_results($query, ARRAY_A);
 

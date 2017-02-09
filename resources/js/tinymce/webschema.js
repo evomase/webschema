@@ -1,7 +1,7 @@
 (() => {
     "use strict";
 
-    class WebSchema {
+    class WebSchema_TinyMCE {
         constructor() {
             let data = null,
                 template = '',
@@ -627,5 +627,5 @@
         };
     }
 
-    (new WebSchema()).init();
+    (new WebSchema_TinyMCE()).init();
 })();

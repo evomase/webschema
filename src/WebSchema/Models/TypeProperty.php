@@ -30,6 +30,7 @@ class TypeProperty extends Model
     public static function lookup($type, $property)
     {
         $model = null;
+        /** @noinspection SqlResolve */
         $query = static::$db->prepare('SELECT * FROM ' . static::$table . ' WHERE type_id = %s AND property_id = %s',
             $type, $property);
 
@@ -56,6 +57,7 @@ class TypeProperty extends Model
      */
     protected function insert()
     {
+        /** @noinspection SqlResolve */
         $query = 'INSERT INTO ' . self::$table . ' ( type_id, property_id ) VALUES ( %s, %s )';
         $query = self::$db->prepare($query, $this->data[self::FIELD_TYPE_ID], $this->data[self::FIELD_PROPERTY_ID]);
 

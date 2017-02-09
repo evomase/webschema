@@ -56,6 +56,7 @@ class Property extends Model
      */
     protected function insert()
     {
+        /** @noinspection SqlResolve */
         $query = 'INSERT INTO ' . self::$table . ' ( id, comment, label, ranges ) VALUES ( %s, %s, %s, %s )';
         $query = self::$db->prepare($query, $this->data[self::FIELD_ID], $this->data[self::FIELD_COMMENT],
             $this->data[self::FIELD_LABEL], json_encode($this->data[self::FIELD_RANGES]));
