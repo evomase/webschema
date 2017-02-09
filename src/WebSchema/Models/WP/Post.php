@@ -150,12 +150,12 @@ class Post
         }
     }
 
-    public function getMicroData()
+    public function getJSON()
     {
 
     }
 
-    public function generateMicroData()
+    public function generateJSON()
     {
 
     }
