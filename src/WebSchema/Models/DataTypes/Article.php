@@ -6,7 +6,7 @@
  * Time: 16:35
  */
 
-namespace WebSchema\Models\Types;
+namespace WebSchema\Models\DataTypes;
 
 class Article extends Model
 {
@@ -19,7 +19,7 @@ class Article extends Model
     const FIELD_MAIN_ENTITY_OF_PAGE = 'mainEntityOfPage';
     const FIELD_PUBLISHER = 'publisher';
 
-    private $data = [
+    protected $data = [
         self::FIELD_AUTHOR              => [],
         self::FIELD_DATE_MODIFIED       => null,
         self::FIELD_DATE_PUBLISHED      => null,
@@ -30,18 +30,13 @@ class Article extends Model
         self::FIELD_PUBLISHER           => []
     ];
 
-    private $required = [
+    protected $required = [
         self::FIELD_HEADLINE,
         self::FIELD_IMAGE,
         self::FIELD_PUBLISHER,
         self::FIELD_DATE_PUBLISHED,
         self::FIELD_AUTHOR
     ];
-
-    public function generateJSON()
-    {
-        return '';
-    }
 
     public function setImage($url)
     {
@@ -52,9 +47,13 @@ class Article extends Model
         return $this;
     }
 
+    /**
+     * @param string $url
+     * @return array|null
+     */
     private function getImage($url)
     {
-        if ($image = getimagesize($url) !== false) {
+        if (filter_var($url, FILTER_VALIDATE_URL) && $image = getimagesize($url) !== false) {
             $width = $image[0];
 
             //requirements as per Google AMP
@@ -67,18 +66,14 @@ class Article extends Model
             }
         }
 
-        return [];
+        return null;
     }
 
-    private function setValue($key, $value)
-    {
-        if ($value && $key) {
-            $this->data[$key] = $value;
-        }
-
-        return $this;
-    }
-
+    /**
+     * @param string $name
+     * @param string $imageURL
+     * @return $this|Article
+     */
     public function setPublisher($name, $imageURL)
     {
         if ($image = $this->getImage($imageURL) && $name) {
@@ -91,31 +86,55 @@ class Article extends Model
         return $this;
     }
 
+    /**
+     * @param \DateTime $dateTime
+     * @return Article
+     */
     public function setDatePublished(\DateTime $dateTime)
     {
         return $this->setValue(self::FIELD_DATE_PUBLISHED, $dateTime->format('c'));
     }
 
+    /**
+     * @param \DateTime $dateTime
+     * @return Article
+     */
     public function setDateModified(\DateTime $dateTime)
     {
         return $this->setValue(self::FIELD_DATE_MODIFIED, $dateTime->format('c'));
     }
 
+    /**
+     * @param string $name
+     * @return Article
+     */
     public function setAuthor($name)
     {
         return $this->setValue(self::FIELD_AUTHOR, $name);
     }
 
+    /**
+     * @param string $description
+     * @return Article
+     */
     public function setDescription($description)
     {
         return $this->setValue(self::FIELD_DESCRIPTION, $description);
     }
 
+    /**
+     * @param string $headline
+     * @return Article
+     */
     public function setHeadline($headline)
     {
         return $this->setValue(self::FIELD_HEADLINE, $headline);
     }
 
+    /**
+     * @param string $url
+     * @return Article
+     */
     public function setMainEntityOfPage($url)
     {
         return $this->setValue(self::FIELD_MAIN_ENTITY_OF_PAGE, $url);

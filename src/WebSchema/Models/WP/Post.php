@@ -11,7 +11,6 @@ namespace WebSchema\Models\WP;
 use WebSchema\Models\StructuredData;
 use WebSchema\Models\Traits\HasCollection;
 use WebSchema\Models\Traits\HasData;
-use WebSchema\Models\Types\Model;
 
 class Post
 {
@@ -43,9 +42,6 @@ class Post
         $types = StructuredData::getTypes();
 
         foreach ($types as $id => $type) {
-            /**
-             * @var Model $type
-             */
             $types[$id] = $type->getSchema()->toArray();
         }
 

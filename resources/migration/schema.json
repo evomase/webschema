@@ -4066,6 +4066,7 @@
             "id": "image",
             "label": "Image",
             "ranges": [
+                "ImageObject",
                 "URL"
             ]
         },

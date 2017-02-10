@@ -8,53 +8,56 @@
 
 namespace WebSchema\Models;
 
-use WebSchema\Models\Types\Model;
+use WebSchema\Models\DataTypes\Model as DataType;
 
 class StructuredData
 {
-    const CLASS_TYPES = [
-        'WebSchema\Models\Types\Article'
+    const DATA_TYPES = [
+        'WebSchema\Models\DataTypes\Article'
     ];
 
-    private static $types = [];
+    /**
+     * @var DataType[]
+     */
+    private static $dataTypes = [];
 
     private function __construct()
     {
     }
 
     /**
-     * @param $type
-     * @return Model|null
+     * @param string $dataType
+     * @return DataType|null
      */
-    public static function get($type)
+    public static function get($dataType)
     {
-        if (empty(self::$types)) {
+        if (empty(self::$dataTypes)) {
             self::getTypes();
         }
 
-        if (!empty(self::$types[$type])) {
-            return self::$types[$type];
+        if (!empty(self::$dataTypes[$dataType])) {
+            return self::$dataTypes[$dataType];
         }
 
         return null;
     }
 
     /**
-     * @return array
+     * @return DataType[]
      */
     public static function getTypes()
     {
-        if (empty(self::$types)) {
-            foreach (self::CLASS_TYPES as $class) {
+        if (empty(self::$dataTypes)) {
+            foreach (self::DATA_TYPES as $class) {
                 /**
-                 * @var Model $type
+                 * @var DataType $dataType
                  */
-                $type = new $class();
-                self::$types[$type->getTypeName()] = $type;
+                $dataType = new $class();
+                self::$dataTypes[$dataType->getName()] = $dataType;
             }
 
         }
 
-        return self::$types;
+        return self::$dataTypes;
     }
 }
