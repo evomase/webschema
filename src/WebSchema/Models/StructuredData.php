@@ -13,13 +13,8 @@ use WebSchema\Models\DataTypes\Model as DataType;
 class StructuredData
 {
     const DATA_TYPES = [
-        'WebSchema\Models\DataTypes\Article'
+        'Article' => 'WebSchema\Models\DataTypes\Article'
     ];
-
-    /**
-     * @var DataType[]
-     */
-    private static $dataTypes = [];
 
     private function __construct()
     {
@@ -31,33 +26,18 @@ class StructuredData
      */
     public static function get($dataType)
     {
-        if (empty(self::$dataTypes)) {
-            self::getTypes();
-        }
-
-        if (!empty(self::$dataTypes[$dataType])) {
-            return self::$dataTypes[$dataType];
+        if (!empty(self::DATA_TYPES[$dataType])) {
+            return self::DATA_TYPES[$dataType];
         }
 
         return null;
     }
 
     /**
-     * @return DataType[]
+     * @return array
      */
     public static function getTypes()
     {
-        if (empty(self::$dataTypes)) {
-            foreach (self::DATA_TYPES as $class) {
-                /**
-                 * @var DataType $dataType
-                 */
-                $dataType = new $class();
-                self::$dataTypes[$dataType->getName()] = $dataType;
-            }
-
-        }
-
-        return self::$dataTypes;
+        return self::DATA_TYPES;
     }
 }

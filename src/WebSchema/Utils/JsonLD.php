@@ -17,58 +17,18 @@ class JsonLD
     }
 
     /**
-     * @param string $type
-     * @param Node[] $nodes
-     * @return string
+     * @param Node $node
+     * @return string|null
      */
-    public static function create($type, array $nodes)
+    public static function create(Node $node)
     {
-        $json['@context'] = 'http://schema.org/';
-        $json['@type'] = $type;
+        if ($data = $node->toArray()) {
+            $json['@context'] = 'http://schema.org/';
+            $json += $data;
 
-        $json = array_merge($json, self::add($nodes));
-
-        print_r($json);
-
-        //return json_encode($json);
-    }
-
-    /**
-     * @param Node[] $nodes
-     * @param bool   $child
-     * @return array
-     */
-    private static function add(array $nodes, $child = false)
-    {
-        $json = [];
-
-        foreach ($nodes as $node) {
-            /**
-             * @var Node $node
-             */
-
-            $property = $node->getProperty();
-
-            if ($data = $node->getData()) {
-                if (is_array($data)) {
-                    $data = array_merge(['@type' => $node->getType()], $data);
-                }
-
-                if ($child) {
-                    $json[] = $data;
-                } else {
-                    $json[$property] = $data;
-                }
-
-                //don't process children
-                continue;
-            }
-
-            if ($children = $node->getChildren()) {
-                $json[$property] = self::add($children, true);
-            }
+            return json_encode($json);
         }
 
-        return $json;
+        return null;
     }
 }

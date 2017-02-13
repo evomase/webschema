@@ -8,7 +8,7 @@
 
 namespace WebSchema\Models\DataTypes;
 
-class Article extends Model
+class Article extends Thing
 {
     const FIELD_AUTHOR = 'author';
     const FIELD_DATE_MODIFIED = 'dateModified';
@@ -16,7 +16,6 @@ class Article extends Model
     const FIELD_DESCRIPTION = 'description';
     const FIELD_HEADLINE = 'headline';
     const FIELD_IMAGE = 'image';
-    const FIELD_MAIN_ENTITY_OF_PAGE = 'mainEntityOfPage';
     const FIELD_PUBLISHER = 'publisher';
 
     protected $data = [
@@ -32,8 +31,8 @@ class Article extends Model
 
     protected $required = [
         self::FIELD_HEADLINE,
-        self::FIELD_IMAGE,
-        self::FIELD_PUBLISHER,
+        //self::FIELD_IMAGE, //TODO
+        //self::FIELD_PUBLISHER,
         self::FIELD_DATE_PUBLISHED,
         self::FIELD_AUTHOR
     ];
@@ -96,24 +95,6 @@ class Article extends Model
     }
 
     /**
-     * @param \DateTime $dateTime
-     * @return Article
-     */
-    public function setDateModified(\DateTime $dateTime)
-    {
-        return $this->setValue(self::FIELD_DATE_MODIFIED, $dateTime->format('c'));
-    }
-
-    /**
-     * @param string $name
-     * @return Article
-     */
-    public function setAuthor($name)
-    {
-        return $this->setValue(self::FIELD_AUTHOR, $name);
-    }
-
-    /**
      * @param string $description
      * @return Article
      */
@@ -131,12 +112,33 @@ class Article extends Model
         return $this->setValue(self::FIELD_HEADLINE, $headline);
     }
 
+    protected function fill()
+    {
+        $timezone = new \DateTimeZone(date_default_timezone_get());
+
+        $this->setAuthor(get_userdata($this->post->post_author)->display_name)
+            ->setDateModified(new \DateTime($this->post->post_modified, $timezone))
+            ->setDatePublished(new \DateTime($this->post->post_date, $timezone))
+            ->setDescription(get_the_excerpt($this->post))
+            ->setHeadline($this->post->post_title)
+            ->setMainEntityOfPage(get_post_permalink($this->post->ID));
+    }
+
     /**
-     * @param string $url
+     * @param \DateTime $dateTime
      * @return Article
      */
-    public function setMainEntityOfPage($url)
+    public function setDateModified(\DateTime $dateTime)
     {
-        return $this->setValue(self::FIELD_MAIN_ENTITY_OF_PAGE, $url);
+        return $this->setValue(self::FIELD_DATE_MODIFIED, $dateTime->format('c'));
+    }
+
+    /**
+     * @param string $name
+     * @return Article
+     */
+    public function setAuthor($name)
+    {
+        return $this->setValue(self::FIELD_AUTHOR, $name);
     }
 }

@@ -35,15 +35,6 @@ abstract class Model
     }
 
     /**
-     * @param array $data
-     */
-    public function fill(array $data)
-    {
-        $data = array_intersect_key($data, $this->data);
-        $this->data = array_merge($this->data, $data);
-    }
-
-    /**
      * @param $id
      * @return static
      */

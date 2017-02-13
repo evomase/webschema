@@ -15,13 +15,7 @@ trait HasData
      */
     public function toArray()
     {
-        $data = [];
-
-        foreach ($this->data as $id => $value) {
-            $data[$id] = $value;
-        }
-
-        return $data;
+        return $this->getData();
     }
 
     /**
@@ -30,5 +24,14 @@ trait HasData
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function fill(array $data)
+    {
+        $data = array_intersect_key($data, $this->data);
+        $this->data = array_merge($this->data, $data);
     }
 }

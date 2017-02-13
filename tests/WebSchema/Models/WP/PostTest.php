@@ -76,4 +76,20 @@ class PostTest extends AbstractTestCase
 
         Post::renderMetaBox($post);
     }
+
+    public function testGetJson()
+    {
+        $type = 'Article';
+
+        $_POST[Post::META_KEY] = [
+            Post::FIELD_DATA_TYPE => Type::get($type)->getID()
+        ];
+
+        $post = get_post(wp_insert_post([
+            'post_title'  => 'PostTest 2',
+            'post_status' => 'publish'
+        ]));
+
+        //print_r(Post::get($post->ID)->getJson());
+    }
 }

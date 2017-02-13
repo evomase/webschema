@@ -10,26 +10,23 @@ namespace WebSchema\Utils\JsonLD;
 
 class Node
 {
-    private $type, $property, $data;
-    private $children = [];
+    private $type, $data;
 
-    public function __construct($property, $type, $data = null)
+    public function __construct($type = null, $data = null)
     {
-        $this->property = $property;
         $this->type = $type;
         $this->data = $data;
     }
 
     public function add(Node $node)
     {
-        $this->children[] = $node;
+        if (!is_array($this->data)) {
+            $this->data = [];
+        }
+
+        $this->data[] = $node;
 
         return $this;
-    }
-
-    public function getChildren()
-    {
-        return $this->children;
     }
 
     public function getData()
@@ -42,8 +39,61 @@ class Node
         return $this->type;
     }
 
-    public function getProperty()
+    /**
+     * @return string
+     */
+    public function __toString()
     {
-        return $this->property;
+        return (string)json_encode($this->toArray());
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $data = [];
+
+        if ($this->data) {
+            if ($this->type) {
+                $data = ['@type' => $this->type];
+            }
+
+            switch (gettype($this->data)) {
+                case 'array':
+                    foreach ($this->data as $property => $item) {
+                        if (is_array($item)) {
+                            foreach ($item as $child) {
+                                $data[$property][] = $child->toArray();
+                            }
+
+                            continue;
+                        }
+
+                        if ($item instanceof self) {
+                            $data[$property] = $item->toArray();
+                            continue;
+                        }
+
+                        $data[$property] = $item;
+                    }
+                    break;
+
+                case 'object':
+                    if ($this->data instanceof self) {
+                        $data = $this->data->toArray();
+                    }
+                    break;
+
+                case 'string':
+                case 'integer':
+                case 'double':
+                case 'float':
+                    $data = $this->data;
+                    break;
+            }
+        }
+
+        return $data;
     }
 }

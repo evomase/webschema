@@ -16,16 +16,16 @@ class JsonLDTest extends AbstractTestCase
 {
     public function testCreate()
     {
-        $author = new Node('author', 'Text', 'John Doe');
-        $name = new Node('name', 'Text', 'How to Tie a Reef Knot');
-        $stat = new Node('interactionStatistic', 'InteractionCounter');
+        $author = new Node(null, 'John Doe');
+        $name = new Node(null, 'How to Tie a Reef Knot');
+        $stat = new Node();
 
-        $counter1 = new Node('interactionStatistic', 'InteractionCounter', [
+        $counter1 = new Node('InteractionCounter', [
             'interactionType'      => 'http://schema.org/ShareAction',
             'userInteractionCount' => '1203'
         ]);
 
-        $counter2 = new Node('interactionStatistic', 'InteractionCounter', [
+        $counter2 = new Node('InteractionCounter', [
             'interactionType'      => 'http://schema.org/CommentAction',
             'userInteractionCount' => '78'
         ]);
@@ -33,11 +33,25 @@ class JsonLDTest extends AbstractTestCase
         $stat->add($counter1)->add($counter2);
 
         $data = [
-            $author,
-            $name,
-            $stat
+            'author'               => $author,
+            'name'                 => $name,
+            'interactionStatistic' => $stat
         ];
 
-        JsonLD::create('Article', $data);
+        $this->assertEquals(JsonLD::create(new Node('Article', $data)), json_encode([
+            '@context'             => 'http://schema.org/',
+            '@type'                => 'Article',
+            'author'               => $author->getData(),
+            'name'                 => $name->getData(),
+            'interactionStatistic' => [
+                [
+                    '@type'                => $counter1->getType(),
+                ] + $counter1->getData(),
+
+                [
+                    '@type'                => $counter2->getType(),
+                ] + $counter2->getData()
+            ]
+        ]));
     }
 }

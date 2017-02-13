@@ -8,6 +8,7 @@
 
 namespace WebSchema\Models\WP;
 
+use WebSchema\Models\DataTypes\Model as DataType;
 use WebSchema\Models\StructuredData;
 use WebSchema\Models\Traits\HasCollection;
 use WebSchema\Models\Traits\HasData;
@@ -18,14 +19,14 @@ class Post
     use HasData;
 
     const FIELD_DATA_TYPE = 'data-type';
-    const FIELD_MICRO_DATA = '';
+    const FIELD_JSON_LD = 'json-ld';
 
     const META_KEY = 'web-schema';
     const POST_TYPE = 'post';
 
     protected $data = [
-        self::FIELD_DATA_TYPE  => null,
-        self::FIELD_MICRO_DATA => ''
+        self::FIELD_DATA_TYPE => null,
+        self::FIELD_JSON_LD   => ''
     ];
 
     private $id;
@@ -41,8 +42,12 @@ class Post
         /** @noinspection PhpUnusedLocalVariableInspection */
         $types = StructuredData::getTypes();
 
-        foreach ($types as $id => $type) {
-            $types[$id] = $type->getSchema()->toArray();
+        foreach ($types as $id => $class) {
+            /**
+             * @var DataType $class
+             */
+
+            $types[$id] = $class::getSchema()->toArray();
         }
 
         $model = static::get($post->ID);
@@ -71,7 +76,7 @@ class Post
 
     private function load()
     {
-        $data = get_post_meta($this->id, static::META_KEY);
+        $data = get_post_meta($this->id, static::META_KEY, true);
 
         if (empty($data)) {
             $this->new = true;
@@ -80,15 +85,6 @@ class Post
         }
 
         $this->put($this->id, $this);
-    }
-
-    /**
-     * @param array $data
-     */
-    public function fill(array $data)
-    {
-        $data = array_intersect_key($data, $this->data);
-        $this->data = array_merge($this->data, $data);
     }
 
     public static function addMetaBox()
@@ -137,6 +133,8 @@ class Post
 
     public function save()
     {
+        $this->generateJson();
+
         if ($this->new) {
             add_post_meta($this->id, static::META_KEY, $this->data, true);
 
@@ -146,13 +144,25 @@ class Post
         }
     }
 
-    public function getJSON()
+    private function generateJson()
     {
+        if ($this->data[self::FIELD_DATA_TYPE] && ($class = StructuredData::get($this->data[self::FIELD_DATA_TYPE]))) {
+            /**
+             * @var DataType $type
+             */
+            $type = new $class(get_post($this->id));
 
+            if ($json = $type->generateJSON()) {
+                $this->data[self::FIELD_JSON_LD] = $json;
+            }
+        }
     }
 
-    public function generateJSON()
+    /**
+     * @return string
+     */
+    public function getJson()
     {
-
+        return $this->data[self::FIELD_JSON_LD];
     }
 }
