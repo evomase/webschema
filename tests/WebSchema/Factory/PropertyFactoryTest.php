@@ -7,11 +7,11 @@
  * Time: 16:51
  */
 
-namespace tests\WebSchema\Factory;
+namespace WebSchema\Tests\Factory;
 
-use tests\WebSchema\AbstractTestCase;
-use WebSchema\Models\Property;
 use WebSchema\Factory\PropertyFactory;
+use WebSchema\Models\Property;
+use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\Installer;
 
 class PropertyFactoryTest extends AbstractTestCase

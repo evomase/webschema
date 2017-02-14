@@ -6,7 +6,7 @@
  * Time: 18:55
  */
 
-namespace tests\WebSchema;
+namespace WebSchema\Tests;
 
 use WebSchema\Models\Property;
 use WebSchema\Models\Type;

@@ -7,11 +7,11 @@
  * Time: 16:51
  */
 
-namespace tests\WebSchema\Factory;
+namespace WebSchema\Tests\Factory;
 
-use tests\WebSchema\AbstractTestCase;
 use WebSchema\Factory\TypeFactory;
 use WebSchema\Models\Type;
+use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\Installer;
 
 class TypeFactoryTest extends AbstractTestCase

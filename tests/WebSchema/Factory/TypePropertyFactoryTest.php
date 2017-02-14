@@ -7,15 +7,15 @@
  * Time: 16:51
  */
 
-namespace tests\WebSchema\Factory;
+namespace WebSchema\Tests\Factory;
 
-use tests\WebSchema\AbstractTestCase;
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;
 use WebSchema\Factory\TypePropertyFactory;
 use WebSchema\Models\Property;
 use WebSchema\Models\Type;
 use WebSchema\Models\TypeProperty as Model;
+use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\Installer;
 
 class TypePropertyFactoryTest extends AbstractTestCase

@@ -7,12 +7,12 @@
  * Time: 16:32
  */
 
-namespace tests\WebSchema\Utils;
+namespace WebSchema\Tests\Utils;
 
-use tests\WebSchema\AbstractTestCase;
 use WebSchema\Models\Property;
 use WebSchema\Models\Type;
 use WebSchema\Models\TypeProperty;
+use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\Installer;
 
 class InstallerTest extends AbstractTestCase

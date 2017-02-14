@@ -12,6 +12,7 @@ use WebSchema\Models\DataTypes\Model as DataType;
 use WebSchema\Models\StructuredData;
 use WebSchema\Models\Traits\HasCollection;
 use WebSchema\Models\Traits\HasData;
+use WebSchema\Models\WP\Adapters\Model;
 
 class Post
 {
@@ -98,14 +99,18 @@ class Post
     {
         add_action('add_meta_boxes', array(static::class, 'addMetaBox'));
 
-        add_action('save_post', function ($id) {
+        add_action('save_post', function ($id, \WP_Post $post) {
+            if ($post->post_type !== static::POST_TYPE) {
+                return;
+            }
+
             $model = static::get($id);
 
             if (($data = $_POST[static::META_KEY]) && $model->isValid($data)) {
                 $model->fill($data);
                 $model->save();
             }
-        });
+        }, 10, 2);
 
         static::bootCollection();
     }
@@ -147,10 +152,18 @@ class Post
     private function generateJson()
     {
         if ($this->data[self::FIELD_DATA_TYPE] && ($class = StructuredData::get($this->data[self::FIELD_DATA_TYPE]))) {
+            $adapter = 'WebSchema\Models\WP\Adapters\\' . $this->data[self::FIELD_DATA_TYPE];
+
+            /**
+             * @var Model $adapter
+             */
+
+            $adapter = new $adapter(get_post($this->id));
+
             /**
              * @var DataType $type
              */
-            $type = new $class(get_post($this->id));
+            $type = new $class($adapter);
 
             if ($json = $type->generateJSON()) {
                 $this->data[self::FIELD_JSON_LD] = $json;
@@ -163,6 +176,8 @@ class Post
      */
     public function getJson()
     {
+        $this->generateJson();
+
         return $this->data[self::FIELD_JSON_LD];
     }
 }

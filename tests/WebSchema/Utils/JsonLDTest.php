@@ -6,9 +6,9 @@
  * Time: 17:45
  */
 
-namespace tests\WebSchema\Utils;
+namespace WebSchema\Tests\Utils;
 
-use tests\WebSchema\AbstractTestCase;
+use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\JsonLD;
 use WebSchema\Utils\JsonLD\Node;
 
@@ -45,11 +45,11 @@ class JsonLDTest extends AbstractTestCase
             'name'                 => $name->getData(),
             'interactionStatistic' => [
                 [
-                    '@type'                => $counter1->getType(),
+                    '@type' => $counter1->getType(),
                 ] + $counter1->getData(),
 
                 [
-                    '@type'                => $counter2->getType(),
+                    '@type' => $counter2->getType(),
                 ] + $counter2->getData()
             ]
         ]));

@@ -9,7 +9,7 @@ Author URI: http://www.davidogilo.co.uk
 License: GPL2
 */
 
-define('WEB_SCHEMA_VERSION', '1.0');
+define('WEB_SCHEMA_VERSION', '1.1');
 
 require 'config.php';
 require 'autoload.php';

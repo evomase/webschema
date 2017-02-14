@@ -6,13 +6,13 @@
  * Time: 10:53
  */
 
-namespace tests\WebSchema\Models\WP;
+namespace WebSchema\Tests\Models\WP;
 
-use tests\WebSchema\AbstractTestCase;
 use WebSchema\Models\Property;
 use WebSchema\Models\Type;
 use WebSchema\Models\TypeProperty;
 use WebSchema\Models\WP\Post;
+use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\Installer;
 
 class PostTest extends AbstractTestCase
@@ -90,6 +90,13 @@ class PostTest extends AbstractTestCase
             'post_status' => 'publish'
         ]));
 
-        //print_r(Post::get($post->ID)->getJson());
+        $upload = wp_upload_bits('PostTest2.jpg', null,
+            file_get_contents('http://placehold.it/' . WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH . 'x1.jpg'));
+
+        $image = wp_insert_attachment(['post_mime_type' => $upload['type']], $upload['file'], $post->ID);
+
+        print_r(Post::get($post->ID)->getJson());
+
+        wp_delete_attachment($image);
     }
 }

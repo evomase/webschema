@@ -8,14 +8,12 @@
 
 namespace WebSchema\Models\DataTypes;
 
+use WebSchema\Models\DataTypes\Interfaces\ArticleAdapter;
+
 class Article extends Thing
 {
-    const FIELD_AUTHOR = 'author';
     const FIELD_DATE_MODIFIED = 'dateModified';
     const FIELD_DATE_PUBLISHED = 'datePublished';
-    const FIELD_DESCRIPTION = 'description';
-    const FIELD_HEADLINE = 'headline';
-    const FIELD_IMAGE = 'image';
     const FIELD_PUBLISHER = 'publisher';
 
     protected $data = [
@@ -37,35 +35,30 @@ class Article extends Thing
         self::FIELD_AUTHOR
     ];
 
-    public function setImage($url)
-    {
-        if ($image = $this->getImage($url)) {
-            return $this->setValue(self::FIELD_IMAGE, $image);
-        }
-
-        return $this;
-    }
+    /**
+     * @var ArticleAdapter
+     */
+    protected $adapter;
 
     /**
-     * @param string $url
-     * @return array|null
+     * Article constructor.
+     * @param ArticleAdapter $adapter
      */
-    private function getImage($url)
+    public function __construct(ArticleAdapter $adapter)
     {
-        if (filter_var($url, FILTER_VALIDATE_URL) && $image = getimagesize($url) !== false) {
-            $width = $image[0];
+        parent::__construct($adapter);
+    }
 
-            //requirements as per Google AMP
-            if ($width >= 696 && in_array($image[2], [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG])) {
-                return [
-                    'url'    => $url,
-                    'width'  => $width,
-                    'height' => $image[1]
-                ];
-            }
-        }
-
-        return null;
+    protected function fill()
+    {
+        $this->setAuthor($this->adapter->getAuthor())
+            ->setDateModified($this->adapter->getDateModified())
+            ->setDatePublished($this->adapter->getDatePublished())
+            ->setDescription($this->adapter->getDescription())
+            ->setHeadline($this->adapter->getHeadline())
+            ->setImage($this->adapter->getImageURL())
+            ->setPublisher($this->adapter->getPublisherName(), $this->adapter->getPublisherImageURL())
+            ->setMainEntityOfPage($this->adapter->getMainEntityOfPage());
     }
 
     /**
@@ -73,7 +66,7 @@ class Article extends Thing
      * @param string $imageURL
      * @return $this|Article
      */
-    public function setPublisher($name, $imageURL)
+    protected function setPublisher($name, $imageURL)
     {
         if ($image = $this->getImage($imageURL) && $name) {
             return $this->setValue(self::FIELD_PUBLISHER, [
@@ -89,56 +82,17 @@ class Article extends Thing
      * @param \DateTime $dateTime
      * @return Article
      */
-    public function setDatePublished(\DateTime $dateTime)
+    protected function setDatePublished(\DateTime $dateTime)
     {
         return $this->setValue(self::FIELD_DATE_PUBLISHED, $dateTime->format('c'));
-    }
-
-    /**
-     * @param string $description
-     * @return Article
-     */
-    public function setDescription($description)
-    {
-        return $this->setValue(self::FIELD_DESCRIPTION, $description);
-    }
-
-    /**
-     * @param string $headline
-     * @return Article
-     */
-    public function setHeadline($headline)
-    {
-        return $this->setValue(self::FIELD_HEADLINE, $headline);
-    }
-
-    protected function fill()
-    {
-        $timezone = new \DateTimeZone(date_default_timezone_get());
-
-        $this->setAuthor(get_userdata($this->post->post_author)->display_name)
-            ->setDateModified(new \DateTime($this->post->post_modified, $timezone))
-            ->setDatePublished(new \DateTime($this->post->post_date, $timezone))
-            ->setDescription(get_the_excerpt($this->post))
-            ->setHeadline($this->post->post_title)
-            ->setMainEntityOfPage(get_post_permalink($this->post->ID));
     }
 
     /**
      * @param \DateTime $dateTime
      * @return Article
      */
-    public function setDateModified(\DateTime $dateTime)
+    protected function setDateModified(\DateTime $dateTime)
     {
         return $this->setValue(self::FIELD_DATE_MODIFIED, $dateTime->format('c'));
-    }
-
-    /**
-     * @param string $name
-     * @return Article
-     */
-    public function setAuthor($name)
-    {
-        return $this->setValue(self::FIELD_AUTHOR, $name);
     }
 }

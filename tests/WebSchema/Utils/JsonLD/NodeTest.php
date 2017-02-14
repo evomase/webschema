@@ -6,9 +6,9 @@
  * Time: 15:36
  */
 
-namespace tests\WebSchema\Utils\JsonLD;
+namespace WebSchema\Tests\Utils\JsonLD;
 
-use tests\WebSchema\AbstractTestCase;
+use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\JsonLD\Node;
 
 class NodeTest extends AbstractTestCase

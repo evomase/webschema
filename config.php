@@ -9,8 +9,13 @@
 global $wpdb;
 
 define('WEB_SCHEMA_DIR', dirname(__FILE__));
+define('WEB_SCHEMA_BASE_URL', get_option('siteurl'));
+define('WEB_SCHEMA_BASE_DIR', ABSPATH);
 
 //db settings
 define('WEB_SCHEMA_TABLE_TYPES', $wpdb->prefix . 'web_schema_types');
 define('WEB_SCHEMA_TABLE_PROPERTIES', $wpdb->prefix . 'web_schema_properties');
 define('WEB_SCHEMA_TABLE_TYPE_PROPERTIES', $wpdb->prefix . 'web_schema_type_properties');
+
+//AMP settings
+define('WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH', 696);

@@ -8,6 +8,7 @@
 
 namespace WebSchema\Models\DataTypes;
 
+use WebSchema\Models\DataTypes\Interfaces\Adapter;
 use WebSchema\Models\Property;
 use WebSchema\Models\Traits\HasData;
 use WebSchema\Models\Type;
@@ -31,9 +32,14 @@ abstract class Model
     protected $post;
     protected $required, $data = [];
 
-    public function __construct(\WP_Post $post)
+    /**
+     * @var Adapter
+     */
+    protected $adapter;
+
+    public function __construct(Adapter $adapter)
     {
-        $this->post = $post;
+        $this->adapter = $adapter;
         $this->fill();
     }
 
@@ -45,7 +51,7 @@ abstract class Model
     }
 
     /**
-     * @return \WebSchema\Models\Type
+     * @return Type
      */
     public static function getSchema()
     {
@@ -94,5 +100,37 @@ abstract class Model
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $url
+     * @return array|null
+     */
+    protected function getImage($url)
+    {
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            $file = null;
+
+            if (strpos($url, WEB_SCHEMA_BASE_URL) !== false) {
+                $file = WEB_SCHEMA_BASE_DIR . str_replace(WEB_SCHEMA_BASE_URL, '', $url);
+            }
+
+            if (($image = getimagesize(($file) ?: $url)) !== false) {
+                $width = $image[0];
+
+                //requirements as per Google AMP
+                if ($width >= WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH &&
+                    in_array($image[2], [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG])
+                ) {
+                    return [
+                        'url'    => $url,
+                        'width'  => $width,
+                        'height' => $image[1]
+                    ];
+                }
+            }
+        }
+
+        return null;
     }
 }

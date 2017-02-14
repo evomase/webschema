@@ -7,10 +7,10 @@
  * Time: 18:29
  */
 
-namespace tests\WebSchema\Models;
+namespace WebSchema\Tests\Models;
 
-use tests\WebSchema\AbstractTestCase;
 use WebSchema\Models\Property;
+use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\Installer;
 
 class PropertyTest extends AbstractTestCase
