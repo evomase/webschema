@@ -25,13 +25,15 @@ abstract class Model
      */
     protected static $schema;
     protected static $name;
-
+    /**
+     * @var Type
+     */
+    protected static $typeClass = Type::class;
     /**
      * @var \WP_Post $post
      */
     protected $post;
     protected $required, $data = [];
-
     /**
      * @var Adapter
      */
@@ -56,7 +58,9 @@ abstract class Model
     public static function getSchema()
     {
         if (empty(static::$schema)) {
-            static::$schema = Type::get(static::getName());
+            $class = static::$typeClass;
+
+            static::$schema = $class::get(static::getName());
         }
 
         return static::$schema;
@@ -69,6 +73,16 @@ abstract class Model
         }
 
         return static::$name;
+    }
+
+    /**
+     * @param string $class
+     */
+    public static function setTypeClass($class)
+    {
+        if (class_exists($class) && is_subclass_of($class, \WebSchema\Models\Model::class)) {
+            static::$typeClass = $class;
+        }
     }
 
     /**
@@ -87,26 +101,10 @@ abstract class Model
     }
 
     /**
-     * @param string $key
-     * @param string $value
-     * @return $this
-     */
-    protected function setValue($key, $value)
-    {
-        if ($value && $key && ($property = Property::get($key))
-            && ($type = Type::get(current($property->getData()[Property::FIELD_RANGES])))
-        ) {
-            $this->data[$key] = new JsonLD\Node($type->getData()[Type::FIELD_ID], $value);
-        }
-
-        return $this;
-    }
-
-    /**
      * @param string $url
      * @return array|null
      */
-    protected function getImage($url)
+    public function getImage($url)
     {
         if (filter_var($url, FILTER_VALIDATE_URL)) {
             $file = null;
@@ -132,5 +130,21 @@ abstract class Model
         }
 
         return null;
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     * @return $this
+     */
+    protected function setValue($key, $value)
+    {
+        if ($value && $key && ($property = Property::get($key))
+            && ($type = Type::get(current($property->getData()[Property::FIELD_RANGES])))
+        ) {
+            $this->data[$key] = new JsonLD\Node($type->getData()[Type::FIELD_ID], $value);
+        }
+
+        return $this;
     }
 }
