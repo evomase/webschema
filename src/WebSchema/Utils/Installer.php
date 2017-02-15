@@ -43,6 +43,10 @@ class Installer implements Bootable
         return (new self());
     }
 
+    public static function shutdown()
+    {
+    }
+
     /**
      * @return $this
      */

@@ -19,9 +19,9 @@ class TypePropertyTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->disableImport()->runOnce();
+        parent::setUpBeforeClass();
 
-        TypeProperty::boot();
+        (new Installer())->disableImport()->runOnce();
     }
 
     public function testSave()

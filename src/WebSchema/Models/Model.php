@@ -22,6 +22,7 @@ abstract class Model
      * @var \wpdb
      */
     protected static $db;
+
     protected $data = [];
     protected $new = true;
 

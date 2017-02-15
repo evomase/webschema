@@ -17,9 +17,9 @@ class TypeTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->disableImport()->runOnce();
+        parent::setUpBeforeClass();
 
-        Type::boot();
+        (new Installer())->disableImport()->runOnce();
     }
 
     public function testSave()

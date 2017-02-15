@@ -30,10 +30,10 @@ class Post
         self::FIELD_JSON_LD   => ''
     ];
 
-    private $id;
-    private $new = false;
+    protected $id;
+    protected $new = false;
 
-    private function __construct($id)
+    protected function __construct($id)
     {
         $this->id = $id;
     }
@@ -69,13 +69,29 @@ class Post
             return static::$collection->offsetGet($id);
         }
 
-        $model = new static($id);
-        $model->load();
+        /**
+         * @var \WP_Post $post
+         */
+        if (($post = get_post($id)) && static::isValidPostType($post)) {
+            $model = new static($id);
+            $model->load();
 
-        return $model;
+            return $model;
+        }
+
+        return null;
     }
 
-    private function load()
+    /**
+     * @param \WP_Post $post
+     * @return bool
+     */
+    protected static function isValidPostType(\WP_Post $post)
+    {
+        return ($post->post_type == static::POST_TYPE);
+    }
+
+    protected function load()
     {
         $data = get_post_meta($this->id, static::META_KEY, true);
 
@@ -100,13 +116,13 @@ class Post
         add_action('add_meta_boxes', array(static::class, 'addMetaBox'));
 
         add_action('save_post', function ($id, \WP_Post $post) {
-            if ($post->post_type !== static::POST_TYPE) {
+            if (!static::isValidPostType($post)) {
                 return;
             }
 
             $model = static::get($id);
 
-            if (($data = $_POST[static::META_KEY]) && $model->isValid($data)) {
+            if (($data = $_POST[static::META_KEY]) && $model->isValid($post, $data)) {
                 $model->fill($data);
                 $model->save();
             }
@@ -116,10 +132,11 @@ class Post
     }
 
     /**
-     * @param array $data
+     * @param \WP_Post $post
+     * @param array    $data
      * @return bool
      */
-    public function isValid(array $data)
+    protected function isValid(\WP_Post $post, array $data)
     {
         if (empty($data)) {
             return false;
@@ -129,7 +146,7 @@ class Post
             return false;
         }
 
-        if (!current_user_can('edit_' . static::POST_TYPE, $this->id)) {
+        if (!current_user_can('edit_' . $post->post_type, $this->id)) {
             return false;
         }
 
@@ -149,7 +166,7 @@ class Post
         }
     }
 
-    private function generateJson()
+    protected function generateJson()
     {
         if ($this->data[self::FIELD_DATA_TYPE] && ($class = StructuredData::get($this->data[self::FIELD_DATA_TYPE]))) {
             $adapter = 'WebSchema\Models\WP\Adapters\\' . $this->data[self::FIELD_DATA_TYPE];
@@ -176,8 +193,6 @@ class Post
      */
     public function getJson()
     {
-        $this->generateJson();
-
         return $this->data[self::FIELD_JSON_LD];
     }
 }

@@ -80,7 +80,7 @@ abstract class Model
      */
     public static function setTypeClass($class)
     {
-        if (class_exists($class) && is_subclass_of($class, \WebSchema\Models\Model::class)) {
+        if (class_exists($class) && is_subclass_of($class, Type::class)) {
             static::$typeClass = $class;
         }
     }

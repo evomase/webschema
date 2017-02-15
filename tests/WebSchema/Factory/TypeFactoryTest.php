@@ -18,8 +18,9 @@ class TypeFactoryTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
+
         (new Installer())->disableImport()->runOnce();
-        TypeFactory::boot();
     }
 
     public function testCreateOrDelete()

@@ -29,8 +29,7 @@ class Article extends Thing
 
     protected $required = [
         self::FIELD_HEADLINE,
-        //self::FIELD_IMAGE, //TODO
-        //self::FIELD_PUBLISHER,
+        //self::FIELD_PUBLISHER, //TODO
         self::FIELD_DATE_PUBLISHED,
         self::FIELD_AUTHOR
     ];

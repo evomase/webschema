@@ -63,8 +63,6 @@ class Thing extends Model
     protected function setImage($url)
     {
         if ($image = $this->getImage($url)) {
-            print_r($image);
-
             return $this->setValue(static::FIELD_IMAGE, $image);
         }
 

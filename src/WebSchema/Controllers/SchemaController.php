@@ -10,9 +10,8 @@ namespace WebSchema\Controllers;
 
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;
-use WebSchema\Utils\Interfaces\Bootable;
 
-class SchemaController implements Bootable
+class SchemaController
 {
     private static $instance;
 
@@ -27,6 +26,11 @@ class SchemaController implements Bootable
         if (empty(self::$instance)) {
             self::$instance = new self();
         }
+    }
+
+    public static function shutdown()
+    {
+        self::$instance = null;
     }
 
     public function getAll()

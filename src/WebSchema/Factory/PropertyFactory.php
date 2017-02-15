@@ -8,9 +8,10 @@
 
 namespace WebSchema\Factory;
 
+use WebSchema\Factory\Interfaces\Factory;
 use WebSchema\Models\Property;
 
-class PropertyFactory extends Factory
+class PropertyFactory implements Factory
 {
     /**
      * @param array $data
@@ -41,10 +42,5 @@ class PropertyFactory extends Factory
         }
 
         return $data;
-    }
-
-    public static function boot()
-    {
-        Property::boot();
     }
 }

@@ -18,8 +18,9 @@ class PropertyFactoryTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
+
         (new Installer())->disableImport()->runOnce();
-        PropertyFactory::boot();
     }
 
     public function testCreateOrDelete()

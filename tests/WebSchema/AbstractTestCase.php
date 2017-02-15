@@ -8,13 +8,16 @@
 
 namespace WebSchema\Tests;
 
-use WebSchema\Models\Property;
-use WebSchema\Models\Type;
-use WebSchema\Models\TypeProperty;
+use WebSchema\Utils\BootLoader;
 
-class AbstractTestCase extends \PHPUnit_Framework_TestCase
+abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
-    public static function tearDownAfterClass()
+    public static function setUpBeforeClass()
+    {
+        BootLoader::run();
+    }
+
+    public static function dropSchemaTables()
     {
         global $wpdb;
 
@@ -24,9 +27,12 @@ class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_TYPE_PROPERTIES);
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_TYPES);
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_PROPERTIES);
+    }
 
-        Type::clearCollection();
-        Property::clearCollection();
-        TypeProperty::clearCollection();
+    public static function tearDownAfterClass()
+    {
+        BootLoader::stop();
+
+        static::dropSchemaTables();
     }
 }

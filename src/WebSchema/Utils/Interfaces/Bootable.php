@@ -11,4 +11,5 @@ namespace WebSchema\Utils\Interfaces;
 interface Bootable
 {
     public static function boot();
+    public static function shutdown();
 }

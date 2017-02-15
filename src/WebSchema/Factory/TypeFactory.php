@@ -8,9 +8,10 @@
 
 namespace WebSchema\Factory;
 
+use WebSchema\Factory\Interfaces\Factory;
 use WebSchema\Models\Type;
 
-class TypeFactory extends Factory
+class TypeFactory implements Factory
 {
     /**
      * @param array $data
@@ -85,10 +86,5 @@ class TypeFactory extends Factory
         }
 
         return $tree;
-    }
-
-    public static function boot()
-    {
-        Type::boot();
     }
 }

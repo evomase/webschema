@@ -8,9 +8,7 @@
 
 namespace WebSchema\Tests\Models\WP;
 
-use WebSchema\Models\Property;
 use WebSchema\Models\Type;
-use WebSchema\Models\TypeProperty;
 use WebSchema\Models\WP\Post;
 use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\Installer;
@@ -19,11 +17,7 @@ class PostTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        //Boot required classes
-        Type::boot();
-        TypeProperty::boot();
-        Property::boot();
-        Post::boot();
+        parent::setUpBeforeClass();
 
         (new Installer())->runOnce();
 
@@ -91,11 +85,11 @@ class PostTest extends AbstractTestCase
         ]));
 
         $upload = wp_upload_bits('PostTest2.jpg', null,
-            file_get_contents('http://placehold.it/' . WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH . 'x1.jpg'));
+            file_get_contents(WEB_SCHEMA_DIR . '/tests/resources/images/ModelTest.jpg'));
 
         $image = wp_insert_attachment(['post_mime_type' => $upload['type']], $upload['file'], $post->ID);
 
-        print_r(Post::get($post->ID)->getJson());
+        $this->assertInternalType('array', json_decode(Post::get($post->ID)->getJson(), true));
 
         wp_delete_attachment($image);
     }

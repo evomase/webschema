@@ -8,10 +8,11 @@
 
 namespace WebSchema\Factory;
 
+use WebSchema\Factory\Interfaces\Factory;
 use WebSchema\Models\Type;
 use WebSchema\Models\TypeProperty;
 
-class TypePropertyFactory extends Factory
+class TypePropertyFactory implements Factory
 {
     /**
      * @param array $data
@@ -35,10 +36,5 @@ class TypePropertyFactory extends Factory
                 $model->save();
             }
         }
-    }
-
-    public static function boot()
-    {
-        TypeProperty::boot();
     }
 }

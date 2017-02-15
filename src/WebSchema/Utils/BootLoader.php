@@ -13,15 +13,12 @@ use WebSchema\Utils\Interfaces\Bootable;
 class BootLoader
 {
     const CLASSES = [
-        '\WebSchema\Factory\PropertyFactory'     => null,
-        '\WebSchema\Factory\TypeFactory'         => null,
-        '\WebSchema\Factory\TypePropertyFactory' => null,
-        '\WebSchema\Factory\WP\PostFactory'      => null,
+        '\WebSchema\Services\SchemaService'     => null,
+        '\WebSchema\Services\ControllerService' => null,
+        '\WebSchema\Services\WP\PostService'    => null,
 
         '\WebSchema\Utils\Installer' => null,
-        '\WebSchema\Utils\TinyMCE'   => 'is_admin',
-
-        '\WebSchema\Controllers\SchemaController' => null,
+        '\WebSchema\Utils\TinyMCE'   => 'is_admin'
     ];
 
     /**
@@ -42,14 +39,23 @@ class BootLoader
         }
 
         if (!self::$instance->booted) {
-            self::$instance->bootClasses();
+            self::$instance->boot();
         }
     }
 
     /**
      * @throws \BadFunctionCallException
      */
-    private function bootClasses()
+    private function boot()
+    {
+        $this->call('boot');
+        self::$instance->booted = true;
+    }
+
+    /**
+     * @param string $method
+     */
+    private function call($method)
     {
         foreach (self::CLASSES as $class => $func) {
             if (!class_exists($class) || !in_array(Bootable::class, class_implements($class))) {
@@ -61,9 +67,20 @@ class BootLoader
                 continue;
             }
 
-            call_user_func($class . '::boot');
+            call_user_func($class . '::' . $method);
         }
+    }
 
-        self::$instance->booted = true;
+    public static function stop()
+    {
+        if (self::$instance->booted) {
+            self::$instance->shutdown();
+        }
+    }
+
+    private function shutdown()
+    {
+        $this->call('shutdown');
+        self::$instance->booted = false;
     }
 }

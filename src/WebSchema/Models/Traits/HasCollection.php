@@ -32,6 +32,14 @@ trait HasCollection
     }
 
     /**
+     * @return array
+     */
+    public static function getCollection()
+    {
+        return static::$collection->getArrayCopy();
+    }
+
+    /**
      * @param int|string $id
      * @param object     $model
      */

@@ -17,9 +17,9 @@ class PropertyTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
-        (new Installer())->disableImport()->runOnce();
+        parent::setUpBeforeClass();
 
-        Property::boot();
+        (new Installer())->disableImport()->runOnce();
     }
 
     public function testSave()

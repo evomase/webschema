@@ -22,6 +22,10 @@ class TinyMCE implements Bootable
         add_action('init', array(__CLASS__, 'addValidAttributes'));
     }
 
+    public static function shutdown()
+    {
+    }
+
     public static function register(array $plugins)
     {
         $plugins['webschema'] = plugins_url('webschema') . '/resources/js/tinymce/webschema.js';

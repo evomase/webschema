@@ -22,7 +22,7 @@ class ModelTest extends AbstractTestCase
     {
         //test local
         $url = WEB_SCHEMA_BASE_URL . '/' . str_replace(WEB_SCHEMA_BASE_DIR, '',
-                WEB_SCHEMA_DIR) . '/tests/resources/images/ModelTest.jpeg';
+                WEB_SCHEMA_DIR) . '/tests/resources/images/ModelTest.jpg';
 
         $adapter = m::mock(Adapter::class);
 
