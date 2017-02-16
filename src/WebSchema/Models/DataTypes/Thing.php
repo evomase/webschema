@@ -10,7 +10,7 @@ namespace WebSchema\Models\DataTypes;
 
 use WebSchema\Utils\JsonLD\Node;
 
-class Thing extends Model
+abstract class Thing extends Model
 {
     const FIELD_AUTHOR = 'author';
     const FIELD_DESCRIPTION = 'description';

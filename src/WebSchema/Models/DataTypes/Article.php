@@ -9,6 +9,7 @@
 namespace WebSchema\Models\DataTypes;
 
 use WebSchema\Models\DataTypes\Interfaces\ArticleAdapter;
+use WebSchema\Utils\JsonLD\Node;
 
 class Article extends Thing
 {
@@ -29,7 +30,7 @@ class Article extends Thing
 
     protected $required = [
         self::FIELD_HEADLINE,
-        //self::FIELD_PUBLISHER, //TODO
+        //self::FIELD_PUBLISHER,
         self::FIELD_DATE_PUBLISHED,
         self::FIELD_AUTHOR
     ];
@@ -67,10 +68,10 @@ class Article extends Thing
      */
     protected function setPublisher($name, $imageURL)
     {
-        if ($image = $this->getImage($imageURL) && $name) {
+        if (($image = $this->getImage($imageURL)) && $name) {
             return $this->setValue(self::FIELD_PUBLISHER, [
                 'name' => (string)$name,
-                'logo' => $image
+                'logo' => new Node('ImageObject', $image)
             ]);
         }
 

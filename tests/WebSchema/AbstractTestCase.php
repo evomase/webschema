@@ -17,6 +17,13 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         BootLoader::run();
     }
 
+    public static function tearDownAfterClass()
+    {
+        BootLoader::stop();
+
+        static::dropSchemaTables();
+    }
+
     public static function dropSchemaTables()
     {
         global $wpdb;
@@ -27,12 +34,5 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_TYPE_PROPERTIES);
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_TYPES);
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_PROPERTIES);
-    }
-
-    public static function tearDownAfterClass()
-    {
-        BootLoader::stop();
-
-        static::dropSchemaTables();
     }
 }

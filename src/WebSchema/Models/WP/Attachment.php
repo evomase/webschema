@@ -23,15 +23,6 @@ class Attachment extends Post
     }
 
     /**
-     * @param \WP_Post $post
-     * @return bool
-     */
-    protected static function isValidPostType(\WP_Post $post)
-    {
-        return ($post->post_type == self::POST_TYPE);
-    }
-
-    /**
      * @param int $id
      */
     public static function actOnParent($id)
@@ -44,17 +35,27 @@ class Attachment extends Post
     private function saveParent()
     {
         $post = get_post($this->id);
+        $parent = $post->post_parent;
 
         switch ($post->post_type) {
             case Page::POST_TYPE:
-                $parent = Page::get($post->ID);
+                $parent = Page::get($parent);
                 break;
 
             default:
-                $parent = Post::get($post->ID);
+                $parent = Post::get($parent);
                 break;
         }
 
         $parent->save();
+    }
+
+    /**
+     * @param \WP_Post $post
+     * @return bool
+     */
+    protected static function isValidPostType(\WP_Post $post)
+    {
+        return ($post->post_type == self::POST_TYPE);
     }
 }

@@ -43,23 +43,42 @@ class Settings
         $this->load();
 
         add_action('admin_init', [$this, 'register']);
-    }
-
-    public static function boot()
-    {
-        new self();
+        add_action('update_option_' . self::NAME, [self::class, 'boot']);
     }
 
     private function load()
     {
+        if (($data = get_option(self::NAME)) && is_array($data)) {
+            $this->fill($data);
+        }
+    }
 
+    public static function boot()
+    {
+        if (empty(self::$instance)) {
+            new self();
+        }
+    }
+
+    /**
+     * @param $setting
+     * @return mixed|null
+     */
+    public static function get($setting)
+    {
+        if (array_key_exists($setting, self::$instance->data)) {
+            return self::$instance->data[$setting];
+        }
+
+        return null;
     }
 
     public function register()
     {
         register_setting(self::NAME, self::NAME, [
-            'description' => 'Settings page to customize the Web Schema functionality',
-            'default'     => $this->data
+            'description'       => 'Settings page to customize the Web Schema functionality',
+            'default'           => $this->data,
+            'sanitize_callback' => [$this, 'sanitize']
         ]);
 
         //Sections
@@ -83,29 +102,33 @@ class Settings
             self::SECTION_POST_TYPES);
     }
 
-    public function getInstance()
+    public function sanitize(array $data)
     {
-        return self::$instance;
+        if (get_settings_errors(self::NAME)) {
+            $data = get_option(self::NAME);
+        }
+
+        return array_replace_recursive($this->data, $data);
     }
 
     public function renderPublisherNameField()
     {
-        $data = get_option(self::NAME)[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_NAME];
-        $data = ($data) ?: get_option('blogname');
+        $name = get_option(self::NAME)[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_NAME];
+        $name = ($name) ?: get_option('blogname');
 
         echo '<input name="' . self::NAME . '[' . self::FIELD_PUBLISHER . '][' . self::FIELD_PUBLISHER_NAME . ']"' .
-            ' value="' . $data . '" type="text" required/>';
+            ' value="' . $name . '" type="text" required/>';
     }
 
     public function renderPublisherLogoField()
     {
-        $data = get_option(self::NAME)[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_LOGO];
+        $logo = get_option(self::NAME)[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_LOGO];
 
         echo '<input name="' . self::NAME . '[' . self::FIELD_PUBLISHER . '][' . self::FIELD_PUBLISHER_LOGO . ']"' .
-            ' type="file" required/>';
+            ' type="file" />';
 
-        if ($data) {
-
+        if ($logo) {
+            echo '<img src="' . $logo . '" alt="image" />';
         }
     }
 
@@ -118,7 +141,7 @@ class Settings
 
         $data = get_option(self::NAME)[self::FIELD_POST_TYPES];
 
-        echo '<select name="' . self::NAME . '[' . self::FIELD_POST_TYPES . ']" multiple>';
+        echo '<select name="' . self::NAME . '[' . self::FIELD_POST_TYPES . '][]" multiple>';
 
         foreach ($types as $id => $type) {
             /**

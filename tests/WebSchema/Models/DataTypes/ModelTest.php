@@ -10,7 +10,7 @@ namespace WebSchema\Tests\Models\DataTypes;
 
 use Mockery as m;
 use WebSchema\Models\DataTypes\Interfaces\Adapter;
-use WebSchema\Models\DataTypes\Model;
+use WebSchema\Models\DataTypes\Model as DataType;
 use WebSchema\Models\Type;
 use WebSchema\Tests\AbstractTestCase;
 
@@ -18,7 +18,7 @@ class ModelTest extends AbstractTestCase
 {
     use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testGetImageLocal()
+    public function testGetImage()
     {
         //test local
         $url = WEB_SCHEMA_BASE_URL . '/' . str_replace(WEB_SCHEMA_BASE_DIR, '',
@@ -27,9 +27,9 @@ class ModelTest extends AbstractTestCase
         $adapter = m::mock(Adapter::class);
 
         /**
-         * @var Model $model
+         * @var DataType $model
          */
-        $model = m::mock(Model::class, [$adapter])->makePartial();
+        $model = m::mock(DataType::class, [$adapter])->makePartial();
         $image = $model->getImage($url);
 
         $this->assertNotEmpty($image);
@@ -53,9 +53,9 @@ class ModelTest extends AbstractTestCase
         $type = 'Article';
 
         /**
-         * @var Model $model
+         * @var DataType $model
          */
-        $model = m::namedMock($type, Model::class, [$adapter])->makePartial();
+        $model = m::namedMock($type, DataType::class, [$adapter])->makePartial();
         $this->assertEquals('Article', $model::getName());
     }
 
@@ -77,9 +77,9 @@ class ModelTest extends AbstractTestCase
         $typeMock::boot();
 
         /**
-         * @var Model $model
+         * @var DataType $model
          */
-        $model = m::namedMock($type, Model::class, [$adapter])->makePartial();
+        $model = m::namedMock($type, DataType::class, [$adapter])->makePartial();
         $model::setTypeClass(get_class($typeMock));
 
         $this->assertInstanceOf(Type::class, $model::getSchema());

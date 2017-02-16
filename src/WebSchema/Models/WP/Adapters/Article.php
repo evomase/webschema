@@ -48,14 +48,4 @@ class Article extends Model implements ArticleAdapter
 
         return (string)$image;
     }
-
-    public function getPublisherImageURL()
-    {
-        // TODO: Implement getPublisherImageURL() method.
-    }
-
-    public function getPublisherName()
-    {
-        // TODO: Implement getPublisherName() method.
-    }
 }

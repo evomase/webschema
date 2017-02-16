@@ -32,6 +32,6 @@ trait HasData
     public function fill(array $data)
     {
         $data = array_intersect_key($data, $this->data);
-        $this->data = array_merge($this->data, $data);
+        $this->data = array_replace_recursive($this->data, $data);
     }
 }

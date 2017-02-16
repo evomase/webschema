@@ -9,6 +9,7 @@
 namespace WebSchema\Models\WP\Adapters;
 
 use WebSchema\Models\DataTypes\Interfaces\Adapter;
+use WebSchema\Models\WP\Settings;
 
 abstract class Model implements Adapter
 {
@@ -52,5 +53,29 @@ abstract class Model implements Adapter
     public function getDescription()
     {
         return get_the_excerpt($this->post);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublisherImageURL()
+    {
+        if ($publisher = Settings::get(Settings::FIELD_PUBLISHER)) {
+            return $publisher[Settings::FIELD_PUBLISHER_LOGO];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublisherName()
+    {
+        if ($publisher = Settings::get(Settings::FIELD_PUBLISHER)) {
+            return $publisher[Settings::FIELD_PUBLISHER_NAME];
+        }
+
+        return null;
     }
 }

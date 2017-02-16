@@ -183,8 +183,12 @@ class Post
                  */
                 $type = new $class($adapter);
 
-                if ($json = $type->generateJSON()) {
-                    $this->data[self::FIELD_JSON_LD] = $json;
+                try {
+                    if ($json = $type->generateJSON()) {
+                        $this->data[self::FIELD_JSON_LD] = $json;
+                    }
+                } catch (\UnexpectedValueException $e) {
+                    Notify::notify($e->getMessage(), Notify::NOTICE_ERROR);
                 }
             }
         }

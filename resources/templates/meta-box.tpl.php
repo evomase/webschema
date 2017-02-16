@@ -20,6 +20,9 @@
 </div>
 
 <div id="preview">
+    <h3>Preview</h3>
+
     <pre>
+        <?php print_r(json_decode($data['json-ld'], true)); ?>
     </pre>
 </div>

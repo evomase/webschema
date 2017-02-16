@@ -15,13 +15,17 @@ class ControllerService extends Service
 {
     public static function boot()
     {
-        AjaxController::boot();
-        SettingsController::boot();
+        if (is_admin()) {
+            AjaxController::boot();
+            SettingsController::boot();
+        }
     }
 
     public static function shutdown()
     {
-        AjaxController::shutdown();
-        SettingsController::shutdown();
+        if (is_admin()) {
+            AjaxController::shutdown();
+            SettingsController::shutdown();
+        }
     }
 }

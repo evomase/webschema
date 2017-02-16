@@ -93,7 +93,9 @@ abstract class Model
     {
         foreach ($this->required as $field) {
             if (empty($this->data[$field])) {
-                throw new \UnexpectedValueException('The field "' . $field . '" is required to generate a JSON');
+                $field = ($property = Property::get($field)) ? $property->getData()[Property::FIELD_LABEL] : $field;
+
+                throw new \UnexpectedValueException('The web schema field "' . $field . '" is required to generate a JSON-LD');
             }
         }
 
@@ -114,15 +116,10 @@ abstract class Model
             }
 
             if (($image = getimagesize(($file) ?: $url)) !== false) {
-                $width = $image[0];
-
-                //requirements as per Google AMP
-                if ($width >= WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH &&
-                    in_array($image[2], [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG])
-                ) {
+                if (static::isImageValid($image)) {
                     return [
                         'url'    => $url,
-                        'width'  => $width,
+                        'width'  => $image[0],
                         'height' => $image[1]
                     ];
                 }
@@ -130,6 +127,18 @@ abstract class Model
         }
 
         return null;
+    }
+
+    /**
+     * Requirements as per Google AMP
+     *
+     * @param array $image (from getimagesize())
+     * @return bool
+     */
+    public static function isImageValid(array $image)
+    {
+        return ($image[0] >= WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH &&
+            in_array($image[2], [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG]));
     }
 
     /**

@@ -18,8 +18,9 @@ class BootLoader
 
         '\WebSchema\Services\WP\PostService'     => null,
         '\WebSchema\Services\WP\SettingsService' => null,
+        '\WebSchema\Services\WP\NotifyService'   => 'is_admin',
 
-        '\WebSchema\Utils\Installer' => null,
+        '\WebSchema\Utils\Installer' => 'is_admin',
         '\WebSchema\Utils\TinyMCE'   => 'is_admin'
     ];
 
