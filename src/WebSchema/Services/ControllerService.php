@@ -8,17 +8,20 @@
 
 namespace WebSchema\Services;
 
-use WebSchema\Controllers\SchemaController;
+use WebSchema\Controllers\Admin\SettingsController;
+use WebSchema\Controllers\AjaxController;
 
 class ControllerService extends Service
 {
     public static function boot()
     {
-        SchemaController::boot();
+        AjaxController::boot();
+        SettingsController::boot();
     }
 
     public static function shutdown()
     {
-        SchemaController::shutdown();
+        AjaxController::shutdown();
+        SettingsController::shutdown();
     }
 }

@@ -87,7 +87,10 @@ class PostTest extends AbstractTestCase
         $upload = wp_upload_bits('PostTest2.jpg', null,
             file_get_contents(WEB_SCHEMA_DIR . '/tests/resources/images/ModelTest.jpg'));
 
-        $image = wp_insert_attachment(['post_mime_type' => $upload['type']], $upload['file'], $post->ID);
+        $image = wp_insert_attachment([
+            'post_mime_type' => $upload['type'],
+            'guid'           => $upload['url']
+        ], $upload['file'], $post->ID);
 
         $this->assertInternalType('array', json_decode(Post::get($post->ID)->getJson(), true));
 

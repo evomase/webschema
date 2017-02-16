@@ -11,26 +11,14 @@ namespace WebSchema\Controllers;
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;
 
-class SchemaController
+class AjaxController extends Controller
 {
-    private static $instance;
+    protected static $instance;
 
-    private function __construct()
+    protected function __construct()
     {
         add_action('wp_ajax_schema_get_all', array($this, 'getAll'));
         add_action('wp_ajax_schema_get_template', array($this, 'getTemplate'));
-    }
-
-    public static function boot()
-    {
-        if (empty(self::$instance)) {
-            self::$instance = new self();
-        }
-    }
-
-    public static function shutdown()
-    {
-        self::$instance = null;
     }
 
     public function getAll()

@@ -15,7 +15,9 @@ class BootLoader
     const CLASSES = [
         '\WebSchema\Services\SchemaService'     => null,
         '\WebSchema\Services\ControllerService' => null,
-        '\WebSchema\Services\WP\PostService'    => null,
+
+        '\WebSchema\Services\WP\PostService'     => null,
+        '\WebSchema\Services\WP\SettingsService' => null,
 
         '\WebSchema\Utils\Installer' => null,
         '\WebSchema\Utils\TinyMCE'   => 'is_admin'

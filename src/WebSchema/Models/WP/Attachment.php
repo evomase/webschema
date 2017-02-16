@@ -17,9 +17,18 @@ class Attachment extends Post
     public static function boot()
     {
         add_action('add_attachment', [self::class, 'actOnParent'], 10, 2);
-        add_action('delete_post', [self::class, 'actOnParent'], 10, 2);
+        add_action('deleted_post', [self::class, 'actOnParent'], 10, 2);
 
         static::bootCollection();
+    }
+
+    /**
+     * @param \WP_Post $post
+     * @return bool
+     */
+    protected static function isValidPostType(\WP_Post $post)
+    {
+        return ($post->post_type == self::POST_TYPE);
     }
 
     /**
@@ -27,16 +36,25 @@ class Attachment extends Post
      */
     public static function actOnParent($id)
     {
-        if (($post = get_post($id)) && ($post->post_type == self::POST_TYPE)
-            && ($model = Attachment::get($post->ID))
-        ) {
+        if ($model = Attachment::get($id)) {
             $model->saveParent();
         }
     }
 
     private function saveParent()
     {
-        $parent = Post::get(get_post($this->id)->post_parent);
+        $post = get_post($this->id);
+
+        switch ($post->post_type) {
+            case Page::POST_TYPE:
+                $parent = Page::get($post->ID);
+                break;
+
+            default:
+                $parent = Post::get($post->ID);
+                break;
+        }
+
         $parent->save();
     }
 }

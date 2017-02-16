@@ -42,13 +42,11 @@ class Article extends Model implements ArticleAdapter
             $image = current($images)->ID;
         }
 
-        $image = wp_get_attachment_url($image);
-
-        if (!$image || strpos($image, '?') !== false) {
+        if (($image = wp_get_attachment_url($image)) && (strpos($image, 'attachment_id=') !== false)) {
             return null;
         }
 
-        return $image;
+        return (string)$image;
     }
 
     public function getPublisherImageURL()

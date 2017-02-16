@@ -12,7 +12,7 @@ use WebSchema\Models\DataTypes\Model as DataType;
 use WebSchema\Models\StructuredData;
 use WebSchema\Models\Traits\HasCollection;
 use WebSchema\Models\Traits\HasData;
-use WebSchema\Models\WP\Adapters\Model;
+use WebSchema\Models\WP\Adapters\Model as Adapter;
 
 class Post
 {
@@ -171,19 +171,21 @@ class Post
         if ($this->data[self::FIELD_DATA_TYPE] && ($class = StructuredData::get($this->data[self::FIELD_DATA_TYPE]))) {
             $adapter = 'WebSchema\Models\WP\Adapters\\' . $this->data[self::FIELD_DATA_TYPE];
 
-            /**
-             * @var Model $adapter
-             */
+            if (class_exists($adapter)) {
+                /**
+                 * @var Adapter $adapter
+                 */
 
-            $adapter = new $adapter(get_post($this->id));
+                $adapter = new $adapter(get_post($this->id));
 
-            /**
-             * @var DataType $type
-             */
-            $type = new $class($adapter);
+                /**
+                 * @var DataType $type
+                 */
+                $type = new $class($adapter);
 
-            if ($json = $type->generateJSON()) {
-                $this->data[self::FIELD_JSON_LD] = $json;
+                if ($json = $type->generateJSON()) {
+                    $this->data[self::FIELD_JSON_LD] = $json;
+                }
             }
         }
     }
