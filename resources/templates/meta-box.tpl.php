@@ -1,6 +1,6 @@
 <div id="fields">
     <fieldset>
-        <p>In this section, you can add more information can be generated on the page which could be used by services
+        <p>In this section, you can select the document Structured Data Type, which can be used by services
             like Google AMP/Structured Data</p>
 
         <p class="post-attributes-label-wrapper">
@@ -19,10 +19,10 @@
     </fieldset>
 </div>
 
-<div id="preview">
-    <h3>Preview</h3>
+<?php if ($data['json-ld']): ?>
+    <div id="preview">
+        <h3>Preview</h3>
 
-    <pre>
-        <?php print_r(json_decode($data['json-ld'], true)); ?>
-    </pre>
-</div>
+        <pre><code data-language="json"><?php print $data['json-ld']; ?></code></pre>
+    </div>
+<?php endif; ?>

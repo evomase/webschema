@@ -102,10 +102,24 @@ class Settings
             self::SECTION_POST_TYPES);
     }
 
+    /**
+     * @param array $data
+     * @return array
+     */
     public function sanitize(array $data)
     {
         if (get_settings_errors(self::NAME)) {
             $data = get_option(self::NAME);
+        }
+
+        //delete publisher logo if needed
+        if (!empty($data[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_LOGO])
+            && $data[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_LOGO] != $this->data[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_LOGO]
+        ) {
+            $logo = str_replace(WEB_SCHEMA_BASE_URL, ABSPATH,
+                $this->data[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_LOGO]);
+
+            wp_delete_file($logo);
         }
 
         return array_replace_recursive($this->data, $data);

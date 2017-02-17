@@ -9,6 +9,7 @@
 namespace WebSchema\Models\DataTypes;
 
 use WebSchema\Models\DataTypes\Interfaces\Adapter;
+use WebSchema\Models\DataTypes\Traits\Model as ModelTrait;
 use WebSchema\Models\Property;
 use WebSchema\Models\Traits\HasData;
 use WebSchema\Models\Type;
@@ -16,15 +17,11 @@ use WebSchema\Utils\JsonLD;
 
 abstract class Model
 {
+    use ModelTrait;
     use HasData {
         fill as protected;
     }
 
-    /**
-     * @var \WebSchema\Models\Type $schema
-     */
-    protected static $schema;
-    protected static $name;
     /**
      * @var Type
      */
@@ -66,6 +63,9 @@ abstract class Model
         return static::$schema;
     }
 
+    /**
+     * @return string
+     */
     public static function getName()
     {
         if (empty(static::$name)) {

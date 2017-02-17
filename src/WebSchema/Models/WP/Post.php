@@ -38,7 +38,36 @@ class Post
         $this->id = $id;
     }
 
-    public static function renderMetaBox(\WP_Post $post)
+    public static function boot()
+    {
+        add_action('add_meta_boxes', function () {
+            static::addMetaBox();
+        });
+
+        add_action('save_post', function ($id, \WP_Post $post) {
+            if (!static::isValidPostType($post)) {
+                return;
+            }
+
+            $model = static::get($id);
+
+            if (($data = $_POST[static::META_KEY]) && $model->isValid($post, $data)) {
+                $model->fill($data);
+                $model->save();
+            }
+        }, 10, 2);
+
+        static::bootCollection();
+    }
+
+    private static function addMetaBox()
+    {
+        add_meta_box(static::META_KEY, 'Web Schema - Structured Data', function (\WP_Post $post) {
+            static::renderMetaBox($post);
+        }, static::POST_TYPE, 'advanced', 'high');
+    }
+
+    private static function renderMetaBox(\WP_Post $post)
     {
         /** @noinspection PhpUnusedLocalVariableInspection */
         $types = StructuredData::getTypes();
@@ -55,6 +84,7 @@ class Post
 
         /** @noinspection PhpUnusedLocalVariableInspection */
         $data = $model->data;
+        $data[self::FIELD_JSON_LD] = $model->getJson();
 
         include WEB_SCHEMA_DIR . '/resources/templates/meta-box.tpl.php';
     }
@@ -104,31 +134,14 @@ class Post
         $this->put($this->id, $this);
     }
 
-    public static function addMetaBox()
+    /**
+     * @return string
+     */
+    public function getJson()
     {
-        add_meta_box(static::META_KEY, 'Web Schema - Structured Data', array(static::class, 'renderMetaBox'),
-            static::POST_TYPE,
-            'advanced', 'high');
-    }
-
-    public static function boot()
-    {
-        add_action('add_meta_boxes', array(static::class, 'addMetaBox'));
-
-        add_action('save_post', function ($id, \WP_Post $post) {
-            if (!static::isValidPostType($post)) {
-                return;
-            }
-
-            $model = static::get($id);
-
-            if (($data = $_POST[static::META_KEY]) && $model->isValid($post, $data)) {
-                $model->fill($data);
-                $model->save();
-            }
-        }, 10, 2);
-
-        static::bootCollection();
+        //make the json pretty ;-)
+        return json_encode(json_decode($this->data[self::FIELD_JSON_LD], true),
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
 
     /**
@@ -188,7 +201,7 @@ class Post
                         $this->data[self::FIELD_JSON_LD] = $json;
                     }
                 } catch (\UnexpectedValueException $e) {
-                    Notify::notify($e->getMessage(), Notify::NOTICE_ERROR);
+                    Notify::add($e->getMessage(), Notify::NOTICE_ERROR);
                 }
             }
         }
@@ -197,8 +210,8 @@ class Post
     /**
      * @return string
      */
-    public function getJson()
+    public function getJsonScript()
     {
-        return $this->data[self::FIELD_JSON_LD];
+        return '<script type="application/ld+json">' . $this->getJson() . '</script>';
     }
 }

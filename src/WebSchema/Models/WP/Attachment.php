@@ -16,8 +16,13 @@ class Attachment extends Post
 
     public static function boot()
     {
-        add_action('add_attachment', [self::class, 'actOnParent'], 10, 2);
-        add_action('deleted_post', [self::class, 'actOnParent'], 10, 2);
+        add_action('add_attachment', function ($id) {
+            self::actOnParent($id);
+        }, 10, 2);
+
+        add_action('deleted_post', function ($id) {
+            self::actOnParent($id);
+        }, 10, 2);
 
         static::bootCollection();
     }
@@ -25,7 +30,7 @@ class Attachment extends Post
     /**
      * @param int $id
      */
-    public static function actOnParent($id)
+    private static function actOnParent($id)
     {
         if ($model = Attachment::get($id)) {
             $model->saveParent();

@@ -23,24 +23,16 @@ class SettingsController extends Controller
         add_action('admin_menu', [$this, 'addMenus']);
 
         //This needs to be called before Settings default sanitize method
-        add_filter('sanitize_option_' . Settings::NAME, [$this, 'sanitize'], 1);
-    }
-
-    public function addMenus()
-    {
-        add_options_page('Web Schema Settings', 'Web Schema', 'manage_options', self::SLUG, [$this, 'get']);
-    }
-
-    public function get()
-    {
-        include WEB_SCHEMA_DIR . '/resources/templates/admin/settings.tpl.php';
+        add_filter('sanitize_option_' . Settings::NAME, function (array $data) {
+            return $this->sanitize($data);
+        }, 1);
     }
 
     /**
      * @param array $data
      * @return array
      */
-    public function sanitize(array $data)
+    private function sanitize(array $data)
     {
         if (!empty($_FILES[Settings::NAME])) {
             $image = $_FILES[Settings::NAME];
@@ -49,7 +41,7 @@ class SettingsController extends Controller
                 $image[$item] = $image[$item][Settings::FIELD_PUBLISHER][Settings::FIELD_PUBLISHER_LOGO];
             }
 
-            if (!$image['error']) {
+            if (!$image['error'] && file_exists($image['tmp_name'])) {
                 $size = getimagesize($image['tmp_name']);
 
                 if (DataType::isImageValid($size)) {
@@ -69,5 +61,15 @@ class SettingsController extends Controller
         }
 
         return $data;
+    }
+
+    public function addMenus()
+    {
+        add_options_page('Web Schema Settings', 'Web Schema', 'manage_options', self::SLUG, [$this, 'get']);
+    }
+
+    public function get()
+    {
+        include WEB_SCHEMA_DIR . '/resources/templates/admin/settings.tpl.php';
     }
 }

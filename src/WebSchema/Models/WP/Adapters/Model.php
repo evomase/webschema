@@ -52,7 +52,7 @@ abstract class Model implements Adapter
      */
     public function getDescription()
     {
-        return get_the_excerpt($this->post);
+        return get_the_excerpt($this->post) ?: wp_trim_words($this->post->post_content);
     }
 
     /**

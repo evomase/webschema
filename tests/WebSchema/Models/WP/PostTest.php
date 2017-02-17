@@ -67,8 +67,8 @@ class PostTest extends AbstractTestCase
     public function testRenderMetaBox(\WP_Post $post)
     {
         $this->expectOutputRegex('/<label for="web-schema-data-type" class="post-attributes-label">Data Type<\/label>/');
-
-        Post::renderMetaBox($post);
+        do_action('add_meta_boxes');
+        do_meta_boxes(Post::POST_TYPE, 'advanced', $post);
     }
 
     public function testGetJson()

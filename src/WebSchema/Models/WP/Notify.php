@@ -39,7 +39,7 @@ class Notify
      * @param string $message
      * @param string $type
      */
-    public static function notify($message, $type = self::NOTICE_INFO)
+    public static function add($message, $type = self::NOTICE_INFO)
     {
         $md5 = md5($message);
 

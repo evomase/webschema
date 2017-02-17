@@ -9,6 +9,7 @@
 global $wpdb;
 
 define('WEB_SCHEMA_DIR', dirname(__FILE__));
+define('WEB_SCHEMA_DIR_URL', plugins_url('webschema'));
 define('WEB_SCHEMA_BASE_URL', get_option('siteurl'));
 define('WEB_SCHEMA_BASE_DIR', ABSPATH);
 

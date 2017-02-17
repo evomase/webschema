@@ -8,6 +8,7 @@
 
 namespace WebSchema\Services;
 
+use WebSchema\Controllers\Admin\PostController;
 use WebSchema\Controllers\Admin\SettingsController;
 use WebSchema\Controllers\AjaxController;
 
@@ -18,6 +19,7 @@ class ControllerService extends Service
         if (is_admin()) {
             AjaxController::boot();
             SettingsController::boot();
+            PostController::boot();
         }
     }
 
@@ -26,6 +28,7 @@ class ControllerService extends Service
         if (is_admin()) {
             AjaxController::shutdown();
             SettingsController::shutdown();
+            PostController::shutdown();
         }
     }
 }
