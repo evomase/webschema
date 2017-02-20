@@ -33,7 +33,7 @@ class TypeProperty extends Model
         $query = static::$db->prepare('SELECT * FROM ' . static::$table . ' WHERE type_id = %s AND property_id = %s',
             $type, $property);
 
-        if ($data = static::$db->get_col($query, ARRAY_A)) {
+        if ($data = self::$db->get_row($query, ARRAY_A)) {
             $model = new self($data);
             $model->new = false;
 
