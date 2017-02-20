@@ -86,8 +86,6 @@ class Installer implements Bootable
         TypeFactory::createOrUpdate($data['types'] + $data['datatypes']);
         TypePropertyFactory::createOrUpdate($data['types']);
 
-        file_put_contents(WEB_SCHEMA_BASE_DIR . '/wp-content/uploads/errors.txt', ob_get_contents());
-
         return true;
     }
 }
