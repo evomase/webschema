@@ -20,4 +20,12 @@ class Page extends Post
     {
         return ($post->post_type == self::POST_TYPE);
     }
+
+    /**
+     * @param array $types
+     */
+    protected static function addMetaBox(array $types = [])
+    {
+        parent::addMetaBox([self::POST_TYPE]);
+    }
 }

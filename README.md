@@ -1,4 +1,4 @@
-# Web Schema v1.0
+# Web Schema v1.1
 
 Web Schema is an open source tool created to make it easier for content creators to markup their content with a collection of [schemas](http://schema.org/).
 

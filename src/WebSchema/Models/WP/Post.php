@@ -60,14 +60,21 @@ class Post
         static::bootCollection();
     }
 
-    private static function addMetaBox()
+    /**
+     * @param array $types
+     */
+    protected static function addMetaBox(array $types = [])
     {
+        if (empty($types)) {
+            $types = array_merge(Settings::get(Settings::FIELD_POST_TYPES), [static::POST_TYPE]);
+        }
+
         add_meta_box(static::META_KEY, 'Web Schema - Structured Data', function (\WP_Post $post) {
             static::renderMetaBox($post);
-        }, static::POST_TYPE, 'advanced', 'high');
+        }, $types, 'advanced', 'high');
     }
 
-    private static function renderMetaBox(\WP_Post $post)
+    protected static function renderMetaBox(\WP_Post $post)
     {
         /** @noinspection PhpUnusedLocalVariableInspection */
         $types = StructuredData::getTypes();
@@ -118,7 +125,8 @@ class Post
      */
     protected static function isValidPostType(\WP_Post $post)
     {
-        return ($post->post_type == static::POST_TYPE);
+        return (in_array($post->post_type,
+            array_merge(Settings::get(Settings::FIELD_POST_TYPES), [static::POST_TYPE])));
     }
 
     protected function load()

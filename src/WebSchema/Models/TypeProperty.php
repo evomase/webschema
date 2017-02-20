@@ -31,14 +31,14 @@ class TypeProperty extends Model
     {
         $model = null;
         /** @noinspection SqlResolve */
-        $query = static::$db->prepare('SELECT * FROM ' . static::$table . ' WHERE type_id = %s AND property_id = %s',
+        $query = self::$db->prepare('SELECT * FROM ' . self::$table . ' WHERE type_id = %s AND property_id = %s',
             $type, $property);
 
-        if ($data = static::$db->get_col($query, ARRAY_A)) {
+        if ($data = self::$db->get_row($query, ARRAY_A)) {
             $model = new self($data);
             $model->new = false;
 
-            $model->put($data[static::$key], $model);
+            $model->put($data[self::$key], $model);
         }
 
         return $model;

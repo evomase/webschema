@@ -150,20 +150,24 @@ class Settings
     {
         $types = get_post_types([
             'public'   => true,
-            '_builtin' => true
+            '_builtin' => false
         ], 'objects');
 
         $data = get_option(self::NAME)[self::FIELD_POST_TYPES];
 
-        echo '<select name="' . self::NAME . '[' . self::FIELD_POST_TYPES . '][]" multiple>';
+        if ($types) {
+            echo '<select name="' . self::NAME . '[' . self::FIELD_POST_TYPES . '][]" multiple>';
 
-        foreach ($types as $id => $type) {
-            /**
-             * @var \WP_Post_Type $type
-             */
-            $selected = (in_array($id, $data)) ? 'selected="selected"' : '';
+            foreach ($types as $id => $type) {
+                /**
+                 * @var \WP_Post_Type $type
+                 */
+                $selected = (in_array($id, $data)) ? 'selected="selected"' : '';
 
-            echo '<option value="' . $id . '" ' . $selected . '>' . $type->label . '</option>';
+                echo '<option value="' . $id . '" ' . $selected . '>' . $type->label . '</option>';
+            }
+        } else {
+            echo '<p>No custom post types registered</p>';
         }
     }
 }
