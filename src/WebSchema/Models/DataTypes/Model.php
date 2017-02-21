@@ -30,7 +30,7 @@ abstract class Model
      * @var \WP_Post $post
      */
     protected $post;
-    protected $required, $data = [];
+    protected $required = [], $data = [];
     /**
      * @var Adapter
      */

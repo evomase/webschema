@@ -17,6 +17,7 @@ class PostTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
+        self::setDefaultSettings();
         parent::setUpBeforeClass();
 
         (new Installer())->runOnce();
@@ -69,6 +70,8 @@ class PostTest extends AbstractTestCase
         $this->expectOutputRegex('/<label for="web-schema-data-type" class="post-attributes-label">Data Type<\/label>/');
         do_action('add_meta_boxes');
         do_meta_boxes(Post::POST_TYPE, 'advanced', $post);
+
+        wp_delete_post($post->ID);
     }
 
     public function testGetJson()
@@ -94,5 +97,6 @@ class PostTest extends AbstractTestCase
         $this->assertInternalType('array', json_decode(Post::get($post->ID)->getJson(), true));
 
         wp_delete_attachment($image);
+        wp_delete_post($post->ID);
     }
 }

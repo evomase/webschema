@@ -17,7 +17,9 @@ use WebSchema\Models\WP\Adapters\Model as Adapter;
 class Post
 {
     use HasCollection;
-    use HasData;
+    use HasData {
+        fill as protected;
+    }
 
     const FIELD_DATA_TYPE = 'data-type';
     const FIELD_JSON_LD = 'json-ld';
@@ -148,8 +150,8 @@ class Post
     public function getJson()
     {
         //make the json pretty ;-)
-        return json_encode(json_decode($this->data[self::FIELD_JSON_LD], true),
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        return ($this->data[self::FIELD_JSON_LD]) ? json_encode(json_decode($this->data[self::FIELD_JSON_LD], true),
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : null;
     }
 
     /**

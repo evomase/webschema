@@ -45,6 +45,45 @@ class ArticleTest extends AbstractTestCase
          * @var ArticleAdapter $adapter
          */
         $type = new Article($adapter);
-        $this->assertJson($type->generateJSON());
+        $json = $type->generateJSON();
+        $this->assertJson($json);
+
+        $json = json_decode($json, true);
+
+        foreach ($json as $index => $item) {
+            $this->assertNotEmpty($item);
+        }
+
+        $this->assertEquals('ImageObject', $json[Article::FIELD_IMAGE]['@type']);
+        $this->assertEquals($image, $json[Article::FIELD_IMAGE]['url']);
+
+        $this->assertEquals('ImageObject', $json[Article::FIELD_PUBLISHER]['logo']['@type']);
+        $this->assertEquals($image, $json[Article::FIELD_PUBLISHER]['logo']['url']);
+    }
+
+    /**
+     * For required values
+     */
+    public function testGenerateJsonException()
+    {
+        $date = new \DateTime();
+        $adapter = m::mock(ArticleAdapter::class)->makePartial();
+        $adapter->shouldReceive('getDateModified')->andReturn($date);
+        $adapter->shouldReceive('getImageURL')->andReturn(null);
+        $adapter->shouldReceive('getDatePublished')->andReturn($date);
+        $adapter->shouldReceive('getPublisherName')->andReturn(null);
+        $adapter->shouldReceive('getPublisherImageURL')->andReturn(null);
+        $adapter->shouldReceive('getMainEntityOfPage')->andReturn('http://www.google.com');
+        $adapter->shouldReceive('getHeadline')->andReturn('Headline');
+        $adapter->shouldReceive('getAuthor')->andReturn('Author');
+        $adapter->shouldReceive('getDescription')->andReturn('Description');
+
+        /**
+         * @var ArticleAdapter $adapter
+         */
+        $type = new Article($adapter);
+
+        $this->setExpectedException(\UnexpectedValueException::class);
+        $type->generateJSON();
     }
 }

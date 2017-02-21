@@ -98,11 +98,11 @@ abstract class Model
 
     /**
      * @param $value
-     * @return Model
+     * @return Model[]
      */
     public static function find($value)
     {
-        return (new static())->search($value);
+        return static::search($value);
     }
 
     public static function boot()

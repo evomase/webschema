@@ -13,7 +13,9 @@ use WebSchema\Models\Traits\HasData;
 
 class Settings
 {
-    use HasData;
+    use HasData {
+        fill as private;
+    }
 
     const FIELD_POST_TYPES = 'post-types';
     const FIELD_PUBLISHER = 'publisher';
@@ -44,6 +46,7 @@ class Settings
 
         add_action('admin_init', [$this, 'register']);
         add_action('update_option_' . self::NAME, [self::class, 'boot']);
+        add_action('delete_option_' . self::NAME, [self::class, 'boot']);
     }
 
     private function load()
@@ -57,6 +60,8 @@ class Settings
     {
         if (empty(self::$instance)) {
             new self();
+        } else {
+            self::$instance->load();
         }
     }
 
@@ -71,6 +76,19 @@ class Settings
         }
 
         return null;
+    }
+
+    public static function reset()
+    {
+        delete_option(self::NAME);
+    }
+
+    /**
+     * @return Settings
+     */
+    public static function getInstance()
+    {
+        return self::$instance;
     }
 
     public function register()

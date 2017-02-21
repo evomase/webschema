@@ -8,6 +8,7 @@
 
 namespace WebSchema\Tests;
 
+use WebSchema\Models\WP\Settings;
 use WebSchema\Utils\BootLoader;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
@@ -22,9 +23,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         BootLoader::stop();
 
         static::dropSchemaTables();
+        Settings::reset();
     }
 
-    public static function dropSchemaTables()
+    protected static function dropSchemaTables()
     {
         global $wpdb;
 
@@ -34,5 +36,15 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_TYPE_PROPERTIES);
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_TYPES);
         $wpdb->query('DROP TABLE IF EXISTS ' . WEB_SCHEMA_TABLE_PROPERTIES);
+    }
+
+    protected static function setDefaultSettings()
+    {
+        update_option(Settings::NAME, [
+            Settings::FIELD_PUBLISHER => [
+                Settings::FIELD_PUBLISHER_NAME => 'Tester',
+                Settings::FIELD_PUBLISHER_LOGO => WEB_SCHEMA_DIR_URL . '/tests/resources/images/ModelTest.jpg'
+            ]
+        ]);
     }
 }

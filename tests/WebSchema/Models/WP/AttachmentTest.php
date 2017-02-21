@@ -18,6 +18,7 @@ class AttachmentTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
+        self::setDefaultSettings();
         parent::setUpBeforeClass();
 
         (new Installer())->runOnce();
@@ -55,5 +56,7 @@ class AttachmentTest extends AbstractTestCase
 
         $data = json_decode(Post::get($post->ID)->getJson(), true);
         $this->assertArrayNotHasKey(Article::FIELD_IMAGE, $data);
+
+        wp_delete_post($post->ID);
     }
 }
