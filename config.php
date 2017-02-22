@@ -20,3 +20,6 @@ define('WEB_SCHEMA_TABLE_TYPE_PROPERTIES', $wpdb->prefix . 'web_schema_type_prop
 
 //AMP settings
 define('WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH', 696);
+
+define('WEB_SCHEMA_AMP_PUBLISHER_LOGO_WIDTH', 600);
+define('WEB_SCHEMA_AMP_PUBLISHER_LOGO_HEIGHT', 60);

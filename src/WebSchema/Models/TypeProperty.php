@@ -16,6 +16,11 @@ class TypeProperty extends Model
 
     protected static $table = WEB_SCHEMA_TABLE_TYPE_PROPERTIES;
 
+    /**
+     * @var \ArrayObject
+     */
+    protected static $collection;
+
     protected $data = [
         self::FIELD_ID          => null,
         self::FIELD_PROPERTY_ID => null,

@@ -18,6 +18,11 @@ class Property extends Model
 
     protected static $table = WEB_SCHEMA_TABLE_PROPERTIES;
 
+    /**
+     * @var \ArrayObject
+     */
+    protected static $collection;
+
     protected $data = [
         self::FIELD_ID      => null,
         self::FIELD_COMMENT => null,

@@ -2,15 +2,15 @@
 /**
  * Created by IntelliJ IDEA.
  * User: David
- * Date: 17/02/2017
- * Time: 18:09
+ * Date: 22/02/2017
+ * Time: 14:48
  */
 
-namespace WebSchema\Models\DataTypes\Traits;
+namespace WebSchema\Models\DataTypes;
 
 use WebSchema\Models\Type;
 
-trait Model
+class NewsArticle extends Article
 {
     /**
      * @var Type $schema

@@ -43,7 +43,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         update_option(Settings::NAME, [
             Settings::FIELD_PUBLISHER => [
                 Settings::FIELD_PUBLISHER_NAME => 'Tester',
-                Settings::FIELD_PUBLISHER_LOGO => WEB_SCHEMA_DIR_URL . '/tests/resources/images/ModelTest.jpg'
+                Settings::FIELD_PUBLISHER_LOGO => WEB_SCHEMA_DIR_URL . '/tests/resources/images/PublisherImage.jpg'
             ]
         ]);
     }

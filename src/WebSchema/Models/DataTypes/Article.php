@@ -9,13 +9,25 @@
 namespace WebSchema\Models\DataTypes;
 
 use WebSchema\Models\DataTypes\Interfaces\ArticleAdapter;
-use WebSchema\Utils\JsonLD\Node;
+use WebSchema\Models\DataTypes\Traits\HasAuthor;
+use WebSchema\Models\DataTypes\Traits\HasPublisher;
+use WebSchema\Models\Type;
 
 class Article extends Thing
 {
+    use HasPublisher;
+    use HasAuthor;
+
+    const FIELD_AUTHOR = 'author';
     const FIELD_DATE_MODIFIED = 'dateModified';
     const FIELD_DATE_PUBLISHED = 'datePublished';
+    const FIELD_HEADLINE = 'headline';
     const FIELD_PUBLISHER = 'publisher';
+    /**
+     * @var Type $schema
+     */
+    protected static $schema;
+    protected static $name;
 
     protected $data = [
         self::FIELD_AUTHOR              => [],
@@ -27,14 +39,12 @@ class Article extends Thing
         self::FIELD_MAIN_ENTITY_OF_PAGE => null,
         self::FIELD_PUBLISHER           => []
     ];
-
     protected $required = [
         self::FIELD_HEADLINE,
         self::FIELD_PUBLISHER,
         self::FIELD_DATE_PUBLISHED,
         self::FIELD_AUTHOR
     ];
-
     /**
      * @var ArticleAdapter
      */
@@ -62,20 +72,12 @@ class Article extends Thing
     }
 
     /**
-     * @param string $name
-     * @param string $imageURL
-     * @return $this|Article
+     * @param string $headline
+     * @return $this
      */
-    protected function setPublisher($name, $imageURL)
+    protected function setHeadline($headline)
     {
-        if (($image = $this->getImage($imageURL)) && $name) {
-            return $this->setValue(self::FIELD_PUBLISHER, [
-                'name' => (string)$name,
-                'logo' => new Node('ImageObject', $image)
-            ]);
-        }
-
-        return $this;
+        return $this->setValue(static::FIELD_HEADLINE, $headline);
     }
 
     /**

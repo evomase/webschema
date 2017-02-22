@@ -9,9 +9,12 @@
 namespace WebSchema\Models\WP\Adapters;
 
 use WebSchema\Models\DataTypes\Interfaces\ArticleAdapter;
+use WebSchema\Models\WP\Adapters\Traits\HasPublisher;
 
 class Article extends Model implements ArticleAdapter
 {
+    use HasPublisher;
+
     /**
      * @return \DateTime
      */
@@ -29,23 +32,18 @@ class Article extends Model implements ArticleAdapter
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getImageURL()
+    public function getHeadline()
     {
-        $image = get_post_thumbnail_id($this->post);
+        return $this->post->post_title;
+    }
 
-        if (!$image && ($images = get_attached_media(['image/jpeg', 'image/png', 'image/gif'], $this->post))) {
-            /**
-             * @var \WP_Post $image
-             */
-            $image = current($images)->ID;
-        }
-
-        if (($image = wp_get_attachment_url($image)) && (strpos($image, 'attachment_id=') !== false)) {
-            return null;
-        }
-
-        return (string)$image;
+    /**
+     * @return string
+     */
+    public function getAuthor()
+    {
+        return get_userdata($this->post->post_author)->display_name;
     }
 }

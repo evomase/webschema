@@ -9,7 +9,6 @@
 namespace WebSchema\Models\DataTypes;
 
 use WebSchema\Models\DataTypes\Interfaces\Adapter;
-use WebSchema\Models\DataTypes\Traits\Model as ModelTrait;
 use WebSchema\Models\Property;
 use WebSchema\Models\Traits\HasData;
 use WebSchema\Models\Type;
@@ -17,10 +16,15 @@ use WebSchema\Utils\JsonLD;
 
 abstract class Model
 {
-    use ModelTrait;
     use HasData {
         fill as protected;
     }
+
+    /**
+     * @var Type $schema
+     */
+    protected static $schema;
+    protected static $name;
 
     /**
      * @var Type
@@ -50,12 +54,24 @@ abstract class Model
     }
 
     /**
+     * @param string $class
+     */
+    public static function setTypeClass($class)
+    {
+        if (class_exists($class) && ($class == Type::class || is_subclass_of($class, Type::class))) {
+            self::$typeClass = $class;
+
+            static::$schema = null;
+        }
+    }
+
+    /**
      * @return Type
      */
     public static function getSchema()
     {
         if (empty(static::$schema)) {
-            $class = static::$typeClass;
+            $class = self::$typeClass;
 
             static::$schema = $class::get(static::getName());
         }
@@ -76,16 +92,6 @@ abstract class Model
     }
 
     /**
-     * @param string $class
-     */
-    public static function setTypeClass($class)
-    {
-        if (class_exists($class) && is_subclass_of($class, Type::class)) {
-            static::$typeClass = $class;
-        }
-    }
-
-    /**
      * @return string
      * @throws \UnexpectedValueException
      */
@@ -95,7 +101,10 @@ abstract class Model
             if (empty($this->data[$field])) {
                 $field = ($property = Property::get($field)) ? $property->getData()[Property::FIELD_LABEL] : $field;
 
-                throw new \UnexpectedValueException('The web schema field "' . $field . '" is required to generate a JSON-LD');
+                throw new \UnexpectedValueException('The Web Schema field "' . $field . '" is required or invalid to' .
+                    ' generate a JSON-LD. Please refer to the' .
+                    ' <a href="https://developers.google.com/search/docs/data-types/data-type-selector" target="_blank">' .
+                    'Structured Data Types API</a> for more information.');
             }
         }
 
@@ -108,6 +117,25 @@ abstract class Model
      */
     public function getImage($url)
     {
+        if (($image = $this->getImageSize($url)) && static::isImageValid($image)) {
+            return [
+                'url'    => $url,
+                'width'  => $image[0],
+                'height' => $image[1]
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $url
+     * @return array|null
+     */
+    protected function getImageSize($url)
+    {
+        $image = null;
+
         if (filter_var($url, FILTER_VALIDATE_URL)) {
             $file = null;
 
@@ -115,18 +143,10 @@ abstract class Model
                 $file = WEB_SCHEMA_BASE_DIR . str_replace(WEB_SCHEMA_BASE_URL, '', $url);
             }
 
-            if (($image = getimagesize(($file) ?: $url)) !== false) {
-                if (static::isImageValid($image)) {
-                    return [
-                        'url'    => $url,
-                        'width'  => $image[0],
-                        'height' => $image[1]
-                    ];
-                }
-            }
+            $image = getimagesize(($file) ?: $url);
         }
 
-        return null;
+        return $image;
     }
 
     /**

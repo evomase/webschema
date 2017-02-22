@@ -28,14 +28,16 @@ class ArticleTest extends AbstractTestCase
     public function testGenerateJson()
     {
         $date = new \DateTime();
-        $image = WEB_SCHEMA_DIR_URL . '/tests/resources/images/ModelTest.jpg';
+        $base = WEB_SCHEMA_DIR_URL . '/tests/resources/images';
+        $imageURL = $base . '/ModelTest.jpg';
+        $publisherImageURL = $base . '/PublisherImage.jpg';
 
         $adapter = m::mock(ArticleAdapter::class)->makePartial();
         $adapter->shouldReceive('getDateModified')->andReturn($date);
-        $adapter->shouldReceive('getImageURL')->andReturn($image);
+        $adapter->shouldReceive('getImageURL')->andReturn($imageURL);
         $adapter->shouldReceive('getDatePublished')->andReturn($date);
         $adapter->shouldReceive('getPublisherName')->andReturn('Publisher');
-        $adapter->shouldReceive('getPublisherImageURL')->andReturn($image);
+        $adapter->shouldReceive('getPublisherImageURL')->andReturn($publisherImageURL);
         $adapter->shouldReceive('getMainEntityOfPage')->andReturn('http://www.google.com');
         $adapter->shouldReceive('getHeadline')->andReturn('Headline');
         $adapter->shouldReceive('getAuthor')->andReturn('Author');
@@ -55,10 +57,10 @@ class ArticleTest extends AbstractTestCase
         }
 
         $this->assertEquals('ImageObject', $json[Article::FIELD_IMAGE]['@type']);
-        $this->assertEquals($image, $json[Article::FIELD_IMAGE]['url']);
+        $this->assertEquals($imageURL, $json[Article::FIELD_IMAGE]['url']);
 
         $this->assertEquals('ImageObject', $json[Article::FIELD_PUBLISHER]['logo']['@type']);
-        $this->assertEquals($image, $json[Article::FIELD_PUBLISHER]['logo']['url']);
+        $this->assertEquals($publisherImageURL, $json[Article::FIELD_PUBLISHER]['logo']['url']);
     }
 
     /**

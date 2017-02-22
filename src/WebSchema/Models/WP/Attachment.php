@@ -12,6 +12,11 @@ class Attachment extends Post
 {
     const POST_TYPE = 'attachment';
 
+    /**
+     * @var \ArrayObject
+     */
+    protected static $collection;
+
     protected $data = [];
 
     public static function boot()

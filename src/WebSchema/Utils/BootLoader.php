@@ -13,8 +13,9 @@ use WebSchema\Utils\Interfaces\Bootable;
 class BootLoader
 {
     const CLASSES = [
-        '\WebSchema\Services\SchemaService'     => null,
-        '\WebSchema\Services\ControllerService' => null,
+        '\WebSchema\Services\SchemaService'         => null,
+        '\WebSchema\Services\ControllerService'     => null,
+        '\WebSchema\Services\StructuredDataService' => null,
 
         '\WebSchema\Services\WP\PostService'     => null,
         '\WebSchema\Services\WP\SettingsService' => null,

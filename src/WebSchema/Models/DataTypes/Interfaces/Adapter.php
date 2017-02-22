@@ -10,23 +10,4 @@ namespace WebSchema\Models\DataTypes\Interfaces;
 
 interface Adapter
 {
-    /**
-     * @return string
-     */
-    public function getMainEntityOfPage();
-
-    /**
-     * @return string
-     */
-    public function getHeadline();
-
-    /**
-     * @return string
-     */
-    public function getAuthor();
-
-    /**
-     * @return string
-     */
-    public function getDescription();
 }

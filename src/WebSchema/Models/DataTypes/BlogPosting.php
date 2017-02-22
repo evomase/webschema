@@ -1,0 +1,20 @@
+<?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: David
+ * Date: 22/02/2017
+ * Time: 14:48
+ */
+
+namespace WebSchema\Models\DataTypes;
+
+use WebSchema\Models\Type;
+
+class BlogPosting extends Article
+{
+    /**
+     * @var Type $schema
+     */
+    protected static $schema;
+    protected static $name;
+}

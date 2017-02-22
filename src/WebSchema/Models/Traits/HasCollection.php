@@ -11,11 +11,6 @@ namespace WebSchema\Models\Traits;
 trait HasCollection
 {
     /**
-     * @var \ArrayObject
-     */
-    protected static $collection;
-
-    /**
      * Clears the collection array
      */
     public static function clearCollection()
@@ -36,7 +31,13 @@ trait HasCollection
      */
     public static function getCollection()
     {
-        return static::$collection->getArrayCopy();
+        /**
+         * @var \ArrayObject $collection
+         */
+
+        $collection = static::$collection;
+
+        return $collection->getArrayCopy();
     }
 
     /**
@@ -45,10 +46,15 @@ trait HasCollection
      */
     protected function put($id, $model)
     {
-        if (static::$collection->offsetExists($id)) {
+        /**
+         * @var \ArrayObject $collection
+         */
+        $collection = static::$collection;
+
+        if ($collection->offsetExists($id)) {
             return;
         }
 
-        static::$collection[$id] = $model;
+        $collection[$id] = $model;
     }
 }

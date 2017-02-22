@@ -9,7 +9,6 @@
 namespace WebSchema\Models\WP\Adapters;
 
 use WebSchema\Models\DataTypes\Interfaces\Adapter;
-use WebSchema\Models\WP\Settings;
 
 abstract class Model implements Adapter
 {
@@ -34,48 +33,29 @@ abstract class Model implements Adapter
     /**
      * @return string
      */
-    public function getHeadline()
-    {
-        return $this->post->post_title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthor()
-    {
-        return get_userdata($this->post->post_author)->display_name;
-    }
-
-    /**
-     * @return string
-     */
     public function getDescription()
     {
         return get_the_excerpt($this->post) ?: wp_trim_words($this->post->post_content);
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getPublisherImageURL()
+    public function getImageURL()
     {
-        if ($publisher = Settings::get(Settings::FIELD_PUBLISHER)) {
-            return $publisher[Settings::FIELD_PUBLISHER_LOGO];
+        $image = get_post_thumbnail_id($this->post);
+
+        if (!$image && ($images = get_attached_media(['image/jpeg', 'image/png', 'image/gif'], $this->post))) {
+            /**
+             * @var \WP_Post $image
+             */
+            $image = current($images)->ID;
         }
 
-        return null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPublisherName()
-    {
-        if ($publisher = Settings::get(Settings::FIELD_PUBLISHER)) {
-            return $publisher[Settings::FIELD_PUBLISHER_NAME];
+        if (($image = wp_get_attachment_url($image)) && (strpos($image, 'attachment_id=') !== false)) {
+            return null;
         }
 
-        return null;
+        return (string)$image;
     }
 }

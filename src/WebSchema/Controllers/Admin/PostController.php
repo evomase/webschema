@@ -42,7 +42,11 @@ class PostController extends Controller
         global $hook_suffix;
 
         if (in_array($hook_suffix, ['post.php', 'post-new.php'])) {
-            wp_enqueue_style('rainbow', WEB_SCHEMA_DIR_URL . '/resources/js/rainbow/css/rainbow.min.css', [], '2.1.2');
+            wp_enqueue_style('web-schema-structured-data', WEB_SCHEMA_DIR_URL . '/resources/css/structured-data.css',
+                [], WEB_SCHEMA_VERSION);
+
+            wp_enqueue_style('rainbow', WEB_SCHEMA_DIR_URL . '/resources/js/rainbow/css/rainbow.min.css',
+                ['web-schema-structured-data'], '2.1.2');
         }
     }
 }

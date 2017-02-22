@@ -20,7 +20,6 @@ class SettingsTest extends AbstractTestCase
 
     public function testActions()
     {
-        //has_action('admin_init', )
         $this->assertEquals(10, has_action('update_option_' . Settings::NAME, [Settings::class, 'boot']));
         $this->assertEquals(10, has_action('delete_option_' . Settings::NAME, [Settings::class, 'boot']));
     }
@@ -51,5 +50,10 @@ class SettingsTest extends AbstractTestCase
         $this->assertInternalType('array', $data);
 
         unset($wp_settings_errors[0]);
+
+        $image = wp_upload_bits('SettingsTest.jpg', null,
+            file_get_contents(WEB_SCHEMA_DIR . '/tests/resources/images/ModelTest.jpg'));
+
+        $data[Settings::FIELD_PUBLISHER][Settings::FIELD_PUBLISHER_LOGO] = $image['url'];
     }
 }

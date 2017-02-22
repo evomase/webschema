@@ -19,6 +19,11 @@ class Type extends Model
 
     protected static $table = WEB_SCHEMA_TABLE_TYPES;
 
+    /**
+     * @var \ArrayObject
+     */
+    protected static $collection;
+
     protected $data = [
         self::FIELD_COMMENT   => null,
         self::FIELD_LABEL     => null,

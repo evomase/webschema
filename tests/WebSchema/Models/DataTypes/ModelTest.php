@@ -82,5 +82,8 @@ class ModelTest extends AbstractTestCase
         $model::setTypeClass(get_class($typeMock));
 
         $this->assertInstanceOf(Type::class, $model::getSchema());
+
+        //revert back to default
+        $model::setTypeClass(Type::class);
     }
 }

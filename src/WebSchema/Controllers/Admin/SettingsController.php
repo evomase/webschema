@@ -9,7 +9,7 @@
 namespace WebSchema\Controllers\Admin;
 
 use WebSchema\Controllers\Controller;
-use WebSchema\Models\DataTypes\Model as DataType;
+use WebSchema\Models\DataTypes\Article;
 use WebSchema\Models\WP\Settings;
 
 class SettingsController extends Controller
@@ -44,7 +44,7 @@ class SettingsController extends Controller
             if (!$image['error'] && file_exists($image['tmp_name'])) {
                 $size = getimagesize($image['tmp_name']);
 
-                if (DataType::isImageValid($size)) {
+                if (Article::isValidPublisherImage($size)) {
                     $image = wp_handle_upload($image, ['action' => 'update']);
 
                     if (empty($image['error'])) {
@@ -54,8 +54,9 @@ class SettingsController extends Controller
                     }
                 } else {
                     add_settings_error(Settings::NAME, 1,
-                        'Uploaded file is not valid, only JPEG,PNG, or GIF allowed and' .
-                        ' a minimum width of ' . WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH . ' pixels');
+                        'Uploaded publisher image is not valid, only JPEG, PNG, or GIF allowed and ' .
+                        WEB_SCHEMA_AMP_PUBLISHER_LOGO_WIDTH . 'x' . WEB_SCHEMA_AMP_PUBLISHER_LOGO_HEIGHT . ' pixels' .
+                        ' in dimension');
                 }
             }
         }

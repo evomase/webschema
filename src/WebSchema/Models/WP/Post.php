@@ -8,6 +8,7 @@
 
 namespace WebSchema\Models\WP;
 
+use WebSchema\Models\DataTypes\Model;
 use WebSchema\Models\DataTypes\Model as DataType;
 use WebSchema\Models\StructuredData;
 use WebSchema\Models\Traits\HasCollection;
@@ -23,9 +24,14 @@ class Post
 
     const FIELD_DATA_TYPE = 'data-type';
     const FIELD_JSON_LD = 'json-ld';
-
+    const FILTER_POST_ADAPTER = 'web-schema-post-adapter';
     const META_KEY = 'web-schema';
     const POST_TYPE = 'post';
+
+    /**
+     * @var \ArrayObject
+     */
+    protected static $collection;
 
     protected $data = [
         self::FIELD_DATA_TYPE => null,
@@ -189,12 +195,16 @@ class Post
         }
     }
 
+    /**
+     * @throws \TypeError
+     */
     protected function generateJson()
     {
         if ($this->data[self::FIELD_DATA_TYPE] && ($class = StructuredData::get($this->data[self::FIELD_DATA_TYPE]))) {
             $adapter = 'WebSchema\Models\WP\Adapters\\' . $this->data[self::FIELD_DATA_TYPE];
+            $adapter = apply_filters(self::FILTER_POST_ADAPTER, $adapter);
 
-            if (class_exists($adapter)) {
+            if (class_exists($adapter) && class_exists($class)) {
                 /**
                  * @var Adapter $adapter
                  */
@@ -206,12 +216,18 @@ class Post
                  */
                 $type = new $class($adapter);
 
+                if (!($type instanceof Model)) {
+                    throw new \TypeError('The type class ' . get_class($type) . ' must extend ' . Model::class);
+                }
+
                 try {
                     if ($json = $type->generateJSON()) {
                         $this->data[self::FIELD_JSON_LD] = $json;
                     }
                 } catch (\UnexpectedValueException $e) {
                     Notify::add($e->getMessage(), Notify::NOTICE_ERROR);
+
+                    $this->data[self::FIELD_JSON_LD] = null;
                 }
             }
         }

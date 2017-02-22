@@ -136,7 +136,7 @@ class ArticleTest extends AbstractTestCase
         $post = $this->insertPost();
         $adapter = new Article($post);
 
-        $this->assertRegExp('/ModelTest\.jpg$/i', $adapter->getPublisherImageURL());
+        $this->assertRegExp('/PublisherImage\.jpg$/i', $adapter->getPublisherImageURL());
 
         wp_delete_post($post->ID);
     }

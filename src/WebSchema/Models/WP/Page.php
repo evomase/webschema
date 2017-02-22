@@ -13,6 +13,11 @@ class Page extends Post
     const POST_TYPE = 'page';
 
     /**
+     * @var \ArrayObject
+     */
+    protected static $collection;
+
+    /**
      * @param \WP_Post $post
      * @return bool
      */

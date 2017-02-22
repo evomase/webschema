@@ -13,6 +13,26 @@ interface ArticleAdapter extends Adapter
     /**
      * @return string
      */
+    public function getMainEntityOfPage();
+
+    /**
+     * @return string
+     */
+    public function getHeadline();
+
+    /**
+     * @return string
+     */
+    public function getAuthor();
+
+    /**
+     * @return string
+     */
+    public function getDescription();
+
+    /**
+     * @return string
+     */
     public function getImageURL();
 
     /**

@@ -27,6 +27,11 @@ abstract class Model
     protected $new = true;
 
     /**
+     * @var \ArrayObject
+     */
+    protected static $collection;
+
+    /**
      * Model constructor.
      * @param array $data
      */
