@@ -8,7 +8,6 @@
 
 namespace WebSchema\Models\WP;
 
-use WebSchema\Models\DataTypes\Model;
 use WebSchema\Models\DataTypes\Model as DataType;
 use WebSchema\Models\StructuredData;
 use WebSchema\Models\Traits\HasCollection;
@@ -216,8 +215,8 @@ class Post
                  */
                 $type = new $class($adapter);
 
-                if (!($type instanceof Model)) {
-                    throw new \TypeError('The type class ' . get_class($type) . ' must extend ' . Model::class);
+                if (!($type instanceof DataType)) {
+                    throw new \TypeError('The type class ' . get_class($type) . ' must extend ' . DataType::class);
                 }
 
                 try {
