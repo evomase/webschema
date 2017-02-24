@@ -6,7 +6,7 @@
  * Time: 14:48
  */
 
-namespace WebSchema\Models\DataTypes;
+namespace WebSchema\Models\StructuredData\Types;
 
 use WebSchema\Models\Type;
 

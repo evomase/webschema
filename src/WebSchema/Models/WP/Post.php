@@ -8,8 +8,8 @@
 
 namespace WebSchema\Models\WP;
 
-use WebSchema\Models\DataTypes\Model as DataType;
-use WebSchema\Models\StructuredData;
+use WebSchema\Models\StructuredData\StructuredData;
+use WebSchema\Models\StructuredData\Types\Model as StructuredDataType;
 use WebSchema\Models\Traits\HasCollection;
 use WebSchema\Models\Traits\HasData;
 use WebSchema\Models\WP\Adapters\Model as Adapter;
@@ -88,7 +88,7 @@ class Post
 
         foreach ($types as $id => $class) {
             /**
-             * @var DataType $class
+             * @var StructuredDataType $class
              */
 
             $types[$id] = $class::getSchema()->toArray();
@@ -98,7 +98,7 @@ class Post
 
         /** @noinspection PhpUnusedLocalVariableInspection */
         $data = $model->data;
-        $data[self::FIELD_JSON_LD] = $model->getJson();
+        $data[self::FIELD_JSON_LD] = $model->getPrettyJson();
 
         include WEB_SCHEMA_DIR . '/resources/templates/meta-box.tpl.php';
     }
@@ -150,13 +150,21 @@ class Post
     }
 
     /**
+     * @return string|null
+     */
+    public function getPrettyJson()
+    {
+        //make the json pretty ;-)
+        return ($this->data[self::FIELD_JSON_LD]) ? json_encode(json_decode($this->getJson(), true),
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : null;
+    }
+
+    /**
      * @return string
      */
     public function getJson()
     {
-        //make the json pretty ;-)
-        return ($this->data[self::FIELD_JSON_LD]) ? json_encode(json_decode($this->data[self::FIELD_JSON_LD], true),
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : null;
+        return $this->data[self::FIELD_JSON_LD];
     }
 
     /**
@@ -211,12 +219,12 @@ class Post
                 $adapter = new $adapter(get_post($this->id));
 
                 /**
-                 * @var DataType $type
+                 * @var StructuredDataType $type
                  */
                 $type = new $class($adapter);
 
-                if (!($type instanceof DataType)) {
-                    throw new \TypeError('The type class ' . get_class($type) . ' must extend ' . DataType::class);
+                if (!($type instanceof StructuredDataType)) {
+                    throw new \TypeError('The type class ' . get_class($type) . ' must extend ' . StructuredDataType::class);
                 }
 
                 try {
@@ -237,6 +245,8 @@ class Post
      */
     public function getJsonScript()
     {
-        return '<script type="application/ld+json">' . $this->getJson() . '</script>';
+        $json = $this->getJson();
+
+        return (!$json) ?: '<script type="application/ld+json">' . $json . '</script>';
     }
 }

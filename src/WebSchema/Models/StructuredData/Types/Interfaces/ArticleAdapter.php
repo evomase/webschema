@@ -6,7 +6,7 @@
  * Time: 12:07
  */
 
-namespace WebSchema\Models\DataTypes\Interfaces;
+namespace WebSchema\Models\StructuredData\Types\Interfaces;
 
 interface ArticleAdapter extends Adapter
 {
@@ -23,7 +23,12 @@ interface ArticleAdapter extends Adapter
     /**
      * @return string
      */
-    public function getAuthor();
+    public function getAuthorName();
+
+    /**
+     * @return string
+     */
+    public function getAuthorURL();
 
     /**
      * @return string

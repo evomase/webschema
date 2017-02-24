@@ -6,7 +6,7 @@
  * Time: 13:48
  */
 
-namespace WebSchema\Models\DataTypes\Traits;
+namespace WebSchema\Models\StructuredData\Types\Traits;
 
 use WebSchema\Utils\JsonLD\Node;
 
@@ -47,7 +47,7 @@ trait HasPublisher
     }
 
     /**
-     * @param array $image
+     * @param array $image (from getimagesize())
      * @return bool
      */
     public static function isValidPublisherImage(array $image)

@@ -101,12 +101,12 @@ class ArticleTest extends AbstractTestCase
         wp_delete_post($post->ID);
     }
 
-    public function testGetAuthor()
+    public function testGetAuthorName()
     {
         $post = $this->insertPost();
         $adapter = new Article($post);
 
-        $this->assertEquals(get_userdata($post->post_author)->display_name, $adapter->getAuthor());
+        $this->assertEquals(get_userdata($post->post_author)->display_name, $adapter->getAuthorName());
 
         wp_delete_post($post->ID);
     }

@@ -9,7 +9,7 @@
 namespace WebSchema\Controllers\Admin;
 
 use WebSchema\Controllers\Controller;
-use WebSchema\Models\DataTypes\Article;
+use WebSchema\Models\StructuredData\Types\Article;
 use WebSchema\Models\WP\Settings;
 
 class SettingsController extends Controller

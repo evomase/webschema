@@ -8,7 +8,7 @@
 
 namespace WebSchema\Models\WP\Adapters;
 
-use WebSchema\Models\DataTypes\Interfaces\Adapter;
+use WebSchema\Models\StructuredData\Types\Interfaces\Adapter;
 
 abstract class Model implements Adapter
 {

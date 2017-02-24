@@ -8,7 +8,7 @@
 
 namespace WebSchema\Models\WP\Adapters;
 
-use WebSchema\Models\DataTypes\Interfaces\ArticleAdapter;
+use WebSchema\Models\StructuredData\Types\Interfaces\ArticleAdapter;
 use WebSchema\Models\WP\Adapters\Traits\HasPublisher;
 
 class Article extends Model implements ArticleAdapter
@@ -42,8 +42,16 @@ class Article extends Model implements ArticleAdapter
     /**
      * @return string
      */
-    public function getAuthor()
+    public function getAuthorName()
     {
         return get_userdata($this->post->post_author)->display_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthorURL()
+    {
+        return get_userdata($this->post->post_author)->user_url;
     }
 }

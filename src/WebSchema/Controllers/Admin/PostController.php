@@ -18,9 +18,6 @@ class PostController extends Controller
     {
         add_action('admin_enqueue_scripts', function () {
             $this->enqueueScripts();
-        });
-
-        add_action('admin_enqueue_scripts', function () {
             $this->enqueueStyles();
         });
     }

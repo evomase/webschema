@@ -6,20 +6,20 @@
  * Time: 16:56
  */
 
-namespace WebSchema\Models;
+namespace WebSchema\Models\StructuredData;
 
-use WebSchema\Models\DataTypes\Model as DataType;
+use WebSchema\Models\StructuredData\Types\Model as DataType;
 
 class StructuredData
 {
     const FILTER_STRUCTURE_DATA_TYPES = 'web-schema-structured-data-types';
 
     private static $types = [
-        'Article'     => 'WebSchema\Models\DataTypes\Article',
-        'NewsArticle' => 'WebSchema\Models\DataTypes\NewsArticle',
-        'BlogPosting' => 'WebSchema\Models\DataTypes\BlogPosting',
+        'Article'     => 'WebSchema\Models\StructuredData\Types\Article',
+        'NewsArticle' => 'WebSchema\Models\StructuredData\Types\NewsArticle',
+        'BlogPosting' => 'WebSchema\Models\StructuredData\Types\BlogPosting',
 
-        'VideoObject' => 'WebSchema\Models\DataTypes\VideoObject'
+        'VideoObject' => 'WebSchema\Models\StructuredData\Types\VideoObject'
     ];
 
     private function __construct()

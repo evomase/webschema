@@ -6,7 +6,7 @@
  * Time: 17:37
  */
 
-namespace WebSchema\Models\DataTypes;
+namespace WebSchema\Models\StructuredData\Types;
 
 use WebSchema\Utils\JsonLD\Node;
 

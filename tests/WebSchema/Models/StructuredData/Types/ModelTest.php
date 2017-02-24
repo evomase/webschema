@@ -6,11 +6,11 @@
  * Time: 15:19
  */
 
-namespace WebSchema\Tests\Models\DataTypes;
+namespace WebSchema\Tests\Models\StructuredData\Types;
 
 use Mockery as m;
-use WebSchema\Models\DataTypes\Interfaces\Adapter;
-use WebSchema\Models\DataTypes\Model as DataType;
+use WebSchema\Models\StructuredData\Types\Interfaces\Adapter;
+use WebSchema\Models\StructuredData\Types\Model as StructuredDataType;
 use WebSchema\Models\Type;
 use WebSchema\Tests\AbstractTestCase;
 
@@ -26,9 +26,9 @@ class ModelTest extends AbstractTestCase
         $adapter = m::mock(Adapter::class);
 
         /**
-         * @var DataType $model
+         * @var StructuredDataType $model
          */
-        $model = m::mock(DataType::class, [$adapter])->makePartial();
+        $model = m::mock(StructuredDataType::class, [$adapter])->makePartial();
         $image = $model->getImage($url);
 
         $this->assertNotEmpty($image);
@@ -52,9 +52,9 @@ class ModelTest extends AbstractTestCase
         $type = 'Article';
 
         /**
-         * @var DataType $model
+         * @var StructuredDataType $model
          */
-        $model = m::namedMock($type, DataType::class, [$adapter])->makePartial();
+        $model = m::namedMock($type, StructuredDataType::class, [$adapter])->makePartial();
         $this->assertEquals('Article', $model::getName());
     }
 
@@ -76,9 +76,9 @@ class ModelTest extends AbstractTestCase
         $typeMock::boot();
 
         /**
-         * @var DataType $model
+         * @var StructuredDataType $model
          */
-        $model = m::namedMock($type, DataType::class, [$adapter])->makePartial();
+        $model = m::namedMock($type, StructuredDataType::class, [$adapter])->makePartial();
         $model::setTypeClass(get_class($typeMock));
 
         $this->assertInstanceOf(Type::class, $model::getSchema());

@@ -8,7 +8,7 @@
 
 namespace WebSchema\Tests\Models\WP;
 
-use WebSchema\Models\DataTypes\Article;
+use WebSchema\Models\StructuredData\Types\Article;
 use WebSchema\Models\Type;
 use WebSchema\Models\WP\Post;
 use WebSchema\Tests\AbstractTestCase;

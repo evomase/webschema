@@ -6,11 +6,11 @@
  * Time: 16:35
  */
 
-namespace WebSchema\Models\DataTypes;
+namespace WebSchema\Models\StructuredData\Types;
 
-use WebSchema\Models\DataTypes\Interfaces\ArticleAdapter;
-use WebSchema\Models\DataTypes\Traits\HasAuthor;
-use WebSchema\Models\DataTypes\Traits\HasPublisher;
+use WebSchema\Models\StructuredData\Types\Interfaces\ArticleAdapter;
+use WebSchema\Models\StructuredData\Types\Traits\HasAuthor;
+use WebSchema\Models\StructuredData\Types\Traits\HasPublisher;
 use WebSchema\Models\Type;
 
 class Article extends Thing
@@ -61,7 +61,7 @@ class Article extends Thing
 
     protected function fill()
     {
-        $this->setAuthor($this->adapter->getAuthor())
+        $this->setAuthor($this->adapter->getAuthorName(), $this->adapter->getAuthorURL())
             ->setDateModified($this->adapter->getDateModified())
             ->setDatePublished($this->adapter->getDatePublished())
             ->setDescription($this->adapter->getDescription())

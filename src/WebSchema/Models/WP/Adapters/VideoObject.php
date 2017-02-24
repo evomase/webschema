@@ -8,7 +8,7 @@
 
 namespace WebSchema\Models\WP\Adapters;
 
-use WebSchema\Models\DataTypes\Interfaces\VideoObjectAdapter;
+use WebSchema\Models\StructuredData\Types\Interfaces\VideoObjectAdapter;
 use WebSchema\Models\WP\Adapters\Traits\HasPublisher;
 
 class VideoObject extends Model implements VideoObjectAdapter
@@ -23,8 +23,19 @@ class VideoObject extends Model implements VideoObjectAdapter
         return $this->post->post_title;
     }
 
+    /**
+     * @return null|string
+     */
     public function getThumbnailURL()
     {
         return $this->getImageURL();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUploadDate()
+    {
+        return new \DateTime($this->post->post_date, new \DateTimeZone(date_default_timezone_get()));
     }
 }

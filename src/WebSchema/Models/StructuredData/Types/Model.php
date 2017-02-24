@@ -6,9 +6,9 @@
  * Time: 17:12
  */
 
-namespace WebSchema\Models\DataTypes;
+namespace WebSchema\Models\StructuredData\Types;
 
-use WebSchema\Models\DataTypes\Interfaces\Adapter;
+use WebSchema\Models\StructuredData\Types\Interfaces\Adapter;
 use WebSchema\Models\Property;
 use WebSchema\Models\Traits\HasData;
 use WebSchema\Models\Type;

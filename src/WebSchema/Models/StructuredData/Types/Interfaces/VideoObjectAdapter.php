@@ -6,7 +6,7 @@
  * Time: 14:17
  */
 
-namespace WebSchema\Models\DataTypes\Interfaces;
+namespace WebSchema\Models\StructuredData\Types\Interfaces;
 
 interface VideoObjectAdapter extends Adapter
 {
@@ -34,4 +34,9 @@ interface VideoObjectAdapter extends Adapter
      * @return string
      */
     public function getThumbnailURL();
+
+    /**
+     * @return \DateTime
+     */
+    public function getUploadDate();
 }

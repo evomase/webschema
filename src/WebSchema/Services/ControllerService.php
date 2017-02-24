@@ -8,9 +8,10 @@
 
 namespace WebSchema\Services;
 
-use WebSchema\Controllers\Admin\PostController;
+use WebSchema\Controllers\Admin\PostController as AdminPostController;
 use WebSchema\Controllers\Admin\SettingsController;
 use WebSchema\Controllers\AjaxController;
+use WebSchema\Controllers\PostController as FrontPostController;
 
 class ControllerService extends Service
 {
@@ -19,8 +20,10 @@ class ControllerService extends Service
         if (is_admin()) {
             AjaxController::boot();
             SettingsController::boot();
-            PostController::boot();
+            AdminPostController::boot();
         }
+
+        FrontPostController::boot();
     }
 
     public static function shutdown()
@@ -28,7 +31,9 @@ class ControllerService extends Service
         if (is_admin()) {
             AjaxController::shutdown();
             SettingsController::shutdown();
-            PostController::shutdown();
+            AdminPostController::shutdown();
         }
+
+        FrontPostController::shutdown();
     }
 }

@@ -100,11 +100,11 @@ class Settings
         ]);
 
         //Sections
-        add_settings_section(self::SECTION_POST_TYPES, 'Post Type Settings', function () {
+        add_settings_section(self::SECTION_POST_TYPES, 'Custom Post Types', function () {
             echo 'Select a list of custom post types that require the microdata functionality';
         }, self::PAGE);
 
-        add_settings_section(self::SECTION_PUBLISHER, 'Publisher Settings', function () {
+        add_settings_section(self::SECTION_PUBLISHER, 'Publisher', function () {
             echo 'Please provide the publisher information (required by JSON-LD representation)';
         }, self::PAGE);
 

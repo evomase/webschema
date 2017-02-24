@@ -6,11 +6,11 @@
  * Time: 17:12
  */
 
-namespace WebSchema\Tests\Models\DataTypes;
+namespace WebSchema\Tests\Models\StructuredData\Types;
 
 use Mockery as m;
-use WebSchema\Models\DataTypes\Article;
-use WebSchema\Models\DataTypes\Interfaces\ArticleAdapter;
+use WebSchema\Models\StructuredData\Types\Article;
+use WebSchema\Models\StructuredData\Types\Interfaces\ArticleAdapter;
 use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\Installer;
 
@@ -40,7 +40,8 @@ class ArticleTest extends AbstractTestCase
         $adapter->shouldReceive('getPublisherImageURL')->andReturn($publisherImageURL);
         $adapter->shouldReceive('getMainEntityOfPage')->andReturn('http://www.google.com');
         $adapter->shouldReceive('getHeadline')->andReturn('Headline');
-        $adapter->shouldReceive('getAuthor')->andReturn('Author');
+        $adapter->shouldReceive('getAuthorName')->andReturn('Author');
+        $adapter->shouldReceive('getAuthorURL')->andReturn('http://www.google.com');
         $adapter->shouldReceive('getDescription')->andReturn('Description');
 
         /**
@@ -77,7 +78,8 @@ class ArticleTest extends AbstractTestCase
         $adapter->shouldReceive('getPublisherImageURL')->andReturn(null);
         $adapter->shouldReceive('getMainEntityOfPage')->andReturn('http://www.google.com');
         $adapter->shouldReceive('getHeadline')->andReturn('Headline');
-        $adapter->shouldReceive('getAuthor')->andReturn('Author');
+        $adapter->shouldReceive('getAuthorName')->andReturn('Author');
+        $adapter->shouldReceive('getAuthorURL')->andReturn('http://www.google.com');
         $adapter->shouldReceive('getDescription')->andReturn('Description');
 
         /**

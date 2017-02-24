@@ -6,10 +6,10 @@
  * Time: 13:47
  */
 
-namespace WebSchema\Models\DataTypes;
+namespace WebSchema\Models\StructuredData\Types;
 
-use WebSchema\Models\DataTypes\Interfaces\VideoObjectAdapter;
-use WebSchema\Models\DataTypes\Traits\HasPublisher;
+use WebSchema\Models\StructuredData\Types\Interfaces\VideoObjectAdapter;
+use WebSchema\Models\StructuredData\Types\Traits\HasPublisher;
 use WebSchema\Models\Type;
 
 class VideoObject extends Thing
@@ -18,6 +18,7 @@ class VideoObject extends Thing
 
     const FIELD_PUBLISHER = 'publisher';
     const FIELD_THUMBNAIL_URL = 'thumbnailUrl';
+    const FIELD_UPLOAD_DATE = 'uploadDate';
 
     /**
      * @var Type $schema
@@ -41,7 +42,8 @@ class VideoObject extends Thing
         self::FIELD_PUBLISHER,
         self::FIELD_DESCRIPTION,
         self::FIELD_THUMBNAIL_URL,
-        self::FIELD_NAME
+        self::FIELD_NAME,
+        self::FIELD_UPLOAD_DATE
     ];
 
     /**
@@ -70,7 +72,19 @@ class VideoObject extends Thing
         $this->setThumbnailURL($this->adapter->getThumbnailURL())
             ->setDescription($this->adapter->getDescription())
             ->setPublisher($this->adapter->getPublisherName(), $this->adapter->getPublisherImageURL())
+            ->setUploadDate($this->adapter->getUploadDate())
             ->setName($this->adapter->getName());
+    }
+
+    /**
+     * @param \DateTime $date
+     * @return $this
+     */
+    private function setUploadDate(\DateTime $date)
+    {
+        $this->setValue(self::FIELD_UPLOAD_DATE, $date->format('c'));
+
+        return $this;
     }
 
     /**

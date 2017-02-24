@@ -6,7 +6,7 @@
  * Time: 12:05
  */
 
-namespace WebSchema\Models\DataTypes\Interfaces;
+namespace WebSchema\Models\StructuredData\Types\Interfaces;
 
 interface Adapter
 {

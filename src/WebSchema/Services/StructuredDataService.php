@@ -8,7 +8,7 @@
 
 namespace WebSchema\Services;
 
-use WebSchema\Models\StructuredData;
+use WebSchema\Models\StructuredData\StructuredData;
 
 class StructuredDataService extends Service
 {
