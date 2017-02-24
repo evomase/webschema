@@ -8,21 +8,28 @@
 
 namespace WebSchema\Utils;
 
+use WebSchema\Services\ControllerService;
+use WebSchema\Services\SchemaService;
+use WebSchema\Services\StructuredDataService;
+use WebSchema\Services\WP\NotifyService;
+use WebSchema\Services\WP\PostService;
+use WebSchema\Services\WP\SettingsService;
 use WebSchema\Utils\Interfaces\Bootable;
 
 class BootLoader
 {
     const CLASSES = [
-        '\WebSchema\Services\SchemaService'         => null,
-        '\WebSchema\Services\ControllerService'     => null,
-        '\WebSchema\Services\StructuredDataService' => null,
+        SchemaService::class         => null,
+        ControllerService::class     => null,
+        StructuredDataService::class => null,
 
-        '\WebSchema\Services\WP\PostService'     => null,
-        '\WebSchema\Services\WP\SettingsService' => null,
-        '\WebSchema\Services\WP\NotifyService'   => 'is_admin',
+        //WP Services
+        PostService::class           => null,
+        SettingsService::class       => null,
+        NotifyService::class         => 'is_admin',
 
-        '\WebSchema\Utils\Installer' => 'is_admin',
-        '\WebSchema\Utils\TinyMCE'   => 'is_admin'
+        Installer::class => 'is_admin',
+        TinyMCE::class   => 'is_admin'
     ];
 
     /**

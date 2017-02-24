@@ -19,8 +19,6 @@ trait HasAuthor
      */
     protected function setAuthor($name, $url = '')
     {
-        $data = $name;
-
         if ($url && (filter_var($url, FILTER_VALIDATE_URL) !== false)) {
             $data = [
                 'name' => $name,
@@ -28,11 +26,9 @@ trait HasAuthor
             ];
 
             $this->data[static::FIELD_AUTHOR] = new Node('Person', $data);
-
             return $this;
         }
 
-
-        return $this->setValue(static::FIELD_AUTHOR, $data);
+        return $this->setValue(static::FIELD_AUTHOR, $name);
     }
 }

@@ -8,18 +8,22 @@
 
 namespace WebSchema\Models\StructuredData;
 
-use WebSchema\Models\StructuredData\Types\Model as DataType;
+use WebSchema\Models\StructuredData\Types\Article;
+use WebSchema\Models\StructuredData\Types\BlogPosting;
+use WebSchema\Models\StructuredData\Types\Model as StructuredDataType;
+use WebSchema\Models\StructuredData\Types\NewsArticle;
+use WebSchema\Models\StructuredData\Types\VideoObject;
 
 class StructuredData
 {
     const FILTER_STRUCTURE_DATA_TYPES = 'web-schema-structured-data-types';
 
     private static $types = [
-        'Article'     => 'WebSchema\Models\StructuredData\Types\Article',
-        'NewsArticle' => 'WebSchema\Models\StructuredData\Types\NewsArticle',
-        'BlogPosting' => 'WebSchema\Models\StructuredData\Types\BlogPosting',
+        'Article'     => Article::class,
+        'NewsArticle' => NewsArticle::class,
+        'BlogPosting' => BlogPosting::class,
 
-        'VideoObject' => 'WebSchema\Models\StructuredData\Types\VideoObject'
+        'VideoObject' => VideoObject::class
     ];
 
     private function __construct()
@@ -33,7 +37,7 @@ class StructuredData
 
     /**
      * @param string $type
-     * @return DataType|null
+     * @return StructuredDataType|null
      */
     public static function get($type)
     {
