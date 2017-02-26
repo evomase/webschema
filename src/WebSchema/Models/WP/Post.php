@@ -247,6 +247,6 @@ class Post
     {
         $json = $this->getJson();
 
-        return (!$json) ?: '<script type="application/ld+json">' . $json . '</script>';
+        return (!$json) ? null : '<script type="application/ld+json">' . $json . '</script>';
     }
 }

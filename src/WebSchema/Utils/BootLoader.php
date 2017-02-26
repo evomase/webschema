@@ -8,6 +8,7 @@
 
 namespace WebSchema\Utils;
 
+use WebSchema\Services\AMP\RouteService;
 use WebSchema\Services\ControllerService;
 use WebSchema\Services\SchemaService;
 use WebSchema\Services\StructuredDataService;
@@ -28,8 +29,11 @@ class BootLoader
         SettingsService::class       => null,
         NotifyService::class         => 'is_admin',
 
-        Installer::class => 'is_admin',
-        TinyMCE::class   => 'is_admin'
+        Installer::class    => 'is_admin',
+        TinyMCE::class      => 'is_admin',
+
+        //AMP
+        RouteService::class => null
     ];
 
     /**

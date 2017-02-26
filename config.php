@@ -23,3 +23,6 @@ define('WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH', 696);
 
 define('WEB_SCHEMA_AMP_PUBLISHER_LOGO_WIDTH', 600);
 define('WEB_SCHEMA_AMP_PUBLISHER_LOGO_HEIGHT', 60);
+
+define('WEB_SCHEMA_AMP_JS', 'https://cdn.ampproject.org/v0.js');
+define('WEB_SCHEMA_AMP_VIEWPORT', 'width=device-width,minimum-scale=1,initial-scale=1');

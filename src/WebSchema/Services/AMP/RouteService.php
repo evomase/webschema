@@ -15,7 +15,7 @@ class RouteService extends Service
 {
     public static function boot()
     {
-        Route::register();
+        Route::boot();
     }
 
     public static function shutdown()
