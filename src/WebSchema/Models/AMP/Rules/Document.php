@@ -8,6 +8,7 @@
 
 namespace WebSchema\Models\AMP\Rules;
 
+use Masterminds\HTML5;
 use WebSchema\Models\AMP\Route;
 
 class Document extends Model
@@ -16,18 +17,22 @@ class Document extends Model
     {
         $this->cleanHTMLTag();
         $this->cleanHead();
+        $this->cleanBody();
     }
 
     private function cleanHTMLTag()
     {
         $html = $this->document->getElementsByTagName('html')->item(0);
 
-        foreach ($html->attributes as $name => $value) {
-            $html->removeAttribute($name);
+        for ($i = 0; $html->attributes->length;) {
+            $attribute = $html->attributes->item($i);
+
+            /**
+             * @var \DOMAttr $attribute
+             */
+            $html->removeAttributeNode($attribute);
         }
 
-        //for some reason, class isn't in the list of attributes
-        $html->removeAttribute('class');
         $html->setAttribute('amp', '');
     }
 
@@ -60,7 +65,7 @@ class Document extends Model
         $element->appendChild($charset);
 
         $script = $this->document->createElement('script');
-        $script->setAttribute('src', 'https://cdn.ampproject.org/v0.js');
+        $script->setAttribute('src', WEB_SCHEMA_AMP_FRAMEWORK . '.js');
         $script->setAttribute('async', '');
         $element->appendChild($script);
 
@@ -73,5 +78,34 @@ class Document extends Model
         $viewport->setAttribute('name', 'viewport');
         $viewport->setAttribute('content', WEB_SCHEMA_AMP_VIEWPORT);
         $element->appendChild($viewport);
+
+        //add custom styles
+        $style = (new HTML5())->loadHTMLFragment(WEB_SCHEMA_AMP_STYLE);
+        $element->appendChild($this->document->importNode($style->firstChild, true));
+
+        $style = (new HTML5())->loadHTMLFragment(WEB_SCHEMA_AMP_STYLE_NO_SCRIPT);
+        $element->appendChild($this->document->importNode($style->firstChild, true));
+    }
+
+    private function cleanBody()
+    {
+        $body = $this->document->getElementsByTagName('body')->item(0);
+
+        //remove all scripts
+        $scripts = $body->getElementsByTagName('script');
+
+        for ($i = 0; $i < $scripts->length;) {
+            $script = $scripts->item($i);
+            $script->parentNode->removeChild($script);
+        }
+
+        //remove all comments
+        $comments = (new \DOMXPath($this->document))->query('//comment()', $body);
+
+        if ($comments->length) {
+            foreach ($comments as $comment) {
+                $comment->parentNode->removeChild($comment);
+            }
+        }
     }
 }

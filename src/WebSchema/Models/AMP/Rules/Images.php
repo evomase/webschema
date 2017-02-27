@@ -8,7 +8,7 @@
 
 namespace WebSchema\Models\AMP\Rules;
 
-class Image extends Model
+class Images extends Model
 {
     const TAG_NAME = 'amp-img';
 
@@ -16,7 +16,9 @@ class Image extends Model
     {
         $images = $this->document->getElementsByTagName('img');
 
-        foreach ($images as $image) {
+        //The DOMNodeList is updated when <img> is removed, so we always get the first item
+        for ($i = 0; $i < $images->length;) {
+            $image = $images->item($i);
             $this->replace($image);
         }
     }
@@ -24,15 +26,14 @@ class Image extends Model
     private function replace(\DOMElement $image)
     {
         $element = $this->document->createElement(self::TAG_NAME);
-        $child = $this->document->createElement('noscript');
 
-        foreach (['src', 'height', 'width', 'alt'] as $attribute) {
-            $element->setAttribute($attribute, $image->getAttribute($attribute));
-            $child->setAttribute($attribute, $image->getAttribute($attribute));
+        foreach (['src', 'height', 'width', 'alt', 'srcset'] as $attribute) {
+            if ($value = $image->getAttribute($attribute)) {
+                $element->setAttribute($attribute, $value);
+            }
         }
 
         $element->setAttribute('layout', 'responsive');
-        $element->appendChild($child);
 
         $image->parentNode->replaceChild($element, $image);
     }

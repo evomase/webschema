@@ -8,6 +8,7 @@
 
 namespace WebSchema\Controllers;
 
+use Masterminds\HTML5;
 use WebSchema\Models\AMP\DocumentParser;
 use WebSchema\Models\AMP\Route;
 
@@ -31,12 +32,8 @@ class AMPController extends Controller
     private function parseHTML()
     {
         $html = ob_get_clean();
+        $document = new HTML5();
 
-        libxml_use_internal_errors(true);
-
-        $document = new \DOMDocument();
-        $document->loadHTML($html);
-
-        echo (new DocumentParser($document))->parse();
+        echo (new DocumentParser($document, $html))->parse();
     }
 }

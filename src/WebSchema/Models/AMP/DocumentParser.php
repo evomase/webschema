@@ -8,9 +8,14 @@
 
 namespace WebSchema\Models\AMP;
 
+use Masterminds\HTML5;
 use WebSchema\Models\AMP\Interfaces\Rule;
+use WebSchema\Models\AMP\Rules\AdminBar;
+use WebSchema\Models\AMP\Rules\Attributes;
 use WebSchema\Models\AMP\Rules\Document;
-use WebSchema\Models\AMP\Rules\Image;
+use WebSchema\Models\AMP\Rules\Form;
+use WebSchema\Models\AMP\Rules\Images;
+use WebSchema\Models\AMP\Rules\SVG;
 
 class DocumentParser
 {
@@ -18,18 +23,36 @@ class DocumentParser
      * @var Rule[]
      */
     private static $rules = [
-        Document::class,
-        Image::class
+        Document::class, //Always first to be processed
+
+        Images::class,
+        AdminBar::class,
+        Attributes::class,
+        Form::class,
+        SVG::class
     ];
 
     /**
      * @var \DOMDocument
      */
     private $document;
+    private $html;
 
-    public function __construct(\DOMDocument $document)
+    /**
+     * @var HTML5
+     */
+    private $parser;
+
+    /**
+     * DocumentParser constructor.
+     * @param HTML5  $parser
+     * @param string $html
+     */
+    public function __construct(HTML5 $parser, $html)
     {
-        $this->document = $document;
+        $this->html = $html;
+        $this->parser = $parser;
+        $this->document = $this->parser->loadHTML($this->html);
     }
 
     public function parse()
@@ -42,6 +65,6 @@ class DocumentParser
             $rule->parse();
         }
 
-        return preg_replace('/=""/', '', $this->document->saveHTML());
+        return $this->parser->saveHTML($this->document);
     }
 }
