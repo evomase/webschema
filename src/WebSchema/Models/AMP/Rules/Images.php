@@ -27,9 +27,12 @@ class Images extends Model
     {
         $element = $this->document->createElement(self::TAG_NAME);
 
-        foreach (['src', 'height', 'width', 'alt', 'srcset'] as $attribute) {
-            if ($value = $image->getAttribute($attribute)) {
-                $element->setAttribute($attribute, $value);
+        foreach ($image->attributes as $attribute) {
+            /**
+             * @var \DOMAttr $attribute
+             */
+            if ($attribute->value) {
+                $element->setAttribute($attribute->name, $attribute->value);
             }
         }
 

@@ -38,53 +38,75 @@ class Document extends Model
 
     private function cleanHead()
     {
-        $head = $this->document->getElementsByTagName('head')->item(0);
+        $head = $this->document->createElement('head');
+        $oldHead = $this->document->getElementsByTagName('head')->item(0);
 
-        $element = $this->document->createElement('head');
-        $this->addDefaultHeadElements($element);
+        $this->addDefaultHeadElements($head);
 
-        $scripts = $head->getElementsByTagName('script');
+        $this->addFonts($head);
+        $this->addJSON($head, $oldHead);
+
+        //add title
+        $head->appendChild($oldHead->getElementsByTagName('title')->item(0));
+
+        $oldHead->parentNode->replaceChild($head, $oldHead);
+    }
+
+    private function addDefaultHeadElements(\DOMElement $head)
+    {
+        $charset = $this->document->createElement('meta');
+        $charset->setAttribute('charset', 'utf-8');
+        $head->appendChild($charset);
+
+        $script = $this->document->createElement('script');
+        $script->setAttribute('src', WEB_SCHEMA_AMP_FRAMEWORK . '.js');
+        $script->setAttribute('async', '');
+        $head->appendChild($script);
+
+        $canonical = $this->document->createElement('link');
+        $canonical->setAttribute('rel', 'canonical');
+        $canonical->setAttribute('href', site_url(Route::getURI()));
+        $head->appendChild($canonical);
+
+        $viewport = $this->document->createElement('meta');
+        $viewport->setAttribute('name', 'viewport');
+        $viewport->setAttribute('content', WEB_SCHEMA_AMP_VIEWPORT);
+        $head->appendChild($viewport);
+
+        //add custom styles
+        $style = (new HTML5())->loadHTMLFragment(WEB_SCHEMA_AMP_STYLE);
+        $head->appendChild($this->document->importNode($style->firstChild, true));
+
+        $style = (new HTML5())->loadHTMLFragment(WEB_SCHEMA_AMP_STYLE_NO_SCRIPT);
+        $head->appendChild($this->document->importNode($style->firstChild, true));
+    }
+
+    private function addFonts(\DOMElement $head)
+    {
+        $xpath = new \DOMXPath($this->document);
+        $xpath->registerNamespace('html', HTML5\Parser\DOMTreeBuilder::NAMESPACE_HTML);
+
+        $fonts = $xpath->query("//html:link[@rel='stylesheet'][starts-with(@href, 'https://fonts.googleapis.com') or 
+            starts-with(@href, 'https://cloud.typography.com') or starts-with(@href, 'https://fast.fonts.net') or 
+            starts-with(@href, 'https://maxcdn.bootstrapcdn.com')]");
+
+        foreach ($fonts as $font) {
+            $head->appendChild($font);
+        }
+    }
+
+    private function addJSON(\DOMElement $head, \DOMElement $oldHead)
+    {
+        $scripts = $oldHead->getElementsByTagName('script');
 
         foreach ($scripts as $script) {
             /**
              * @var \DOMElement $script
              */
             if ($script->getAttribute('type') == 'application/ld+json') {
-                $element->appendChild($script);
+                $head->appendChild($script);
             }
         }
-
-        $element->appendChild($head->getElementsByTagName('title')->item(0));
-        $head->parentNode->replaceChild($element, $head);
-    }
-
-    private function addDefaultHeadElements(\DOMElement $element)
-    {
-        $charset = $this->document->createElement('meta');
-        $charset->setAttribute('charset', 'utf-8');
-        $element->appendChild($charset);
-
-        $script = $this->document->createElement('script');
-        $script->setAttribute('src', WEB_SCHEMA_AMP_FRAMEWORK . '.js');
-        $script->setAttribute('async', '');
-        $element->appendChild($script);
-
-        $canonical = $this->document->createElement('link');
-        $canonical->setAttribute('rel', 'canonical');
-        $canonical->setAttribute('href', site_url(Route::getURI()));
-        $element->appendChild($canonical);
-
-        $viewport = $this->document->createElement('meta');
-        $viewport->setAttribute('name', 'viewport');
-        $viewport->setAttribute('content', WEB_SCHEMA_AMP_VIEWPORT);
-        $element->appendChild($viewport);
-
-        //add custom styles
-        $style = (new HTML5())->loadHTMLFragment(WEB_SCHEMA_AMP_STYLE);
-        $element->appendChild($this->document->importNode($style->firstChild, true));
-
-        $style = (new HTML5())->loadHTMLFragment(WEB_SCHEMA_AMP_STYLE_NO_SCRIPT);
-        $element->appendChild($this->document->importNode($style->firstChild, true));
     }
 
     private function cleanBody()

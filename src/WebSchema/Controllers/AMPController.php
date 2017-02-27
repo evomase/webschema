@@ -31,9 +31,9 @@ class AMPController extends Controller
 
     private function parseHTML()
     {
-        $html = ob_get_clean();
-        $document = new HTML5();
-
-        echo (new DocumentParser($document, $html))->parse();
+        if ($html = ob_get_clean()) {
+            $document = new HTML5();
+            echo (new DocumentParser($document, $html))->parse();
+        }
     }
 }

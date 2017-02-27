@@ -61,6 +61,14 @@ class SettingsController extends Controller
             }
         }
 
+        if (empty($data[Settings::FIELD_AMP][Settings::FIELD_AMP_USE_SSL])) {
+            $data[Settings::FIELD_AMP][Settings::FIELD_AMP_USE_SSL] = 0;
+        }
+
+        if (empty($data[Settings::SECTION_POST_TYPES])) {
+            $data[Settings::SECTION_POST_TYPES] = [];
+        }
+
         return $data;
     }
 

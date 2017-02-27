@@ -17,13 +17,18 @@ class Settings
         fill as private;
     }
 
+    const FIELD_AMP = 'amp';
+    const FIELD_AMP_USE_SSL = 'use-ssl';
     const FIELD_POST_TYPES = 'post-types';
+
     const FIELD_PUBLISHER = 'publisher';
     const FIELD_PUBLISHER_LOGO = 'logo';
     const FIELD_PUBLISHER_NAME = 'name';
+
     const NAME = 'web-schema';
     const PAGE = SettingsController::SLUG;
 
+    const SECTION_AMP = self::FIELD_AMP;
     const SECTION_POST_TYPES = self::FIELD_POST_TYPES;
     const SECTION_PUBLISHER = self::FIELD_PUBLISHER;
 
@@ -35,7 +40,11 @@ class Settings
             self::FIELD_PUBLISHER_LOGO => ''
         ],
 
-        self::FIELD_POST_TYPES => []
+        self::FIELD_POST_TYPES => [],
+
+        self::FIELD_AMP => [
+            self::FIELD_AMP_USE_SSL => false
+        ]
     ];
 
     private function __construct()
@@ -65,19 +74,6 @@ class Settings
         }
     }
 
-    /**
-     * @param $setting
-     * @return mixed|null
-     */
-    public static function get($setting)
-    {
-        if (array_key_exists($setting, self::$instance->data)) {
-            return self::$instance->data[$setting];
-        }
-
-        return null;
-    }
-
     public static function reset()
     {
         delete_option(self::NAME);
@@ -100,22 +96,41 @@ class Settings
         ]);
 
         //Sections
-        add_settings_section(self::SECTION_POST_TYPES, 'Custom Post Types', function () {
-            echo 'Select a list of custom post types that require the microdata functionality';
+        $this->addAMPSection();
+        $this->addPublisherSection();
+        $this->addPostTypesSection();
+    }
+
+    private function addAMPSection()
+    {
+        add_settings_section(self::SECTION_AMP, 'Google AMP', function () {
+            echo 'Here a settings associated with how AMP works';
         }, self::PAGE);
 
+        //settings
+        add_settings_field(self::FIELD_AMP . '-use-ssl', 'Use SSL', [$this, 'renderAMPSSLField'], self::PAGE,
+            self::SECTION_AMP);
+    }
+
+    private function addPublisherSection()
+    {
         add_settings_section(self::SECTION_PUBLISHER, 'Publisher', function () {
             echo 'Please provide the publisher information (required by JSON-LD representation)';
         }, self::PAGE);
 
-        //Publisher
-        add_settings_field(self::FIELD_PUBLISHER . 'Name', 'Name', [$this, 'renderPublisherNameField'], self::PAGE,
+        add_settings_field(self::FIELD_PUBLISHER . '-name', 'Name', [$this, 'renderPublisherNameField'], self::PAGE,
             self::SECTION_PUBLISHER);
 
-        add_settings_field(self::FIELD_PUBLISHER . 'Logo', 'Logo', [$this, 'renderPublisherLogoField'], self::PAGE,
+        add_settings_field(self::FIELD_PUBLISHER . '-logo', 'Logo', [$this, 'renderPublisherLogoField'], self::PAGE,
             self::SECTION_PUBLISHER);
+    }
 
-        //Post Types
+    private function addPostTypesSection()
+    {
+        add_settings_section(self::SECTION_POST_TYPES, 'Custom Post Types', function () {
+            echo 'Select a list of custom post types that require the microdata functionality';
+        }, self::PAGE);
+
         add_settings_field(self::FIELD_POST_TYPES, 'Post Types', [$this, 'renderPostTypesField'], self::PAGE,
             self::SECTION_POST_TYPES);
     }
@@ -140,21 +155,41 @@ class Settings
             wp_delete_file($logo);
         }
 
+        //set all pre-selected post types to null - HACK >_<
+        if (empty($data[self::FIELD_POST_TYPES]) && $this->data[self::FIELD_POST_TYPES]) {
+            foreach ($this->data[self::FIELD_POST_TYPES] as $index => $value) {
+                $data[self::FIELD_POST_TYPES][$index] = null;
+            }
+        }
+
         return array_replace_recursive($this->data, $data);
     }
 
     public function renderPublisherNameField()
     {
-        $name = get_option(self::NAME)[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_NAME];
+        $name = self::get(self::FIELD_PUBLISHER)[self::FIELD_PUBLISHER_NAME];
         $name = ($name) ?: get_option('blogname');
 
         echo '<input name="' . self::NAME . '[' . self::FIELD_PUBLISHER . '][' . self::FIELD_PUBLISHER_NAME . ']"' .
-            ' value="' . $name . '" type="text" required/>';
+            ' value="' . $name . '" type="text" required autocomplete="off"/>';
+    }
+
+    /**
+     * @param $setting
+     * @return mixed|null
+     */
+    public static function get($setting)
+    {
+        if (array_key_exists($setting, self::$instance->data)) {
+            return self::$instance->data[$setting];
+        }
+
+        return null;
     }
 
     public function renderPublisherLogoField()
     {
-        $logo = get_option(self::NAME)[self::FIELD_PUBLISHER][self::FIELD_PUBLISHER_LOGO];
+        $logo = self::get(self::FIELD_PUBLISHER)[self::FIELD_PUBLISHER_LOGO];
 
         echo '<input name="' . self::NAME . '[' . self::FIELD_PUBLISHER . '][' . self::FIELD_PUBLISHER_LOGO . ']"' .
             ' type="file" />';
@@ -164,6 +199,14 @@ class Settings
         }
     }
 
+    public function renderAMPSSLField()
+    {
+        $ssl = self::get(self::FIELD_AMP)[self::FIELD_AMP_USE_SSL];
+
+        echo '<input type="checkbox" name="' . self::NAME . '[' . self::FIELD_AMP . '][' . self::FIELD_AMP_USE_SSL . ']"' .
+            checked($ssl, true, false) . ' value="1"/>';
+    }
+
     public function renderPostTypesField()
     {
         $types = get_post_types([
@@ -171,7 +214,7 @@ class Settings
             '_builtin' => false
         ], 'objects');
 
-        $data = get_option(self::NAME)[self::FIELD_POST_TYPES];
+        $data = self::get(self::FIELD_POST_TYPES);
 
         if ($types) {
             echo '<select name="' . self::NAME . '[' . self::FIELD_POST_TYPES . '][]" multiple>';

@@ -8,15 +8,20 @@
 
 namespace WebSchema\Models\AMP\Rules;
 
+use Masterminds\HTML5\Parser\DOMTreeBuilder;
+
 class SVG extends Model
 {
     public function parse()
     {
-        $attributes = (new \DOMXPath($this->document))->query('//svg');
+        $xpath = new \DOMXPath($this->document);
+        $xpath->registerNamespace('svg', DOMTreeBuilder::NAMESPACE_SVG);
 
-        echo '<pre>';
-        print_r($attributes);
-        print_r($this->document->getElementsByTagName('svg'));
-        exit;
+        foreach ($attributes = $xpath->query('//svg:svg//@href') as $attribute) {
+            /**
+             * @var \DOMAttr $attribute
+             */
+            $attribute->ownerElement->removeAttributeNode($attribute);
+        }
     }
 }
