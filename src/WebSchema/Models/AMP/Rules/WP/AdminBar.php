@@ -6,7 +6,9 @@
  * Time: 13:05
  */
 
-namespace WebSchema\Models\AMP\Rules;
+namespace WebSchema\Models\AMP\Rules\WP;
+
+use WebSchema\Models\AMP\Rules\Model;
 
 class AdminBar extends Model
 {
