@@ -10,8 +10,9 @@ namespace WebSchema\Models\AMP\Rules;
 
 use WebSchema\Models\WP\Settings;
 
-class Form extends Model
+class Forms extends Model
 {
+    const TAG_NAME = 'amp-form';
     /**
      * @var \DOMNodeList
      */
@@ -24,7 +25,7 @@ class Form extends Model
 
         if ($this->useSSL) {
             $this->handleAction();
-            $this->addScript();
+            $this->addScript(self::TAG_NAME);
             $this->handleTarget();
         }
     }
@@ -60,18 +61,6 @@ class Form extends Model
 
             $form->setAttribute('target', '_top');
         }
-    }
-
-    private function addScript()
-    {
-        $head = $this->document->getElementsByTagName('head')->item(0);
-
-        $script = $this->document->createElement('script');
-        $script->setAttribute('custom-element', 'amp-form');
-        $script->setAttribute('async', '');
-        $script->setAttribute('src', WEB_SCHEMA_AMP_FRAMEWORK . '/amp-form-0.1.js');
-
-        $head->appendChild($script);
     }
 
     private function handleTarget()

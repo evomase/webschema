@@ -12,9 +12,10 @@ use Masterminds\HTML5;
 use WebSchema\Models\AMP\Interfaces\Rule;
 use WebSchema\Models\AMP\Rules\Attributes;
 use WebSchema\Models\AMP\Rules\Document;
-use WebSchema\Models\AMP\Rules\Form;
+use WebSchema\Models\AMP\Rules\Forms;
 use WebSchema\Models\AMP\Rules\Images;
 use WebSchema\Models\AMP\Rules\SVG;
+use WebSchema\Models\AMP\Rules\Videos;
 use WebSchema\Models\AMP\Rules\WP\AdminBar;
 use WebSchema\Models\AMP\Rules\WP\Stylesheet;
 
@@ -27,8 +28,9 @@ class DocumentParser
         Document::class, //Always first to be processed
 
         Images::class,
+        Videos::class,
         Attributes::class,
-        Form::class,
+        Forms::class,
         SVG::class,
 
         //WP
