@@ -16,7 +16,7 @@ use WebSchema\Models\AMP\Rules\Form;
 use WebSchema\Models\AMP\Rules\Images;
 use WebSchema\Models\AMP\Rules\SVG;
 use WebSchema\Models\AMP\Rules\WP\AdminBar;
-use WebSchema\Models\AMP\Rules\WP\Theme;
+use WebSchema\Models\AMP\Rules\WP\Stylesheet;
 
 class DocumentParser
 {
@@ -33,7 +33,7 @@ class DocumentParser
 
         //WP
         AdminBar::class,
-        Theme::class
+        Stylesheet::class
     ];
 
     /**
