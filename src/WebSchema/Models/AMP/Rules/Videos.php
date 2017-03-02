@@ -51,6 +51,10 @@ class Videos extends Model
             }
         }
 
+        if ($element->getAttribute('layout')) {
+            $element->setAttribute('layout', 'responsive');
+        }
+
         if ($fallback) {
             $div = $this->document->createElement('div');
             $div->setAttribute('fallback', '');

@@ -36,7 +36,9 @@ class Images extends Model
             }
         }
 
-        $element->setAttribute('layout', 'responsive');
+        if ($element->getAttribute('layout')) {
+            $element->setAttribute('layout', 'responsive');
+        }
 
         $image->parentNode->replaceChild($element, $image);
     }
