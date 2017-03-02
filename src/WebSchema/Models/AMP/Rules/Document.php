@@ -59,7 +59,7 @@ class Document extends Model
         $head->appendChild($charset);
 
         $script = $this->document->createElement('script');
-        $script->setAttribute('src', WEB_SCHEMA_AMP_FRAMEWORK . '.js');
+        $script->setAttribute('src', WEB_SCHEMA_AMP_JS_FRAMEWORK . '.js');
         $script->setAttribute('async', '');
         $head->appendChild($script);
 

@@ -32,7 +32,7 @@ abstract class Model implements Rule
         $script = $this->document->createElement('script');
         $script->setAttribute('custom-element', $tag);
         $script->setAttribute('async', '');
-        $script->setAttribute('src', WEB_SCHEMA_AMP_FRAMEWORK . '/' . $tag . '-0.1.js');
+        $script->setAttribute('src', WEB_SCHEMA_AMP_JS_FRAMEWORK . '/' . $tag . '-0.1.js');
 
         $head->appendChild($script);
     }

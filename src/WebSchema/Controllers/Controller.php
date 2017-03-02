@@ -8,8 +8,12 @@
 
 namespace WebSchema\Controllers;
 
+use WebSchema\Traits\IsSingleton;
+
 abstract class Controller
 {
+    use IsSingleton;
+
     protected static $instance;
 
     protected function __construct()

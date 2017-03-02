@@ -25,7 +25,6 @@ class ControllerService extends Service
         }
 
         FrontPostController::boot();
-
         AMPController::boot();
     }
 
@@ -38,5 +37,6 @@ class ControllerService extends Service
         }
 
         FrontPostController::shutdown();
+        AMPController::shutdown();
     }
 }

@@ -20,12 +20,26 @@ class SettingsController extends Controller
 
     protected function __construct()
     {
-        add_action('admin_menu', [$this, 'addMenus']);
+        add_action('admin_menu', function () {
+            $this->addMenus();
+        });
 
         //This needs to be called before Settings default sanitize method
         add_filter('sanitize_option_' . Settings::NAME, function (array $data) {
             return $this->sanitize($data);
         }, 1);
+    }
+
+    private function addMenus()
+    {
+        add_options_page('Web Schema Settings', 'Web Schema', 'manage_options', self::SLUG, function () {
+            $this->get();
+        });
+    }
+
+    private function get()
+    {
+        include WEB_SCHEMA_DIR . '/resources/templates/admin/settings.tpl.php';
     }
 
     /**
@@ -70,15 +84,5 @@ class SettingsController extends Controller
         }
 
         return $data;
-    }
-
-    public function addMenus()
-    {
-        add_options_page('Web Schema Settings', 'Web Schema', 'manage_options', self::SLUG, [$this, 'get']);
-    }
-
-    public function get()
-    {
-        include WEB_SCHEMA_DIR . '/resources/templates/admin/settings.tpl.php';
     }
 }
