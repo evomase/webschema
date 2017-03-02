@@ -52,17 +52,21 @@ class DocumentParser
     /**
      * DocumentParser constructor.
      * @param HTML5  $parser
-     * @param string $html
      */
-    public function __construct(HTML5 $parser, $html)
+    public function __construct(HTML5 $parser)
     {
-        $this->html = $html;
         $this->parser = $parser;
-        $this->document = $this->parser->loadHTML($this->html);
     }
 
-    public function parse()
+    /**
+     * @param $html
+     * @return string
+     */
+    public function parse($html)
     {
+        $this->html = $html;
+        $this->document = $this->parser->loadHTML($this->html);
+
         foreach (self::$rules as $class) {
             /**
              * @var Rule $rule

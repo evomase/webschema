@@ -8,22 +8,41 @@
 
 namespace WebSchema\Controllers;
 
-use Masterminds\HTML5;
 use WebSchema\Models\AMP\DocumentParser;
 use WebSchema\Models\AMP\Route;
 
 class AMPController extends Controller
 {
-    protected function __construct()
+    /**
+     * @var Route
+     */
+    private $route;
+
+    /**
+     * @var DocumentParser
+     */
+    private $parser;
+
+    public function __construct(Route $route, DocumentParser $parser)
     {
-        add_action('template_redirect', function () {
-            if (Route::isAMP()) {
+        parent::__construct();
+
+        $this->route = $route;
+        $this->parser = $parser;
+
+        $this->register();
+    }
+
+    private function register()
+    {
+        $this->addAction('template_redirect', $callback = function () {
+            if ($this->route->isAMP()) {
                 ob_start();
             }
         });
 
-        add_action('shutdown', function () {
-            if (Route::isAMP()) {
+        $this->addAction('shutdown', $callback = function () {
+            if ($this->route->isAMP()) {
                 $this->parseHTML();
             }
         }, -1);
@@ -32,8 +51,7 @@ class AMPController extends Controller
     private function parseHTML()
     {
         if ($html = ob_get_clean()) {
-            $document = new HTML5();
-            echo (new DocumentParser($document, $html))->parse();
+            echo $this->parser->parse($html);
         }
     }
 }

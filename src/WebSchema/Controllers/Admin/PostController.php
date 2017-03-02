@@ -14,9 +14,11 @@ class PostController extends Controller
 {
     protected static $instance;
 
-    protected function __construct()
+    public function __construct()
     {
-        add_action('admin_enqueue_scripts', function () {
+        parent::__construct();
+
+        $this->addAction('admin_enqueue_scripts', function () {
             $this->enqueueScripts();
             $this->enqueueStyles();
         });

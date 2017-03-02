@@ -8,6 +8,7 @@
 
 global $wpdb;
 
+define('WEB_SCHEMA_VERSION', '1.1');
 define('WEB_SCHEMA_DIR', dirname(__FILE__));
 define('WEB_SCHEMA_DIR_URL', plugins_url('webschema'));
 define('WEB_SCHEMA_BASE_URL', get_option('siteurl'));
@@ -24,7 +25,7 @@ define('WEB_SCHEMA_AMP_IMAGE_MIN_WIDTH', 696);
 define('WEB_SCHEMA_AMP_PUBLISHER_LOGO_WIDTH', 600);
 define('WEB_SCHEMA_AMP_PUBLISHER_LOGO_HEIGHT', 60);
 
-define('WEB_SCHEMA_AMP_FRAMEWORK', 'https://cdn.ampproject.org/v0');
+define('WEB_SCHEMA_AMP_JS_FRAMEWORK', 'https://cdn.ampproject.org/v0');
 define('WEB_SCHEMA_AMP_VIEWPORT', 'width=device-width,minimum-scale=1,initial-scale=1');
 define('WEB_SCHEMA_AMP_STYLE',
     '<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>');

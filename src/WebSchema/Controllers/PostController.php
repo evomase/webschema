@@ -15,13 +15,15 @@ class PostController extends Controller
 {
     protected static $instance;
 
-    protected function __construct()
+    public function __construct()
     {
-        add_action('wp_head', function () {
+        parent::__construct();
+
+        $this->addAction('wp_head', function () {
             ob_start();
         }, 1);
 
-        add_action('wp_head', function () {
+        $this->addAction('wp_head', function () {
             $this->printJSON();
         }, 100);
     }
@@ -30,8 +32,7 @@ class PostController extends Controller
     {
         global $post;
 
-        $contents = ob_get_contents();
-        ob_end_flush();
+        $contents = ob_get_flush();
 
         //prevent re-adding micro-data if already present
         if ($post->ID && !preg_match('/application\/ld\+json/i', $contents)) {

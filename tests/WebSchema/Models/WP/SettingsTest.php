@@ -55,5 +55,8 @@ class SettingsTest extends AbstractTestCase
             file_get_contents(WEB_SCHEMA_DIR . '/tests/resources/images/ModelTest.jpg'));
 
         $data[Settings::FIELD_PUBLISHER][Settings::FIELD_PUBLISHER_LOGO] = $image['url'];
+
+        //delete file
+        wp_delete_file(str_replace(site_url(), WEB_SCHEMA_BASE_DIR, $image['url']));
     }
 }

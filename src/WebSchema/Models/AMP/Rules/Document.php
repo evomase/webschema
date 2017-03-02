@@ -65,7 +65,7 @@ class Document extends Model
 
         $canonical = $this->document->createElement('link');
         $canonical->setAttribute('rel', 'canonical');
-        $canonical->setAttribute('href', site_url(Route::getURI()));
+        $canonical->setAttribute('href', site_url(Route::getInstance()->getURI()));
         $head->appendChild($canonical);
 
         $viewport = $this->document->createElement('meta');

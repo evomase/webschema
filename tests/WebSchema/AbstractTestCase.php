@@ -22,6 +22,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         BootLoader::stop();
 
+        $_POST = $_GET = $_FILES = [];
         static::dropSchemaTables();
         Settings::reset();
     }

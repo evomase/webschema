@@ -10,12 +10,14 @@ namespace WebSchema\Models\WP;
 
 use WebSchema\Controllers\Admin\SettingsController;
 use WebSchema\Models\Traits\HasData;
+use WebSchema\Traits\UsesHooks;
 
 class Settings
 {
     use HasData {
         fill as private;
     }
+    use UsesHooks;
 
     const FIELD_AMP = 'amp';
     const FIELD_AMP_USE_SSL = 'use-ssl';
@@ -53,9 +55,9 @@ class Settings
 
         $this->load();
 
-        add_action('admin_init', [$this, 'register']);
-        add_action('update_option_' . self::NAME, [self::class, 'boot']);
-        add_action('delete_option_' . self::NAME, [self::class, 'boot']);
+        $this->addAction('admin_init', [$this, 'register']);
+        $this->addAction('update_option_' . self::NAME, [self::class, 'boot']);
+        $this->addAction('delete_option_' . self::NAME, [self::class, 'boot']);
     }
 
     private function load()

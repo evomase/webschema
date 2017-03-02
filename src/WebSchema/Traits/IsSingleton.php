@@ -10,6 +10,9 @@ namespace WebSchema\Traits;
 
 trait IsSingleton
 {
+    /**
+     * @return self
+     */
     public static function getInstance()
     {
         return static::$instance;

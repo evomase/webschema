@@ -9,26 +9,32 @@
 namespace WebSchema\Controllers;
 
 use WebSchema\Traits\IsSingleton;
+use WebSchema\Traits\UsesHooks;
 
 abstract class Controller
 {
     use IsSingleton;
+    use UsesHooks;
 
+    /**
+     * @var static
+     */
     protected static $instance;
 
-    protected function __construct()
-    {
-    }
+    /**
+     * @var array
+     */
+    protected $hooks;
 
-    public static function boot()
+    public function __construct()
     {
-        if (empty(static::$instance)) {
-            static::$instance = new static();
-        }
+        static::$instance = $this;
     }
 
     public static function shutdown()
     {
+        static::$instance->removeHooks();
+
         static::$instance = null;
     }
 }

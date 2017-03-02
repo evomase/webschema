@@ -15,27 +15,41 @@ class AjaxController extends Controller
 {
     protected static $instance;
 
-    protected function __construct()
+    /**
+     * @codeCoverageIgnore
+     */
+    public function __construct()
     {
-        add_action('wp_ajax_schema_get_all', array($this, 'getAll'));
-        add_action('wp_ajax_schema_get_template', array($this, 'getTemplate'));
+        parent::__construct();
+
+        $this->addAction('wp_ajax_schema_get_all', array($this, 'getAll'));
+        $this->addAction('wp_ajax_schema_get_template', array($this, 'getTemplate'));
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getAll()
     {
         header('Content-Type: application/json');
+
         echo json_encode([
             'types'      => ($types = TypeFactory::getAll()),
             'properties' => PropertyFactory::getAll(),
             'tree'       => TypeFactory::createTree($types)
         ]);
-        exit;
+
+        wp_die();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getTemplate()
     {
         header('Content-Type: text/html');
         include WEB_SCHEMA_DIR . '/resources/templates/dialog.tpl.php';
-        exit;
+
+        wp_die();
     }
 }

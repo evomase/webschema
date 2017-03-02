@@ -8,8 +8,14 @@
 
 namespace WebSchema\Models\AMP;
 
+use WebSchema\Traits\IsSingleton;
+use WebSchema\Traits\UsesHooks;
+
 class Route
 {
+    use IsSingleton;
+    use UsesHooks;
+
     const QUERY_VAR = 'amp';
     /**
      * @var self
@@ -26,12 +32,12 @@ class Route
 
     private function __construct()
     {
-        add_filter('do_parse_request', function () {
+        $this->addFilter('do_parse_request', function () {
             $this->register();
             return true;
         });
 
-        add_filter('request', function (array $queryVars) {
+        $this->addFilter('request', function (array $queryVars) {
             if ($this->active) {
                 $queryVars = array_merge($queryVars, [self::QUERY_VAR => 'on']);
 
@@ -105,16 +111,16 @@ class Route
     /**
      * @return bool
      */
-    public static function isAMP()
+    public function isAMP()
     {
-        return self::$instance->active;
+        return $this->active;
     }
 
     /**
      * @return string
      */
-    public static function getURI()
+    public function getURI()
     {
-        return self::$instance->uri;
+        return $this->uri;
     }
 }

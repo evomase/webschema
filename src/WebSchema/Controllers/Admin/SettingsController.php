@@ -18,14 +18,16 @@ class SettingsController extends Controller
 
     protected static $instance;
 
-    protected function __construct()
+    public function __construct()
     {
-        add_action('admin_menu', function () {
+        parent::__construct();
+
+        $this->addAction('admin_menu', function () {
             $this->addMenus();
         });
 
         //This needs to be called before Settings default sanitize method
-        add_filter('sanitize_option_' . Settings::NAME, function (array $data) {
+        $this->addFilter('sanitize_option_' . Settings::NAME, function (array $data) {
             return $this->sanitize($data);
         }, 1);
     }
