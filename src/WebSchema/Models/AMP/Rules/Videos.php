@@ -51,7 +51,7 @@ class Videos extends Model
             }
         }
 
-        if ($element->getAttribute('layout')) {
+        if (!$element->getAttribute('layout')) {
             $element->setAttribute('layout', 'responsive');
         }
 
