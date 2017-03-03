@@ -11,16 +11,24 @@ namespace WebSchema\Tests\Controller;
 use WebSchema\Models\Type;
 use WebSchema\Models\WP\Post;
 use WebSchema\Tests\AbstractTestCase;
+use WebSchema\Tests\Traits\RequiresSchema;
 use WebSchema\Utils\Installer;
 
 class PostControllerTest extends AbstractTestCase
 {
+    use RequiresSchema;
+
     public static function setUpBeforeClass()
     {
         parent::setDefaultSettings();
+
         parent::setUpBeforeClass();
 
-        (new Installer())->runOnce();
+        self::createDummySchema();
+
+        (new Installer([
+            Installer::OPTION_SCHEMA_PATH => self::$schemaPath
+        ]))->runOnce();
 
         wp_set_current_user(1);
     }

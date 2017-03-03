@@ -11,11 +11,15 @@ namespace WebSchema\Utils;
 use WebSchema\Factory\PropertyFactory;
 use WebSchema\Factory\TypeFactory;
 use WebSchema\Factory\TypePropertyFactory;
+use WebSchema\Models\Traits\HasData;
 use WebSchema\Utils\Interfaces\Bootable;
 
 class Installer implements Bootable
 {
-    private $directory = WEB_SCHEMA_DIR . '/resources/migration';
+    use HasData;
+
+    const MIGRATION_DIRECTORY = WEB_SCHEMA_DIR . '/resources/migration';
+    const OPTION_SCHEMA_PATH = 'schema-path';
 
     /**
      * @var \wpdb
@@ -23,14 +27,21 @@ class Installer implements Bootable
     private $db;
     private $import = true;
 
+    private $data = [
+        self::OPTION_SCHEMA_PATH => self::MIGRATION_DIRECTORY . '/schema.json'
+    ];
+
     /**
      * Installer constructor.
+     *
+     * @param array $options
      */
-    public function __construct()
+    public function __construct(array $options = [])
     {
         global $wpdb;
 
         $this->db = $wpdb;
+        $this->fill($options);
 
         register_activation_hook('webschema/schema.php', array($this, 'runOnce'));
     }
@@ -63,7 +74,7 @@ class Installer implements Bootable
      */
     public function runOnce()
     {
-        $dbSchemas = include $this->directory . '/install.php';
+        $dbSchemas = include self::MIGRATION_DIRECTORY . '/install.php';
 
         foreach ($dbSchemas as $name => $schema) {
             if (!$this->db->query($schema)) {
@@ -80,7 +91,7 @@ class Installer implements Bootable
      */
     private function import()
     {
-        $data = json_decode(file_get_contents($this->directory . '/schema.json'), true);
+        $data = json_decode(file_get_contents($this->data[self::OPTION_SCHEMA_PATH]), true);
 
         PropertyFactory::createOrUpdate($data['properties']);
         TypeFactory::createOrUpdate($data['types'] + $data['datatypes']);

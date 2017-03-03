@@ -12,17 +12,23 @@ use Mockery as m;
 use WebSchema\Models\StructuredData\Types\Article;
 use WebSchema\Models\StructuredData\Types\Interfaces\ArticleAdapter;
 use WebSchema\Tests\AbstractTestCase;
+use WebSchema\Tests\Traits\RequiresSchema;
 use WebSchema\Utils\Installer;
 
 class ArticleTest extends AbstractTestCase
 {
     use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use RequiresSchema;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
-        (new Installer())->runOnce();
+        self::createDummySchema();
+
+        (new Installer([
+            Installer::OPTION_SCHEMA_PATH => self::$schemaPath
+        ]))->runOnce();
     }
 
     public function testGenerateJson()
