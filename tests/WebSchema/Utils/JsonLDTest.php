@@ -8,11 +8,10 @@
 
 namespace WebSchema\Tests\Utils;
 
-use WebSchema\Tests\AbstractTestCase;
 use WebSchema\Utils\JsonLD;
 use WebSchema\Utils\JsonLD\Node;
 
-class JsonLDTest extends AbstractTestCase
+class JsonLDTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {

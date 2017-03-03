@@ -13,15 +13,10 @@ use Mockery as m;
 use WebSchema\Controllers\AMPController;
 use WebSchema\Models\AMP\DocumentParser;
 use WebSchema\Models\AMP\Route;
-use WebSchema\Tests\AbstractTestCase;
 
-class AMPControllerTest extends AbstractTestCase
+class AMPControllerTest extends \PHPUnit_Framework_TestCase
 {
     use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public static function setUpBeforeClass()
-    {
-    }
 
     public function testOutputBufferOn()
     {

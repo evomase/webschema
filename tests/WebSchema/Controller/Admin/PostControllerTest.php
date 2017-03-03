@@ -9,9 +9,8 @@
 namespace WebSchema\Tests\Controller\Admin;
 
 use WebSchema\Controllers\Admin\PostController;
-use WebSchema\Tests\AbstractTestCase;
 
-class PostControllerTest extends AbstractTestCase
+class PostControllerTest extends \PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass()
     {

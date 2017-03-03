@@ -30,6 +30,7 @@ class Stylesheet extends Model
         '.-amp-',
         '.i-amp-'
     ];
+
     const VALID_TRANSITION_PROPERTIES = [
         'opacity',
         'transform',
@@ -56,7 +57,7 @@ class Stylesheet extends Model
      */
     public static function applyImportantRule($css)
     {
-        return preg_replace('/[\w-]+?:[\S ]+!important;/', '', $css);
+        return preg_replace('/[\s]*[\w-]+?:[\S ]+!important;/', '', $css);
     }
 
     /**
@@ -66,7 +67,7 @@ class Stylesheet extends Model
      */
     public static function applyMediaRule($css)
     {
-        return preg_replace('/@media print[^{]+\{([\s\S]+?})\s*}/', '', $css);
+        return preg_replace('/[\s]*@media print[^{]+\{(?:[\s\S]+?})\s*}/', '', $css);
     }
 
     /**
@@ -84,7 +85,7 @@ class Stylesheet extends Model
 
         $properties = implode('|', $properties);
 
-        return preg_replace('/(?:' . $properties . '):[\S ]+;/', '', $css);
+        return preg_replace('/[\s]*(?:' . $properties . '):[\S ]+;/', '', $css);
     }
 
     /**
@@ -94,12 +95,26 @@ class Stylesheet extends Model
      */
     public static function applyTransitionRule($css)
     {
-        preg_match_all('/(?:-moz-|-webkit-|-o-)?transition: ?([\S]+)[\S ]*;/', $css, $matches);
+        preg_match_all('/([\s]*)((?:-moz-|-webkit-|-o-)?transition: ?)([\S ]+);/', $css, $matches);
 
-        foreach ($matches[1] as $index => $match) {
-            if (!in_array($match, self::VALID_TRANSITION_PROPERTIES)) {
-                $css = str_replace($matches[0][$index], '', $css);
+        foreach ($matches[3] as $i => $match) {
+            $properties = explode(',', trim($match));
+
+            foreach ($properties as $j => $property) {
+                $check = explode(' ', trim($property))[0];
+
+                if (!in_array($check, self::VALID_TRANSITION_PROPERTIES)) {
+                    unset($properties[$j]);
+                }
             }
+
+            $replace = implode(', ', array_map('trim', $properties));
+
+            if ($replace) {
+                $replace = $matches[1][$i] . $matches[2][$i] . $replace . ';';
+            }
+
+            $css = preg_replace('/[\s]*' . preg_quote($matches[0][$i], '/') . '/', $replace, $css);
         }
 
         return $css;
@@ -120,7 +135,7 @@ class Stylesheet extends Model
 
         $selectors = implode('|', $selectors);
 
-        //remove all wildcard separated selectors
+        //first remove invalid comma separated selectors
         //https://regex101.com/r/ykfIv7/3
         preg_match_all('/((?:,\n)?[\S ]*[^\/](?:' . $selectors . ')(?!\/)[\S ]*[, ])/', $css, $matches);
 
@@ -130,8 +145,8 @@ class Stylesheet extends Model
             }
         }
 
-        //https://regex101.com/r/r6HvSA/5
-        return preg_replace('/((?:[\S ]*)(?:' . $selectors . ')(?![=\/])[^\*]+?\{[^}]+})/', '', $css);
+        //https://regex101.com/r/r6HvSA/6
+        return preg_replace('/((?:[^}\*\/]*)(?:' . $selectors . ')(?![=\/])[^\*]+?\{[^}]+})/', '', $css);
     }
 
     public function parse()
@@ -161,10 +176,9 @@ class Stylesheet extends Model
         }
 
         $regex = [
-            '/\/\*[\s\S]+?\*\//s' => '', //remove comments
-            '/[^}]+\{[\s]+}/'     => '', //remove all empty closures {}
-            '/[\t\r\n\v\f]+/'     => '', //remove single space character
-            '/(:) | ({)/'         => '$1$2', //remove spaces between : and {
+            '/[\s]*\/\*[\s\S]+?\*\//s' => '', //remove comments
+            '/[^}]+\{[\s]+}/'          => '', //remove all empty closures {}
+            '/[\t\r\n\v\f]+|[ ]{4,}/'  => '', //remove single space character
         ];
 
         $css = preg_replace(array_keys($regex), array_values($regex), $css);

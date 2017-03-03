@@ -10,9 +10,8 @@ namespace WebSchema\Tests\Controller\Admin;
 
 use WebSchema\Controllers\Admin\SettingsController;
 use WebSchema\Models\WP\Settings;
-use WebSchema\Tests\AbstractTestCase;
 
-class SettingsControllerTest extends AbstractTestCase
+class SettingsControllerTest extends \PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass()
     {
@@ -24,8 +23,6 @@ class SettingsControllerTest extends AbstractTestCase
     public static function tearDownAfterClass()
     {
         $_POST = $_FILES = [];
-
-        parent::tearDownAfterClass();
     }
 
     public function testAddMenu()

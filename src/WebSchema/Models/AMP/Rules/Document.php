@@ -9,6 +9,7 @@
 namespace WebSchema\Models\AMP\Rules;
 
 use Masterminds\HTML5;
+use Masterminds\HTML5\Parser\DOMTreeBuilder;
 use WebSchema\Models\AMP\Route;
 
 class Document extends Model
@@ -39,17 +40,23 @@ class Document extends Model
     private function cleanHead()
     {
         $head = $this->document->createElement('head');
-        $oldHead = $this->document->getElementsByTagName('head')->item(0);
-
         $this->addDefaultHeadElements($head);
-
         $this->addFonts($head);
-        $this->addJSON($head, $oldHead);
 
-        //add title
-        $head->appendChild($oldHead->getElementsByTagName('title')->item(0));
+        if ($oldHead = $this->document->getElementsByTagName('head')->item(0)) {
+            $this->addJSON($head, $oldHead);
 
-        $oldHead->parentNode->replaceChild($head, $oldHead);
+            //add title
+            if ($title = $oldHead->getElementsByTagName('title')->item(0)) {
+                $head->appendChild($title);
+            }
+
+            $oldHead->parentNode->replaceChild($head, $oldHead);
+        } else {
+            $body = $this->document->getElementsByTagName('body')->item(0);
+            $html = $this->document->getElementsByTagName('html')->item(0);
+            $html->insertBefore($head, $body);
+        }
     }
 
     private function addDefaultHeadElements(\DOMElement $head)
@@ -84,7 +91,7 @@ class Document extends Model
     private function addFonts(\DOMElement $head)
     {
         $xpath = new \DOMXPath($this->document);
-        $xpath->registerNamespace('html', HTML5\Parser\DOMTreeBuilder::NAMESPACE_HTML);
+        $xpath->registerNamespace('html', DOMTreeBuilder::NAMESPACE_HTML);
 
         $fonts = $xpath->query("//html:link[@rel='stylesheet'][starts-with(@href, 'https://fonts.googleapis.com') or 
             starts-with(@href, 'https://cloud.typography.com') or starts-with(@href, 'https://fast.fonts.net') or 
@@ -111,22 +118,22 @@ class Document extends Model
 
     private function cleanBody()
     {
-        $body = $this->document->getElementsByTagName('body')->item(0);
+        if ($body = $this->document->getElementsByTagName('body')->item(0)) {
+            //remove all scripts
+            $scripts = $body->getElementsByTagName('script');
 
-        //remove all scripts
-        $scripts = $body->getElementsByTagName('script');
+            for ($i = 0; $i < $scripts->length;) {
+                $script = $scripts->item($i);
+                $script->parentNode->removeChild($script);
+            }
 
-        for ($i = 0; $i < $scripts->length;) {
-            $script = $scripts->item($i);
-            $script->parentNode->removeChild($script);
-        }
+            //remove all comments
+            $comments = (new \DOMXPath($this->document))->query('//comment()', $body);
 
-        //remove all comments
-        $comments = (new \DOMXPath($this->document))->query('//comment()', $body);
-
-        if ($comments->length) {
-            foreach ($comments as $comment) {
-                $comment->parentNode->removeChild($comment);
+            if ($comments->length) {
+                foreach ($comments as $comment) {
+                    $comment->parentNode->removeChild($comment);
+                }
             }
         }
     }
