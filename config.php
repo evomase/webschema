@@ -32,4 +32,4 @@ define('WEB_SCHEMA_AMP_STYLE',
 define('WEB_SCHEMA_AMP_STYLE_NO_SCRIPT',
     '<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>');
 
-define('WEB_SCHEMA_AMP_STYLESHEET_EXPIRY', 0);
+define('WEB_SCHEMA_AMP_STYLESHEET_EXPIRY', HOUR_IN_SECONDS);

@@ -2,21 +2,23 @@
 /**
  * Created by IntelliJ IDEA.
  * User: David
- * Date: 03/03/2017
- * Time: 17:16
+ * Date: 06/03/2017
+ * Time: 16:56
  */
 
-namespace WebSchema\Tests\Models\AMP\Rules;
+namespace WebSchema\Tests\Models\AMP;
 
 use Masterminds\HTML5;
-use WebSchema\Models\AMP\Rules\Document;
+use WebSchema\Models\AMP\DocumentParser;
 use WebSchema\Services\AMP\RouteService;
+use WebSchema\Services\WP\SettingsService;
 
-class DocumentTest extends \PHPUnit_Framework_TestCase
+class DocumentParserTest extends \PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass()
     {
         RouteService::boot();
+        SettingsService::boot();
     }
 
     public static function tearDownAfterClass()
@@ -24,18 +26,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         RouteService::shutdown();
     }
 
-    public function testCleanHTMLTag()
-    {
-        $html = '<html lang="en-US" class="no-js no-svg"><body><p>Hello world</p></body></html>';
-        $document = (new HTML5())->loadHTML($html);
-
-        $parser = new Document($document);
-        $parser->parse();
-
-        $this->assertTrue($document->getElementsByTagName('html')->item(0)->hasAttribute('amp'));
-    }
-
-    public function testCleanHead()
+    public function testParse()
     {
         $html = <<<HERE
 <html lang="en-US" class="no-js no-svg">
@@ -82,33 +73,7 @@ var twentyseventeenScreenReaderText = {"quote":"<svg class=\"icon icon-quote-rig
 </body>
 </html>
 HERE;
-        $document = (new HTML5())->loadHTML($html);
-
-        $parser = new Document($document);
-        $parser->parse();
-
-        $xpath = new \DOMXPath($document);
-
-        /**
-         * @var \DOMElement $element
-         */
-        $this->assertInstanceOf(\DOMElement::class, $xpath->query('//meta[@charset="utf-8"]')->item(0));
-        $this->assertInstanceOf(\DOMElement::class, $xpath->query('//script[@async]')->item(0));
-        $this->assertInstanceOf(\DOMElement::class, $xpath->query('//link[@rel="canonical"]')->item(0));
-        $this->assertInstanceOf(\DOMElement::class, $xpath->query('//meta[@name="viewport"]')->item(0));
-
-//        $this->assertInstanceOf(\DOMElement::class, $xpath->query('//style[@amp-boilerplate]')->item(0));
-//        $this->assertInstanceOf(\DOMElement::class, $xpath->query('//noscript/style[@amp-boilerplate]')->item(0));
-//
-//        //fonts
-//        $this->assertInstanceOf(\DOMElement::class, $xpath->query('//link[@rel="stylesheet"]')->item(0));
-
-        //json-ld
-//        $this->assertInstanceOf(\DOMElement::class,
-//            $xpath->query('//script[@type="application/ld+json"]')->item(0));
-
-        $this->assertEquals(0, $xpath->query('//script[@type="text/javascript"]')->length);
-        $this->assertEquals(0, $xpath->query('//comment()')->length);
-        $this->assertEquals(0, $xpath->query('.//script', $document->getElementsByTagName('body')->item(0))->length);
+        $parser = new DocumentParser(new HTML5());
+        $this->assertNotEquals($html, $parser->parse($html));
     }
 }

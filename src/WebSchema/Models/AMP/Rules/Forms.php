@@ -12,6 +12,7 @@ use WebSchema\Models\WP\Settings;
 
 class Forms extends Model
 {
+    const DEFAULT_TARGET = '_top';
     const TAG_NAME = 'amp-form';
     /**
      * @var \DOMNodeList
@@ -70,7 +71,7 @@ class Forms extends Model
              * @var \DOMElement $form
              */
             $target = $form->getAttribute('target');
-            $target = (in_array($target, ['_top', '_blank'])) ? $target : '_top';
+            $target = (in_array($target, [self::DEFAULT_TARGET, '_blank'])) ? $target : self::DEFAULT_TARGET;
 
             $form->setAttribute('target', $target);
         }

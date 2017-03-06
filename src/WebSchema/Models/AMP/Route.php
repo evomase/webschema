@@ -58,10 +58,14 @@ class Route
 
         $wp_rewrite->add_rule('^' . self::QUERY_VAR . '\/?', 'index.php?' . self::QUERY_VAR . '=on', 'top');
 
-        $uri = ($_SERVER['PATH_INFO']) ?: $_SERVER['REQUEST_URI'];
+        $this->uri = ($_SERVER['PATH_INFO']) ?: $_SERVER['REQUEST_URI'];
+        $this->active = false;
 
-        if (preg_match('/^\/' . self::QUERY_VAR . '\/?/i', $uri)) {
-            $uri = str_replace('/' . self::QUERY_VAR, '', $uri);
+        if ($_GET[self::QUERY_VAR] == 'on') {
+            //AMP is on
+            $this->active = true;
+        } elseif (preg_match('/^\/' . self::QUERY_VAR . '\/?/i', $this->uri)) {
+            $uri = str_replace('/' . self::QUERY_VAR, '', $this->uri);
 
             //for WP installations in a directory and not in domain root
             $data = parse_url(home_url());
@@ -85,12 +89,10 @@ class Route
             }
 
             if ($_SERVER['PHP_SELF'] != $index) {
-                $_SERVER['PHP_SELF'] = $index . $uri;
+                $_SERVER['PHP_SELF'] = $index;
             }
 
-            //AMP is on
             $this->active = true;
-            $this->uri = $uri;
         }
     }
 
@@ -106,6 +108,11 @@ class Route
     public static function boot()
     {
         self::$instance = new self();
+    }
+
+    public static function shutdown()
+    {
+        self::$instance->removeHooks();
     }
 
     /**

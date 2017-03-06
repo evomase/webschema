@@ -20,6 +20,6 @@ class RouteService extends Service
 
     public static function shutdown()
     {
-        // TODO: Implement shutdown() method.
+        Route::shutdown();
     }
 }

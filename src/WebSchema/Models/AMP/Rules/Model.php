@@ -29,11 +29,13 @@ abstract class Model implements Rule
     {
         $head = $this->document->getElementsByTagName('head')->item(0);
 
-        $script = $this->document->createElement('script');
-        $script->setAttribute('custom-element', $tag);
-        $script->setAttribute('async', '');
-        $script->setAttribute('src', WEB_SCHEMA_AMP_JS_FRAMEWORK . '/' . $tag . '-0.1.js');
+        if ($head) {
+            $script = $this->document->createElement('script');
+            $script->setAttribute('custom-element', $tag);
+            $script->setAttribute('async', '');
+            $script->setAttribute('src', WEB_SCHEMA_AMP_JS_FRAMEWORK . '/' . $tag . '-0.1.js');
 
-        $head->appendChild($script);
+            $head->appendChild($script);
+        }
     }
 }
