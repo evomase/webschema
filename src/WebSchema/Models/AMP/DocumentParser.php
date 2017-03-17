@@ -14,6 +14,8 @@ use WebSchema\Models\AMP\Rules\Attributes;
 use WebSchema\Models\AMP\Rules\Document;
 use WebSchema\Models\AMP\Rules\Forms;
 use WebSchema\Models\AMP\Rules\Images;
+use WebSchema\Models\AMP\Rules\SocialMedias\Instagram;
+use WebSchema\Models\AMP\Rules\SocialMedias\Twitter;
 use WebSchema\Models\AMP\Rules\SVG;
 use WebSchema\Models\AMP\Rules\Videos;
 use WebSchema\Models\AMP\Rules\WP\AdminBar;
@@ -33,6 +35,10 @@ class DocumentParser
         Forms::class,
         SVG::class,
 
+        //Social Media
+        Twitter::class,
+        Instagram::class,
+
         //WP
         AdminBar::class,
         Stylesheet::class
@@ -51,7 +57,7 @@ class DocumentParser
 
     /**
      * DocumentParser constructor.
-     * @param HTML5  $parser
+     * @param HTML5 $parser
      */
     public function __construct(HTML5 $parser)
     {
