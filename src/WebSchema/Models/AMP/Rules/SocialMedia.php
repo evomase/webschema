@@ -10,6 +10,9 @@ namespace WebSchema\Models\AMP\Rules;
 
 abstract class SocialMedia extends Model
 {
+    const DEFAULT_HEIGHT = 0;
+    const DEFAULT_WIDTH = 0;
+
     protected $platform;
     protected $regex;
     protected $element;
@@ -18,7 +21,6 @@ abstract class SocialMedia extends Model
     public function parse()
     {
         $this->addScript('amp-' . $this->platform);
-
         $this->replace();
     }
 
@@ -57,19 +59,35 @@ abstract class SocialMedia extends Model
     {
         $element = $this->document->createElement('amp-' . $this->platform);
         $element->setAttribute($this->attribute, $uid);
+        $this->setDefaultAttributes($element);
 
-        foreach (['width', 'height'] as $attribute) {
+        foreach (['width', 'height', 'layout'] as $attribute) {
             if ($value = $refElement->getAttribute($attribute)) {
                 $element->setAttribute($attribute, $value);
             }
         }
 
-        if ($element->hasAttribute('width') && $element->hasAttribute('height')) {
-            $element->setAttribute('layout', 'responsive');
-        }
-
         $refElement->parentNode->insertBefore($element, $refElement);
 
         return $element;
+    }
+
+    /**
+     * @param \DOMElement $element
+     */
+    protected function setDefaultAttributes(\DOMElement $element)
+    {
+        //set defaults
+        if (!$element->getAttribute('width')) {
+            $element->setAttribute('width', static::DEFAULT_WIDTH);
+        }
+
+        if (!$element->getAttribute('height')) {
+            $element->setAttribute('height', static::DEFAULT_HEIGHT);
+        }
+
+        if (!$element->getAttribute('layout')) {
+            $element->setAttribute('layout', 'responsive');
+        }
     }
 }

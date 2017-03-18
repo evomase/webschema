@@ -9,7 +9,7 @@
 namespace WebSchema\Tests\Models\AMP\Rules\SocialMedias;
 
 use Masterminds\HTML5;
-use WebSchema\Models\AMP\Rules\SocialMedias\Twitter;
+use WebSchema\Models\AMP\Rules\SocialMedia\Twitter;
 
 class TwitterTest extends \PHPUnit_Framework_TestCase
 {

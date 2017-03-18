@@ -6,12 +6,15 @@
  * Time: 16:50
  */
 
-namespace WebSchema\Models\AMP\Rules\SocialMedias;
+namespace WebSchema\Models\AMP\Rules\SocialMedia;
 
 use WebSchema\Models\AMP\Rules\SocialMedia;
 
 class Instagram extends SocialMedia
 {
+    const DEFAULT_HEIGHT = 392;
+    const DEFAULT_WIDTH = 320;
+
     protected $platform = 'instagram';
     protected $regex = '<blockquote[^>]+instagram-media[^>]+?>.+https:\/\/www\.instagram\.com\/p\/(?P<uid>[^"\/]+).+?<\/blockquote>';
     protected $element = 'blockquote';

@@ -9,7 +9,7 @@
 namespace WebSchema\Tests\Models\AMP\Rules\SocialMedias;
 
 use Masterminds\HTML5;
-use WebSchema\Models\AMP\Rules\SocialMedias\Instagram;
+use WebSchema\Models\AMP\Rules\SocialMedia\Instagram;
 
 class InstagramTest extends \PHPUnit_Framework_TestCase
 {
