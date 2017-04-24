@@ -79,6 +79,8 @@ abstract class SocialMedia extends Model
                 $this->setDefaultAttribute($attribute, $element);
             }
         }
+
+        $this->addDataAttributes($refElement, $element);
         $refElement->parentNode->insertBefore($element, $refElement);
 
         return $element;
@@ -100,6 +102,24 @@ abstract class SocialMedia extends Model
             case 'layout':
                 $element->setAttribute('layout', 'responsive');
                 break;
+        }
+    }
+
+    /**
+     * @param \DOMElement $refElement
+     * @param \DOMElement $element
+     */
+    protected function addDataAttributes(\DOMElement $refElement, \DOMElement $element)
+    {
+        $xpath = new \DOMXPath($this->document);
+
+        /**
+         * @var \DOMAttr[]
+         */
+        $attributes = $xpath->query("./@*[starts-with(name(), 'data-')]", $refElement);
+
+        foreach ($attributes as $attribute) {
+            $element->setAttributeNode($attribute);
         }
     }
 }

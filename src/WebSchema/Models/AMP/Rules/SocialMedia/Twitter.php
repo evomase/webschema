@@ -19,4 +19,16 @@ class Twitter extends SocialMedia
     protected $regex = '<blockquote[^>]+twitter-tweet[^>]+?>.+?https:\/\/twitter.com\/[^"]+\/status\/(?P<uid>[^"\/]+)".+?<\/blockquote>';
     protected $element = 'blockquote';
     protected $attribute = 'data-tweetid';
+
+    /**
+     * @param \DOMElement $refElement
+     * @param string      $uid
+     * @return \DOMElement
+     */
+    protected function addElement(\DOMElement $refElement, $uid)
+    {
+        $element = parent::addElement($refElement, $uid);
+
+        return $element;
+    }
 }

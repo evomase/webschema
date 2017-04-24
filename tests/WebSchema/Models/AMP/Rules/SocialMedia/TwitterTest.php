@@ -33,6 +33,8 @@ HERE;
         $this->assertEquals('amp-twitter',
             $head->getElementsByTagName('script')->item(0)->getAttribute('custom-element'));
 
-        $this->assertEquals(1, $document->getElementsByTagName('amp-twitter')->length);
+        $element = $document->getElementsByTagName('amp-twitter');
+        $this->assertEquals(1, $element->length);
+        $this->assertEquals('en', $element->item(0)->getAttribute('data-lang'));
     }
 }

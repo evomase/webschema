@@ -19,4 +19,17 @@ class Instagram extends SocialMedia
     protected $regex = '<blockquote[^>]+instagram-media[^>]+?>.+https:\/\/www\.instagram\.com\/p\/(?P<uid>[^"\/]+).+?<\/blockquote>';
     protected $element = 'blockquote';
     protected $attribute = 'data-shortcode';
+
+    /**
+     * @param \DOMElement $refElement
+     * @param string      $uid
+     * @return \DOMElement
+     */
+    protected function addElement(\DOMElement $refElement, $uid)
+    {
+        $element = parent::addElement($refElement, $uid);
+        $element->setAttribute('data-captioned', 'true');
+
+        return $element;
+    }
 }

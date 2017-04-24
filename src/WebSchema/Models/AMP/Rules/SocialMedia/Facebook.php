@@ -45,17 +45,4 @@ class Facebook extends SocialMedia
 
         return $element;
     }
-
-    /**
-     * @param string      $attribute
-     * @param \DOMElement $element
-     */
-    protected function setDefaultAttribute($attribute, \DOMElement $element)
-    {
-        switch ($attribute) {
-            case 'width':
-                $element->setAttribute('width', static::DEFAULT_WIDTH);
-                break;
-        }
-    }
 }
