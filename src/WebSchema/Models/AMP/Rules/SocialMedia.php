@@ -18,26 +18,38 @@ abstract class SocialMedia extends Model
     protected $element;
     protected $attribute;
 
+    /**
+     * @var \DOMNodeList
+     */
+    protected $elements;
+
     public function parse()
     {
-        $this->addScript('amp-' . $this->platform);
-        $this->replace();
+        $this->elements = $this->getElements();
+
+        if ($this->elements->length) {
+            $this->addScript('amp-' . $this->platform);
+            $this->replace();
+        }
+    }
+
+    /**
+     * @return \DOMNodeList
+     */
+    protected function getElements()
+    {
+        return $this->document->getElementsByTagName($this->element);
     }
 
     protected function replace()
     {
-        $elements = $this->document->getElementsByTagName($this->element);
-
         /**
          * @var \DOMElement[] $remove
          */
         $remove = [];
 
-        foreach ($elements as $element) {
-            $doc = new \DOMDocument();
-            $node = $doc->importNode($element, true);
-            $doc->appendChild($node);
-            $html = $doc->saveHTML($node);
+        foreach ($this->elements as $element) {
+            $html = $this->document->saveHTML($element);
 
             if (preg_match('/' . $this->regex . '/s', $html, $matches)) {
                 $this->addElement($element, $matches['uid']);
@@ -59,35 +71,35 @@ abstract class SocialMedia extends Model
     {
         $element = $this->document->createElement('amp-' . $this->platform);
         $element->setAttribute($this->attribute, $uid);
-        $this->setDefaultAttributes($element);
 
         foreach (['width', 'height', 'layout'] as $attribute) {
             if ($value = $refElement->getAttribute($attribute)) {
                 $element->setAttribute($attribute, $value);
+            } else {
+                $this->setDefaultAttribute($attribute, $element);
             }
         }
-
         $refElement->parentNode->insertBefore($element, $refElement);
 
         return $element;
     }
 
     /**
+     * @param string      $attribute
      * @param \DOMElement $element
      */
-    protected function setDefaultAttributes(\DOMElement $element)
+    protected function setDefaultAttribute($attribute, \DOMElement $element)
     {
-        //set defaults
-        if (!$element->getAttribute('width')) {
-            $element->setAttribute('width', static::DEFAULT_WIDTH);
-        }
-
-        if (!$element->getAttribute('height')) {
-            $element->setAttribute('height', static::DEFAULT_HEIGHT);
-        }
-
-        if (!$element->getAttribute('layout')) {
-            $element->setAttribute('layout', 'responsive');
+        switch ($attribute) {
+            case 'height':
+                $element->setAttribute('height', static::DEFAULT_HEIGHT);
+                break;
+            case 'width':
+                $element->setAttribute('width', static::DEFAULT_WIDTH);
+                break;
+            case 'layout':
+                $element->setAttribute('layout', 'responsive');
+                break;
         }
     }
 }

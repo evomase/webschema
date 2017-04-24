@@ -16,7 +16,7 @@ class Twitter extends SocialMedia
     const DEFAULT_WIDTH = 320;
 
     protected $platform = 'twitter';
-    protected $regex = '<blockquote[^>]+twitter-tweet[^>]+?>.+https:\/\/twitter.com\/[^\s]+\/(?P<uid>[^"\/]+).+?<\/blockquote>';
+    protected $regex = '<blockquote[^>]+twitter-tweet[^>]+?>.+?https:\/\/twitter.com\/[^"]+\/status\/(?P<uid>[^"\/]+)".+?<\/blockquote>';
     protected $element = 'blockquote';
     protected $attribute = 'data-tweetid';
 }

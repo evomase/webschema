@@ -1,6 +1,6 @@
 {
     "name": "evomase/webschema",
-    "version": "1.1",
+    "version": "1.0",
     "license": "GPL-2.0",
     "authors": [
         {
@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.0",
         "masterminds/html5": "2.*"
     },
     "require-dev": {
