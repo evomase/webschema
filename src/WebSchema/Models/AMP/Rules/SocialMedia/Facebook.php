@@ -17,15 +17,14 @@ class Facebook extends SocialMedia
     const DEFAULT_WIDTH = 552;
 
     protected $platform = 'facebook';
-    protected $regex = '<blockquote[^>]+cite="(?P<uid>https:\/\/www.facebook.com[^"]+).+?<\/blockquote>';
-    protected $element = 'blockquote';
+    protected $regex = '<div[^>]+data-href="(?P<uid>https:\/\/[^"]+.facebook.com[^"]+).+?<\/div>';
     protected $attribute = 'data-href';
 
     protected function getElements()
     {
         $xpath = new \DOMXPath($this->document);
         $xpath->registerNamespace('html', DOMTreeBuilder::NAMESPACE_HTML);
-        $expression = "//html:div[@class='fb-post' or @class='fb-video'][starts-with(@data-href, 'https://www.facebook.com')]";
+        $expression = "//html:div[starts-with(@class, 'fb-')][contains(@data-href, '.facebook.com')]";
 
         return $xpath->query($expression);
     }

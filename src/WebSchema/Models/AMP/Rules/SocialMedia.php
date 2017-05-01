@@ -17,6 +17,7 @@ abstract class SocialMedia extends Model
     protected $regex;
     protected $element;
     protected $attribute;
+    protected $dataAttributePrefix;
 
     /**
      * @var \DOMNodeList
@@ -111,15 +112,24 @@ abstract class SocialMedia extends Model
      */
     protected function addDataAttributes(\DOMElement $refElement, \DOMElement $element)
     {
-        $xpath = new \DOMXPath($this->document);
+        foreach ($this->getDataAttributes($refElement) as $attribute) {
+            $name = $attribute->name;
 
-        /**
-         * @var \DOMAttr[]
-         */
-        $attributes = $xpath->query("./@*[starts-with(name(), 'data-')]", $refElement);
+            if ($this->dataAttributePrefix) {
+                $name = str_replace('-' . $this->dataAttributePrefix . '-', '-', $name);
+            }
 
-        foreach ($attributes as $attribute) {
-            $element->setAttributeNode($attribute);
+            $element->setAttribute($name, $attribute->value);
         }
+    }
+
+    /**
+     * @param \DOMElement $element
+     * @return \DOMAttr[]|\DOMNodeList
+     */
+    protected function getDataAttributes(\DOMElement $element)
+    {
+        $xpath = new \DOMXPath($this->document);
+        return $xpath->query("./@*[starts-with(name(), 'data-')]", $element);
     }
 }

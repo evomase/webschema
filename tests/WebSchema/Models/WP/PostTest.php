@@ -102,7 +102,7 @@ class PostTest extends AbstractTestCase
             'post_mime_type' => $upload['type']
         ], $upload['file'], $post->ID);
 
-        $this->assertInternalType('array', json_decode(Post::get($post->ID)->getJson(), true));
+        $this->assertInternalType('array', json_decode(Post::get($post->ID)->getJSON(), true));
 
         wp_delete_attachment($image);
         wp_delete_post($post->ID);

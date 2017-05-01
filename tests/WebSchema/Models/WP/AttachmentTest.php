@@ -53,7 +53,7 @@ class AttachmentTest extends AbstractTestCase
             'post_mime_type' => $upload['type']
         ], $upload['file'], $post->ID);
 
-        $data = json_decode(Post::get($post->ID)->getJson(), true);
+        $data = json_decode(Post::get($post->ID)->getJSON(), true);
 
         $this->assertNotEmpty($data[Article::FIELD_IMAGE]);
         $this->assertRegExp('/AttachmentTestSave/i', $data[Article::FIELD_IMAGE]['url']);
@@ -61,7 +61,7 @@ class AttachmentTest extends AbstractTestCase
         //delete attachment
         wp_delete_attachment($image);
 
-        $data = json_decode(Post::get($post->ID)->getJson(), true);
+        $data = json_decode(Post::get($post->ID)->getJSON(), true);
         $this->assertArrayNotHasKey(Article::FIELD_IMAGE, $data);
 
         wp_delete_post($post->ID);

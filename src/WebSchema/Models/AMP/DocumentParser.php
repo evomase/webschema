@@ -14,8 +14,11 @@ use WebSchema\Models\AMP\Rules\Attributes;
 use WebSchema\Models\AMP\Rules\Document;
 use WebSchema\Models\AMP\Rules\Forms;
 use WebSchema\Models\AMP\Rules\Images;
+use WebSchema\Models\AMP\Rules\SocialMedia\Facebook;
 use WebSchema\Models\AMP\Rules\SocialMedia\Instagram;
+use WebSchema\Models\AMP\Rules\SocialMedia\Pinterest;
 use WebSchema\Models\AMP\Rules\SocialMedia\Twitter;
+use WebSchema\Models\AMP\Rules\SocialMedia\YouTube;
 use WebSchema\Models\AMP\Rules\SVG;
 use WebSchema\Models\AMP\Rules\Videos;
 use WebSchema\Models\AMP\Rules\WP\AdminBar;
@@ -38,6 +41,9 @@ class DocumentParser
         //Social Media
         Twitter::class,
         Instagram::class,
+        Facebook::class,
+        Pinterest::class,
+        YouTube::class,
 
         //WP
         AdminBar::class,

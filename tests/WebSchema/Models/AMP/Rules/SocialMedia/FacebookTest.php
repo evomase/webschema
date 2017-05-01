@@ -6,7 +6,7 @@
  * Time: 17:15
  */
 
-namespace WebSchema\Tests\Models\AMP\Rules\SocialMedias;
+namespace WebSchema\Tests\Models\AMP\Rules\SocialMedia;
 
 use Masterminds\HTML5;
 use WebSchema\Models\AMP\Rules\SocialMedia\Facebook;
@@ -22,6 +22,8 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 <blockquote cite="https://www.facebook.com/facebook/videos/10153231379946729/" class="fb-xfbml-parse-ignore">
 <a href="https://www.facebook.com/facebook/videos/10153231379946729/">How to Share With Just Friends</a><p>How to share with just friends.</p>Posted by 
 <a href="https://www.facebook.com/facebook/">Facebook</a> on Friday, 5 December 2014</blockquote></div>
+
+<div class="fb-comments" data-href="https://developers.facebook.com/docs/plugins/comments#configurator" data-numposts="5"></div>
 </body>
 </html>
 HERE;
@@ -35,6 +37,6 @@ HERE;
         $this->assertEquals('amp-facebook',
             $head->getElementsByTagName('script')->item(0)->getAttribute('custom-element'));
 
-        $this->assertEquals(1, $document->getElementsByTagName('amp-facebook')->length);
+        $this->assertEquals(2, $document->getElementsByTagName('amp-facebook')->length);
     }
 }

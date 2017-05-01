@@ -6,7 +6,7 @@
  * Time: 17:15
  */
 
-namespace WebSchema\Tests\Models\AMP\Rules\SocialMedias;
+namespace WebSchema\Tests\Models\AMP\Rules\SocialMedia;
 
 use Masterminds\HTML5;
 use WebSchema\Models\AMP\Rules\SocialMedia\Instagram;
@@ -30,8 +30,6 @@ HERE;
         $document = (new HTML5())->loadHTML($html);
         $rule = new Instagram($document);
         $rule->parse();
-
-        echo $document->saveHTML();
 
         $this->assertEquals(0, $document->getElementsByTagName('blockquote')->length);
 

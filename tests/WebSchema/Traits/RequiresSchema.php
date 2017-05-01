@@ -39,6 +39,13 @@ trait RequiresSchema
         }
     }
 
+    /**
+     * @param string $type
+     * @param array  $types
+     * @param array  $properties
+     * @param array  $json
+     * @return array
+     */
     protected static function addSchemaType($type, array $types, array $properties, array $json)
     {
         if (!empty($types[$type])) {

@@ -42,7 +42,7 @@ class Route
                 $queryVars = array_merge($queryVars, [self::QUERY_VAR => 'on']);
 
                 //revert to default $_SERVER vars
-                $this->setDefaultServerVars();
+                $this->restoreDefaultServerVars();
             }
 
             return $queryVars;
@@ -74,11 +74,7 @@ class Route
                 : '/' . $wp_rewrite->index;
 
             //store original $_SERVER vars
-            foreach (array_keys($this->default) as $key) {
-                if (!empty($_SERVER[$key])) {
-                    $this->default[$key] = $_SERVER[$key];
-                }
-            }
+            $this->storeDefaultServerVars();
 
             //Non-pretty URL or with index.php in URI
             if ($_SERVER['PATH_INFO']) {
@@ -96,7 +92,16 @@ class Route
         }
     }
 
-    private function setDefaultServerVars()
+    private function storeDefaultServerVars()
+    {
+        foreach (array_keys($this->default) as $key) {
+            if (!empty($_SERVER[$key])) {
+                $this->default[$key] = $_SERVER[$key];
+            }
+        }
+    }
+
+    private function restoreDefaultServerVars()
     {
         foreach ($this->default as $key => $value) {
             if ($value) {

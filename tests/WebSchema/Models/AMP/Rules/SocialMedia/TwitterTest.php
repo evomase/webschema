@@ -6,7 +6,7 @@
  * Time: 16:18
  */
 
-namespace WebSchema\Tests\Models\AMP\Rules\SocialMedias;
+namespace WebSchema\Tests\Models\AMP\Rules\SocialMedia;
 
 use Masterminds\HTML5;
 use WebSchema\Models\AMP\Rules\SocialMedia\Twitter;

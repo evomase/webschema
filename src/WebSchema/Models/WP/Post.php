@@ -98,7 +98,7 @@ class Post
 
         /** @noinspection PhpUnusedLocalVariableInspection */
         $data = $model->data;
-        $data[self::FIELD_JSON_LD] = $model->getPrettyJson();
+        $data[self::FIELD_JSON_LD] = $model->getPrettyJSON();
 
         include WEB_SCHEMA_DIR . '/resources/templates/meta-box.tpl.php';
     }
@@ -152,17 +152,17 @@ class Post
     /**
      * @return string|null
      */
-    public function getPrettyJson()
+    public function getPrettyJSON()
     {
         //make the json pretty ;-)
-        return ($this->data[self::FIELD_JSON_LD]) ? json_encode(json_decode($this->getJson(), true),
+        return ($this->data[self::FIELD_JSON_LD]) ? json_encode(json_decode($this->getJSON(), true),
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : null;
     }
 
     /**
      * @return string
      */
-    public function getJson()
+    public function getJSON()
     {
         return $this->data[self::FIELD_JSON_LD];
     }
@@ -243,9 +243,9 @@ class Post
     /**
      * @return string
      */
-    public function getJsonScript()
+    public function getJSONScript()
     {
-        $json = $this->getJson();
+        $json = $this->getJSON();
 
         return (!$json) ? null : '<script type="application/ld+json">' . $json . '</script>';
     }

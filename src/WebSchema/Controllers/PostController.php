@@ -20,22 +20,32 @@ class PostController extends Controller
         parent::__construct();
 
         $this->addAction('wp_head', function () {
-            ob_start();
+            global $post;
+
+            if ($post) {
+                ob_start();
+            }
         }, 1);
 
         $this->addAction('wp_head', function () {
-            $this->printJSON();
+            global $post;
+
+            if ($post) {
+                $this->printSchema($post, ob_get_flush());
+            }
         }, 100);
     }
 
-    private function printJSON()
+    /**
+     * Prints a JSON-LD schema representation of the post
+     *
+     * @param \WP_Post $post
+     * @param string   $data
+     */
+    private function printSchema(\WP_Post $post, $data)
     {
-        global $post;
-
-        $contents = ob_get_flush();
-
         //prevent re-adding micro-data if already present
-        if ($post->ID && !preg_match('/application\/ld\+json/i', $contents)) {
+        if ($post->ID && !preg_match('/application\/ld\+json/i', $data)) {
             switch ($post->post_type) {
                 case Page::POST_TYPE:
                     $model = Page::get($post->ID);
@@ -46,7 +56,7 @@ class PostController extends Controller
                     break;
             }
 
-            if ($model && ($json = $model->getJsonScript())) {
+            if ($model && ($json = $model->getJSONScript())) {
                 print $json . PHP_EOL;
             }
         }

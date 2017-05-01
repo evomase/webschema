@@ -9,29 +9,31 @@
 namespace WebSchema\Tests\Models\AMP\Rules\SocialMedia;
 
 use Masterminds\HTML5;
-use WebSchema\Models\AMP\Rules\SocialMedia\YouTube;
+use WebSchema\Models\AMP\Rules\SocialMedia\Pinterest;
 
-class YouTubeTest extends \PHPUnit_Framework_TestCase
+class PinterestTest extends \PHPUnit_Framework_TestCase
 {
     public function testParse()
     {
         $html = <<<HERE
 <html><head></head>
 <body>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/xSSL_0DKkRI" frameborder="0" allowfullscreen></iframe>
+<a href="https://www.pinterest.com/pin/139752394664775546/"
+   data-pin-do="embedPin">
+</a>
 </body>
 </html>
 HERE;
         $document = (new HTML5())->loadHTML($html);
-        $rule = new YouTube($document);
+        $rule = new Pinterest($document);
         $rule->parse();
 
-        $this->assertEquals(0, $document->getElementsByTagName('iframe')->length);
+        $this->assertEquals(0, $document->getElementsByTagName('a')->length);
 
         $head = $document->getElementsByTagName('head')->item(0);
-        $this->assertEquals('amp-youtube',
+        $this->assertEquals('amp-pinterest',
             $head->getElementsByTagName('script')->item(0)->getAttribute('custom-element'));
 
-        $this->assertEquals(1, $document->getElementsByTagName('amp-youtube')->length);
+        $this->assertEquals(1, $document->getElementsByTagName('amp-pinterest')->length);
     }
 }

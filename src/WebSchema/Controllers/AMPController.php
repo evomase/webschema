@@ -13,11 +13,12 @@ use WebSchema\Models\AMP\Route;
 
 class AMPController extends Controller
 {
+    protected static $instance;
+
     /**
      * @var Route
      */
     private $route;
-
     /**
      * @var DocumentParser
      */
@@ -35,17 +36,23 @@ class AMPController extends Controller
 
     private function register()
     {
-        $this->addAction('template_redirect', $callback = function () {
+        $this->addAction('template_redirect', function () {
             if ($this->route->isAMP()) {
                 ob_start();
             }
         });
 
-        $this->addAction('shutdown', $callback = function () {
+        $this->addAction('shutdown', function () {
             if ($this->route->isAMP()) {
                 $this->parseHTML();
             }
         }, -1);
+
+        $this->addAction('wp_head', function () {
+            if (!$this->route->isAMP()) {
+                $this->addHeadLink();
+            }
+        });
     }
 
     private function parseHTML()
@@ -53,5 +60,11 @@ class AMPController extends Controller
         if ($html = ob_get_clean()) {
             echo $this->parser->parse($html);
         }
+    }
+
+    private function addHeadLink()
+    {
+        $url = home_url('/amp' . $this->route->getURI());
+        echo '<link rel="amphtml" href="' . $url . '">';
     }
 }
