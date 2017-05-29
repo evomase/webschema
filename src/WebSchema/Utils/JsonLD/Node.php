@@ -12,12 +12,21 @@ class Node
 {
     private $type, $data;
 
+    /**
+     * Node constructor.
+     * @param string $type
+     * @param string|array $data
+     */
     public function __construct($type = null, $data = null)
     {
         $this->type = $type;
         $this->data = $data;
     }
 
+    /**
+     * @param Node $node
+     * @return $this
+     */
     public function add(Node $node)
     {
         if (!is_array($this->data)) {
@@ -29,11 +38,17 @@ class Node
         return $this;
     }
 
+    /**
+     * @return array|null|string
+     */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * @return null|string
+     */
     public function getType()
     {
         return $this->type;

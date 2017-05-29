@@ -163,7 +163,7 @@ abstract class Model
 
     /**
      * @param string $key
-     * @param string $value
+     * @param string|array $value
      * @return $this
      */
     protected function setValue($key, $value)

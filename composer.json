@@ -10,15 +10,19 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
+        "php": ">=5.6",
         "masterminds/html5": "2.*"
     },
     "require-dev": {
         "mockery/mockery": "dev-master"
     },
+    "autoload": {
+        "psr-4": {
+            "WebSchema\\": "src/WebSchema"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
-            "WebSchema\\": "src/WebSchema",
             "WebSchema\\Tests\\": "tests/WebSchema"
         }
     }

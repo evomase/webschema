@@ -13,6 +13,8 @@ use WebSchema\Models\StructuredData\Types\Model as StructuredDataType;
 use WebSchema\Models\Traits\HasCollection;
 use WebSchema\Models\Traits\HasData;
 use WebSchema\Models\WP\Adapters\Model as Adapter;
+use WebSchema\Models\WP\MetaBoxes\DataType;
+use WebSchema\Models\WP\MetaBoxes\Interfaces\MetaBoxInterface;
 
 class Post
 {
@@ -23,7 +25,9 @@ class Post
 
     const FIELD_DATA_TYPE = 'data-type';
     const FIELD_JSON_LD = 'json-ld';
+
     const FILTER_POST_ADAPTER = 'web-schema-post-adapter';
+
     const META_KEY = 'web-schema';
     const POST_TYPE = 'post';
 
@@ -31,6 +35,10 @@ class Post
      * @var \ArrayObject
      */
     protected static $collection;
+
+    protected static $metaBoxes = [
+        DataType::class
+    ];
 
     protected $data = [
         self::FIELD_DATA_TYPE => null,
@@ -76,31 +84,23 @@ class Post
             $types = array_merge(Settings::get(Settings::FIELD_POST_TYPES), [static::POST_TYPE]);
         }
 
-        add_meta_box(static::META_KEY, 'Web Schema - Structured Data', function (\WP_Post $post) {
-            static::renderMetaBox($post);
-        }, $types, 'advanced', 'high');
+        foreach (static::$metaBoxes as $box) {
+            /**
+             * @var MetaBoxInterface $box
+             */
+            $box = new $box;
+            $box->addMetaBox($types, __CLASS__);
+        }
     }
 
-    protected static function renderMetaBox(\WP_Post $post)
+    /**
+     * @param \WP_Post $post
+     * @return bool
+     */
+    protected static function isValidPostType(\WP_Post $post)
     {
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $types = StructuredData::getTypes();
-
-        foreach ($types as $id => $class) {
-            /**
-             * @var StructuredDataType $class
-             */
-
-            $types[$id] = $class::getSchema()->toArray();
-        }
-
-        $model = static::get($post->ID);
-
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $data = $model->data;
-        $data[self::FIELD_JSON_LD] = $model->getPrettyJSON();
-
-        include WEB_SCHEMA_DIR . '/resources/templates/meta-box.tpl.php';
+        return (in_array($post->post_type,
+            array_merge(Settings::get(Settings::FIELD_POST_TYPES), [static::POST_TYPE])));
     }
 
     /**
@@ -126,16 +126,6 @@ class Post
         return null;
     }
 
-    /**
-     * @param \WP_Post $post
-     * @return bool
-     */
-    protected static function isValidPostType(\WP_Post $post)
-    {
-        return (in_array($post->post_type,
-            array_merge(Settings::get(Settings::FIELD_POST_TYPES), [static::POST_TYPE])));
-    }
-
     protected function load()
     {
         $data = get_post_meta($this->id, static::META_KEY, true);
@@ -147,24 +137,6 @@ class Post
         }
 
         $this->put($this->id, $this);
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPrettyJSON()
-    {
-        //make the json pretty ;-)
-        return ($this->data[self::FIELD_JSON_LD]) ? json_encode(json_decode($this->getJSON(), true),
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getJSON()
-    {
-        return $this->data[self::FIELD_JSON_LD];
     }
 
     /**
@@ -238,6 +210,24 @@ class Post
                 }
             }
         }
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPrettyJSON()
+    {
+        //make the json pretty ;-)
+        return ($this->data[self::FIELD_JSON_LD]) ? json_encode(json_decode($this->getJSON(), true),
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJSON()
+    {
+        return $this->data[self::FIELD_JSON_LD];
     }
 
     /**

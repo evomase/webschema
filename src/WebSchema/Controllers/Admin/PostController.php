@@ -32,7 +32,7 @@ class PostController extends Controller
             wp_enqueue_script('rainbow', WEB_SCHEMA_DIR_URL . '/resources/js/rainbow/rainbow.min.js', [], '2.1.2',
                 true);
             wp_enqueue_script('web-schema-structured-data', WEB_SCHEMA_DIR_URL . '/resources/js/structured-data.js',
-                ['rainbow'], WEB_SCHEMA_VERSION, true);
+                ['rainbow', 'jquery-ui-tabs'], WEB_SCHEMA_VERSION, true);
         }
     }
 
